@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="appenderPatternLayout">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36}(%F:%L) - %msg%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="${appenderPatternLayout}"/>
+        </Console>
+        <File name="LogToFile" fileName="logs/client.log" immediateFlush="false" append="false">
+            <PatternLayout pattern="${appenderPatternLayout}"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger name="de.schlunzis" level="${sys:logging.level:-info}">
+            <AppenderRef ref="LogToFile"/>
+        </Logger>
+        <Root level="debug">
+            <AppenderRef ref="LogToConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>

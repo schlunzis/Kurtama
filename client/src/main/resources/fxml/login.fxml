@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="center" hgap="10" style="-fx-padding: 20px;" vgap="10"
+          xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="de.schlunzis.client.controller.LoginController">
+    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleLogin"/>
+    <Button fx:id="loginButton" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#handleLogin"/>
+</GridPane>
