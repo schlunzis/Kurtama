@@ -68,6 +68,7 @@ public class NettyServer implements NetworkServer {
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             log.error("Netty Server interrupted", e);
+            Thread.currentThread().interrupt();
         } finally {
             // Shut down all event loops to terminate all threads.
             bossGroup.shutdownGracefully();

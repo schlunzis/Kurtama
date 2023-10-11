@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schlunzis.client.net.NetworkClient;
 import de.schlunzis.common.messages.ClientMessage;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -35,6 +32,7 @@ public final class NettyClient implements NetworkClient {
         group = new NioEventLoopGroup();
 
         b = new Bootstrap();
+        b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
         b.group(group) // Set EventLoopGroup to handle all events for client.
                 .channel(NioSocketChannel.class)// Use NIO to accept new connections.
                 .handler(new ChannelInitializer<SocketChannel>() {
@@ -50,31 +48,25 @@ public final class NettyClient implements NetworkClient {
     }
 
     public void start() {
+        f = b.connect(host, port);
+        f.awaitUninterruptibly();
 
-        // TODO reorganize this
-
-        try {
-            // Start the client.
-            f = b.connect(host, port).sync();
-
-            try {
-                // Wait until the connection is closed.
-                f.channel().closeFuture().sync();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            } finally {
-                group.shutdownGracefully();
-            }
-        } catch (InterruptedException e) {
-            log.error("Failed to start client", e);
-            Thread.currentThread().interrupt();
+        if (f.isCancelled()) {
+            log.info("Connection cancelled by user.");
+            close();
+        } else if (!f.isSuccess()) {
+            log.error("Connection failed!");
+            f.cause().printStackTrace();
+            close();
+        } else {
+            log.info("Connected to server.");
         }
     }
 
     public void close() {
         log.debug("Closing network client");
         f.channel().close();
+        group.shutdownGracefully();
     }
 
     @Override
@@ -83,7 +75,9 @@ public final class NettyClient implements NetworkClient {
             String msg = objectMapper.writeValueAsString(clientMessage);
             log.info("Sending message {}", msg);
             f.sync().channel().writeAndFlush(msg);
-        } catch (JsonProcessingException | InterruptedException e) {
+        } catch (JsonProcessingException e) {
+            log.error("Failed to send message. Could not create JSON from object.", e);
+        } catch (InterruptedException e) {
             log.error("Failed to send message", e);
             Thread.currentThread().interrupt();
         }

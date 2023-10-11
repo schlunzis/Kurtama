@@ -15,7 +15,6 @@ class ClientHandler extends SimpleChannelInboundHandler<String> {
     private final ServerMessageDispatcher dispatcher;
     private final ObjectMapper objectMapper;
 
-    // TODO: Can the eventbus be injected here? The handler should be hidden on the exchangeable network layer. This layer may not write to the eventbus directly.
     public ClientHandler(ServerMessageDispatcher dispatcher) {
         this.dispatcher = dispatcher;
         this.objectMapper = new ObjectMapper();
