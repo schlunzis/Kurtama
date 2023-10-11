@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.schlunzis</groupId>
-        <artifactId>Netty-Chat</artifactId>
+        <artifactId>Kurtama</artifactId>
         <version>${revision}</version>
     </parent>
 
