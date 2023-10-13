@@ -20,6 +20,9 @@ import java.io.IOException;
 @Component
 public class SceneManager {
 
+    private static final String LOGIN_FXML_PATH = "/fxml/login.fxml";
+    private static final String MAIN_MENU_FXML_PATH = "/fxml/main.fxml";
+
     private final ApplicationContext context;
 
     @Setter
@@ -39,12 +42,12 @@ public class SceneManager {
 
             switch (event.scene()) {
                 case LOGIN -> {
-                    path = "/fxml/login.fxml";
+                    path = LOGIN_FXML_PATH;
                     stage.setTitle("Login");
                 }
-                case CHAT -> {
-                    path = "/fxml/chat.fxml";
-                    stage.setTitle("Chat");
+                case MAIN -> {
+                    path = MAIN_MENU_FXML_PATH;
+                    stage.setTitle("Kurtama");
                 }
             }
 
