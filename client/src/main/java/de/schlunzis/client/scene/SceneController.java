@@ -20,7 +20,7 @@ public class SceneController {
 
     @Subscribe
     public void onLoginSuccessfulResponse(LoginSuccessfulResponse lsr) {
-        eventBus.post(new SceneChangeEvent(Scene.CHAT));
+        eventBus.post(new SceneChangeEvent(Scene.MAIN));
     }
 
 }

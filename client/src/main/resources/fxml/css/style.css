@@ -1,0 +1,16 @@
+* {
+    -fx-font-size: 14px;
+
+    k-grey: #8f8f8f;
+    k-grey-highlight: #c2c2c2;
+}
+
+Button {
+    -fx-pref-height: 40px;
+    -fx-background-color: k-grey;
+    -fx-text-fill: white;
+}
+
+Button:hover {
+    -fx-background-color: k-grey-highlight;
+}

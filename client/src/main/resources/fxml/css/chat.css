@@ -1,0 +1,14 @@
+VBox {
+    -fx-border-color: k-grey;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+ListView {
+    -fx-padding: 1px;
+}
+
+TextField {
+    -fx-min-width: 0;
+    -fx-pref-width: 100;
+}
