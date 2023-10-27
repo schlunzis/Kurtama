@@ -2,9 +2,7 @@ package de.schlunzis.server.auth;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import de.schlunzis.common.messages.authentication.LoginFailedResponse;
-import de.schlunzis.common.messages.authentication.LoginRequest;
-import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
+import de.schlunzis.common.messages.authentication.*;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
 import de.schlunzis.server.net.MessageWrapper;
 import de.schlunzis.server.net.Session;
@@ -49,6 +47,17 @@ public class AuthenticationService {
             }
         }, () -> log.info("User {} not found", loginRequest.getEmail()));
 
+    }
+
+    @Subscribe
+    public void onLogoutRequest(LogoutRequest logoutRequest) {
+        userSessionMap.remove(logoutRequest.getSession());
+        eventBus.post(new LogoutSuccessfulResponse(logoutRequest.getSession()));
+    }
+
+    @Subscribe
+    public void onLogoutEvent(LogoutEvent logoutEvent) {
+        userSessionMap.remove(logoutEvent.getSession());
     }
 
     public boolean isLoggedIn(Session session) {

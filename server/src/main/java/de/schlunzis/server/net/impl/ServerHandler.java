@@ -2,8 +2,10 @@ package de.schlunzis.server.net.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.eventbus.EventBus;
 import de.schlunzis.common.messages.ClientMessage;
 import de.schlunzis.common.messages.ServerMessage;
+import de.schlunzis.server.auth.LogoutEvent;
 import de.schlunzis.server.net.ClientMessageDispatcher;
 import de.schlunzis.server.net.Session;
 import io.netty.channel.Channel;
@@ -26,11 +28,14 @@ class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private final ClientMessageDispatcher clientMessageDispatcher;
 
+    private final EventBus eventBus;
 
-    public ServerHandler(IChannelStore channelStore, ClientMessageDispatcher clientMessageDispatcher) {
+
+    public ServerHandler(IChannelStore channelStore, ClientMessageDispatcher clientMessageDispatcher, EventBus eventBus) {
         this.channelStore = channelStore;
         this.clientMessageDispatcher = clientMessageDispatcher;
         this.objectMapper = new ObjectMapper();
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -41,7 +46,9 @@ class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        // TODO: Log out the user of the corresponding session (see Issue "Allow Logout of user #8")
+        channelStore.get(ctx.channel()).ifPresentOrElse(
+                session -> eventBus.post(new LogoutEvent(session)),
+                () -> log.error("No session found for channel " + ctx.channel()));
         log.info("Client left - " + ctx);
         channelStore.remove(ctx.channel());
         ctx.close();
