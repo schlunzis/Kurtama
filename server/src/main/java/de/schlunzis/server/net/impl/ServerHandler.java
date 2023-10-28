@@ -23,7 +23,7 @@ import java.util.Collection;
 @Component
 @RequiredArgsConstructor
 @ChannelHandler.Sharable
-class ServerHandler extends SimpleChannelInboundHandler<String> {
+public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

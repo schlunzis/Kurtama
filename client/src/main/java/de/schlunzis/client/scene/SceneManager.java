@@ -1,16 +1,16 @@
 package de.schlunzis.client.scene;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import de.schlunzis.client.scene.events.SceneChangeEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -18,6 +18,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SceneManager {
 
     private static final String LOGIN_FXML_PATH = "/fxml/login.fxml";
@@ -28,13 +29,7 @@ public class SceneManager {
     @Setter
     private Stage stage;
 
-    public SceneManager(ApplicationContext context, EventBus eventBus) {
-        this.context = context;
-        eventBus.register(this);
-    }
-
-
-    @Subscribe
+    @EventListener
     public void onSceneChangeMessage(SceneChangeEvent event) {
         log.debug("Changing scene to {}", event.scene());
         Platform.runLater(() -> {

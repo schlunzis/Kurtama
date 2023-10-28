@@ -1,6 +1,5 @@
 package de.schlunzis.client;
 
-import com.google.common.eventbus.EventBus;
 import de.schlunzis.client.net.NetworkClient;
 import de.schlunzis.client.net.NetworkStartThread;
 import de.schlunzis.client.scene.Scene;
@@ -28,7 +27,7 @@ public class ClientApp extends Application {
         SceneManager sceneManager = context.getBean(SceneManager.class);
         sceneManager.setStage(stage);
 
-        context.getBean(EventBus.class).post(new SceneChangeEvent(Scene.LOGIN));
+        context.publishEvent(new SceneChangeEvent(Scene.LOGIN));
 
         context.getBean(NetworkStartThread.class).start();
 

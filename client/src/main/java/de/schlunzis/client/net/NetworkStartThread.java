@@ -1,15 +1,13 @@
 package de.schlunzis.client.net;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class NetworkStartThread extends Thread {
 
     private final NetworkClient networkClient;
-
-    public NetworkStartThread(NetworkClient networkClient) {
-        this.networkClient = networkClient;
-    }
 
     @Override
     public void run() {
