@@ -2,6 +2,7 @@ package de.schlunzis.client.scene;
 
 import de.schlunzis.client.scene.events.SceneChangeEvent;
 import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
+import de.schlunzis.common.messages.authentication.LogoutSuccessfulResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,6 +19,11 @@ public class SceneController {
     @EventListener
     public void onLoginSuccessfulResponse(LoginSuccessfulResponse lsr) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.MAIN));
+    }
+
+    @Subscribe
+    public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
+        eventBus.post(new SceneChangeEvent(Scene.LOGIN));
     }
 
 }
