@@ -21,9 +21,9 @@ public class SceneController {
         eventBus.publishEvent(new SceneChangeEvent(Scene.MAIN));
     }
 
-    @Subscribe
+    @EventListener
     public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
-        eventBus.post(new SceneChangeEvent(Scene.LOGIN));
+        eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
     }
 
 }

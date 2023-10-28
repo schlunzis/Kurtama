@@ -1,6 +1,5 @@
 package de.schlunzis.client.controller;
 
-import com.google.common.eventbus.EventBus;
 import de.schlunzis.common.messages.authentication.LogoutRequest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,7 +23,7 @@ public class MainMenuController {
     @FXML
     private void logout() {
         log.info("Logout button clicked");
-        eventBus.post(new LogoutRequest());
+        eventBus.publishEvent(new LogoutRequest());
     }
 
     @FXML
