@@ -3,17 +3,16 @@ package de.schlunzis.server;
 import de.schlunzis.server.net.NetworkServer;
 import de.schlunzis.server.user.ServerUser;
 import de.schlunzis.server.user.UserStore;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ComponentScan
+@SpringBootApplication
 public class ServerApp {
 
     public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext("de.schlunzis.server");
+        ApplicationContext context = SpringApplication.run(ServerApp.class, args);
+
 
         //TODO remove this
         UserStore userStore = context.getBean(UserStore.class);

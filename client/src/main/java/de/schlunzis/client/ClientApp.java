@@ -8,13 +8,10 @@ import de.schlunzis.client.scene.events.SceneChangeEvent;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 
 @Slf4j
-@Configuration
-@ComponentScan
 public class ClientApp extends Application {
 
     public static void main(String[] args) {
@@ -23,7 +20,7 @@ public class ClientApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("de.schlunzis.client");
+        ApplicationContext context = SpringApplication.run(ClientApp.class);
         SceneManager sceneManager = context.getBean(SceneManager.class);
         sceneManager.setStage(stage);
 
