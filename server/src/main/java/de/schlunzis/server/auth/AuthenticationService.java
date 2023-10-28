@@ -1,6 +1,5 @@
 package de.schlunzis.server.auth;
 
-import de.schlunzis.common.messages.ClientMessage;
 import de.schlunzis.common.messages.authentication.LoginFailedResponse;
 import de.schlunzis.common.messages.authentication.LoginRequest;
 import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
@@ -31,9 +30,9 @@ public class AuthenticationService {
     private final UserStore userStore;
 
     @EventListener
-    public void onLoginEvent(ClientMessageWrapper<ClientMessage> cmw) {
+    public void onLoginEvent(ClientMessageWrapper<LoginRequest> cmw) {
         log.info("Received LoginEvent. Going to authenticate user");
-        LoginRequest loginRequest = (LoginRequest) cmw.clientMessage();
+        LoginRequest loginRequest = cmw.clientMessage();
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (user.getPassword().equals(loginRequest.getPassword())) {
