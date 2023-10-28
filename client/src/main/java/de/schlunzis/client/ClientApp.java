@@ -34,9 +34,7 @@ public class ClientApp extends Application {
 
         stage.setOnCloseRequest(event -> {
             context.getBean(NetworkClient.class).close();
-            // TODO: initiate a logout (see Issue "Allow Logout of user #8")
-            // maybe loosing the connection is enough?
-            // also this whole thing could be moved to a separate service?
+            // TODO: this whole thing could be moved to a separate service?
         });
     }
 }

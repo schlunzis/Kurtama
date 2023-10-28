@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import de.schlunzis.client.scene.events.SceneChangeEvent;
 import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
+import de.schlunzis.common.messages.authentication.LogoutSuccessfulResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,11 @@ public class SceneController {
     @Subscribe
     public void onLoginSuccessfulResponse(LoginSuccessfulResponse lsr) {
         eventBus.post(new SceneChangeEvent(Scene.MAIN));
+    }
+
+    @Subscribe
+    public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
+        eventBus.post(new SceneChangeEvent(Scene.LOGIN));
     }
 
 }

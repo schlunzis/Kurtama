@@ -1,8 +1,6 @@
 package de.schlunzis.server.auth;
 
-import de.schlunzis.common.messages.authentication.LoginFailedResponse;
-import de.schlunzis.common.messages.authentication.LoginRequest;
-import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
+import de.schlunzis.common.messages.authentication.*;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
 import de.schlunzis.server.net.ClientMessageWrapper;
 import de.schlunzis.server.net.ServerMessageWrapper;
@@ -46,6 +44,13 @@ public class AuthenticationService {
             }
         }, () -> log.info("User {} not found", loginRequest.getEmail()));
 
+    }
+
+    @EventListener
+    public void onLogoutRequest(ClientMessageWrapper<LogoutRequest> cmw) {
+        userSessionMap.remove(cmw.session());
+        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), cmw.session()));
+        log.info("Client with session {} logged out", cmw.session());
     }
 
     public boolean isLoggedIn(Session session) {

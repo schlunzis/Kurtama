@@ -4,34 +4,34 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schlunzis.common.messages.ClientMessage;
 import de.schlunzis.common.messages.ServerMessage;
+import de.schlunzis.common.messages.authentication.LogoutRequest;
 import de.schlunzis.server.net.ClientMessageDispatcher;
+import de.schlunzis.server.net.ClientMessageWrapper;
 import de.schlunzis.server.net.Session;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
 @Slf4j
-@ChannelHandler.Sharable
 @Component
+@RequiredArgsConstructor
+@ChannelHandler.Sharable
 class ServerHandler extends SimpleChannelInboundHandler<String> {
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final IChannelStore channelStore;
 
     private final ClientMessageDispatcher clientMessageDispatcher;
 
-
-    public ServerHandler(IChannelStore channelStore, ClientMessageDispatcher clientMessageDispatcher) {
-        this.channelStore = channelStore;
-        this.clientMessageDispatcher = clientMessageDispatcher;
-        this.objectMapper = new ObjectMapper();
-    }
+    private final ApplicationEventPublisher eventBus;
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) throws JsonProcessingException {
@@ -41,7 +41,9 @@ class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        // TODO: Log out the user of the corresponding session (see Issue "Allow Logout of user #8")
+        channelStore.get(ctx.channel()).ifPresentOrElse(
+                session -> eventBus.publishEvent(new ClientMessageWrapper<>(new LogoutRequest(), session)),
+                () -> log.error("No session found for channel " + ctx.channel()));
         log.info("Client left - " + ctx);
         channelStore.remove(ctx.channel());
         ctx.close();
