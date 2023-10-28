@@ -37,7 +37,7 @@ public class AuthenticationService {
                 userSessionMap.put(user, cmw.session());
                 log.info("User {} logged in", user.getEmail());
                 eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toDTO()), cmw.session()));
-                eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(UUID.randomUUID(), "SERVER", "Welcome to the chat!"), getAllLoggedInSessions()));
+                eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(UUID.randomUUID(), "SERVER", null, "Welcome to the chat!"), getAllLoggedInSessions()));
             } else {
                 log.info("User {} tried to log in with wrong password", user.getEmail());
                 eventBus.publishEvent(new LoginFailedResponse());
