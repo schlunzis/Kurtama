@@ -8,7 +8,6 @@ import de.schlunzis.client.scene.events.SceneChangeEvent;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +27,7 @@ public class ClientApp extends Application {
         SceneManager sceneManager = context.getBean(SceneManager.class);
         sceneManager.setStage(stage);
 
-        context.getBean(ApplicationEventPublisher.class).publishEvent(new SceneChangeEvent(Scene.LOGIN));
+        context.publishEvent(new SceneChangeEvent(Scene.LOGIN));
 
         context.getBean(NetworkStartThread.class).start();
 
