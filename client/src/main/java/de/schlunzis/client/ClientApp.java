@@ -1,6 +1,5 @@
 package de.schlunzis.client;
 
-import com.google.common.eventbus.EventBus;
 import de.schlunzis.client.net.NetworkClient;
 import de.schlunzis.client.net.NetworkStartThread;
 import de.schlunzis.client.scene.Scene;
@@ -9,6 +8,7 @@ import de.schlunzis.client.scene.events.SceneChangeEvent;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ public class ClientApp extends Application {
         SceneManager sceneManager = context.getBean(SceneManager.class);
         sceneManager.setStage(stage);
 
-        context.getBean(EventBus.class).post(new SceneChangeEvent(Scene.LOGIN));
+        context.getBean(ApplicationEventPublisher.class).publishEvent(new SceneChangeEvent(Scene.LOGIN));
 
         context.getBean(NetworkStartThread.class).start();
 

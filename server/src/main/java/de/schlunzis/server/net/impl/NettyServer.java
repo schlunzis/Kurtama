@@ -23,10 +23,10 @@ import java.util.Collection;
 @Component
 public class NettyServer implements NetworkServer {
 
-    // Port where chat server will listen for connections.
 
     private final ServerHandler serverHandler;
 
+    // Port where chat server will listen for connections.
     @Value("${chat.server.port}")
     private int port;
 

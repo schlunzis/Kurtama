@@ -18,7 +18,7 @@ import java.util.Collection;
 @Slf4j
 @ChannelHandler.Sharable
 @Component
-class ServerHandler extends SimpleChannelInboundHandler<String> {
+public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private final ObjectMapper objectMapper;
 
