@@ -13,12 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class MessageWrapper {
+public class ServerMessageWrapper {
 
     private ServerMessage serverMessage;
     private Collection<Session> recipients;
 
-    public MessageWrapper(ServerMessage message, Session... sessions) {
+    public ServerMessageWrapper(ServerMessage message, Session... sessions) {
         this(message, List.of(sessions));
     }
 
