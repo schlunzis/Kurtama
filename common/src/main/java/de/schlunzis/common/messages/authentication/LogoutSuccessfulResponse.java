@@ -1,5 +1,7 @@
 package de.schlunzis.common.messages.authentication;
 
-public class LogoutSuccessfulResponse {
+import de.schlunzis.common.messages.ServerMessage;
+
+public class LogoutSuccessfulResponse implements ServerMessage {
 
 }
