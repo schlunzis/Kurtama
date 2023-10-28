@@ -7,7 +7,7 @@ import java.util.UUID;
  */
 public interface IChatMessage {
 
-    String getSender();
+    String getNickname();
 
     String getMessage();
 

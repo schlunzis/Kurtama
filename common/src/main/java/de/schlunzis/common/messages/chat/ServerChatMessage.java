@@ -1,5 +1,6 @@
 package de.schlunzis.common.messages.chat;
 
+import de.schlunzis.common.User;
 import de.schlunzis.common.messages.ServerMessage;
 import lombok.*;
 
@@ -13,7 +14,8 @@ import java.util.UUID;
 public class ServerChatMessage implements ServerMessage, IChatMessage {
 
     private UUID chatID;
-    private String sender;
+    private String nickname;
+    private User user;
     private String message;
 
 }

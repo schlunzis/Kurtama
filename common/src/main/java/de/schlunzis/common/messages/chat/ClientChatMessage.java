@@ -13,7 +13,7 @@ import java.util.UUID;
 public class ClientChatMessage implements ClientMessage, IChatMessage {
 
     private UUID chatID;
-    private String sender;
+    private String nickname;
     private String message;
 
 }
