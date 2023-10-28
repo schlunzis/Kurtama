@@ -1,6 +1,5 @@
 package de.schlunzis.server.auth;
 
-import com.google.common.eventbus.Subscribe;
 import de.schlunzis.common.messages.authentication.*;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
 import de.schlunzis.server.net.ClientMessageWrapper;
@@ -51,11 +50,7 @@ public class AuthenticationService {
     public void onLogoutRequest(ClientMessageWrapper<LogoutRequest> cmw) {
         userSessionMap.remove(cmw.session());
         eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), cmw.session()));
-    }
-
-    @Subscribe
-    public void onLogoutEvent(LogoutEvent logoutEvent) {
-        userSessionMap.remove(logoutEvent.getSession());
+        log.info("Client with session {} logged out", cmw.session());
     }
 
     public boolean isLoggedIn(Session session) {
