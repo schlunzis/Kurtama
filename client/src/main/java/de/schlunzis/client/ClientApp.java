@@ -1,36 +1,45 @@
 package de.schlunzis.client;
 
 import de.schlunzis.client.net.NetworkClient;
-import de.schlunzis.client.net.NetworkStartThread;
-import de.schlunzis.client.scene.Scene;
-import de.schlunzis.client.scene.SceneManager;
-import de.schlunzis.client.scene.events.SceneChangeEvent;
+import de.schlunzis.client.scene.events.ClientReadyEvent;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @Slf4j
 public class ClientApp extends Application {
 
-    public static void main(String[] args) {
-        launch(args);
+
+    private ConfigurableApplicationContext context;
+
+    @Override
+    public void init() {
+        this.context = new SpringApplicationBuilder()
+                .sources(ClientLauncher.class)
+                .run(getParameters().getRaw().toArray(new String[0]));
+    }
+
+
+    @Override
+    public void start(Stage primaryStage) {
+
+        context.publishEvent(new ClientReadyEvent(primaryStage));
+
+
+       /* primaryStage.setOnCloseRequest(event -> {
+
+
+            // TODO: this whole thing could be moved to a separate service?
+        });*/
     }
 
     @Override
-    public void start(Stage stage) {
-        ApplicationContext context = SpringApplication.run(ClientApp.class);
-        SceneManager sceneManager = context.getBean(SceneManager.class);
-        sceneManager.setStage(stage);
-
-        context.publishEvent(new SceneChangeEvent(Scene.LOGIN));
-
-        context.getBean(NetworkStartThread.class).start();
-
-        stage.setOnCloseRequest(event -> {
-            context.getBean(NetworkClient.class).close();
-            // TODO: this whole thing could be moved to a separate service?
-        });
+    public void stop() {
+        context.getBean(NetworkClient.class).close();
+        this.context.close();
+        Platform.exit();
     }
 }

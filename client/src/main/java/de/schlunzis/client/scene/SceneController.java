@@ -26,4 +26,5 @@ public class SceneController {
         eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
     }
 
+
 }

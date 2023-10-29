@@ -1,5 +1,6 @@
 package de.schlunzis.client.scene;
 
+import de.schlunzis.client.scene.events.ClientReadyEvent;
 import de.schlunzis.client.scene.events.SceneChangeEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.io.IOException;
 
+import static de.schlunzis.client.scene.Scene.LOGIN;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -28,6 +31,12 @@ public class SceneManager {
 
     @Setter
     private Stage stage;
+
+    @EventListener
+    void onClientReadyEvent(ClientReadyEvent cre) {
+        stage = cre.stage();
+        onSceneChangeMessage(new SceneChangeEvent(LOGIN));
+    }
 
     @EventListener
     public void onSceneChangeMessage(SceneChangeEvent event) {
