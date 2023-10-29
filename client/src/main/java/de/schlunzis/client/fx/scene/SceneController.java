@@ -1,31 +1,29 @@
-package de.schlunzis.client;
+package de.schlunzis.client.fx.scene;
 
-import de.schlunzis.common.User;
 import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
 import de.schlunzis.common.messages.authentication.LogoutSuccessfulResponse;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-/**
- * A component to save information about the current session. Like the user the client is logged in as.
- */
-@Getter
+@Slf4j
 @Component
-public class LoggedInStore {
+@RequiredArgsConstructor
+public class SceneController {
 
-    private Optional<User> loggedInUser = Optional.empty();
+    private final ApplicationEventPublisher eventBus;
 
     @EventListener
     public void onLoginSuccessfulResponse(LoginSuccessfulResponse lsr) {
-        loggedInUser = Optional.of(lsr.getUser());
+        eventBus.publishEvent(new SceneChangeEvent(Scene.MAIN));
     }
 
     @EventListener
     public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
-        loggedInUser = Optional.empty();
+        eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
     }
+
 
 }

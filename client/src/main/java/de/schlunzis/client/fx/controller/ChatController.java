@@ -1,6 +1,6 @@
-package de.schlunzis.client.controller;
+package de.schlunzis.client.fx.controller;
 
-import de.schlunzis.client.LoggedInStore;
+import de.schlunzis.client.service.ISessionService;
 import de.schlunzis.common.User;
 import de.schlunzis.common.messages.chat.ClientChatMessage;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@Component
 @FxmlView
+@Component
 @RequiredArgsConstructor
 public class ChatController {
 
     private final ApplicationEventPublisher eventBus;
-    private final LoggedInStore loggedInStore;
+    private final ISessionService sessionService;
     private final List<String> messagesToAppend = new ArrayList<>();
 
     @FXML
@@ -40,7 +40,7 @@ public class ChatController {
     public void initialize() {
         chatListView.getItems().addAll(messagesToAppend);
         messagesToAppend.clear();
-        String name = loggedInStore.getLoggedInUser().map(User::getUsername).orElse("Jonas Doe");
+        String name = sessionService.getCurrentUser().map(User::getUsername).orElse("Jonas Doe");
         senderNameTextField.setText(name);
     }
 

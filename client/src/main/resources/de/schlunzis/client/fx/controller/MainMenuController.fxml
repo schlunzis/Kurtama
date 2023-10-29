@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx/17.0.2-ea"
-          fx:controller="de.schlunzis.client.controller.MainMenuController">
+          fx:controller="de.schlunzis.client.fx.controller.MainMenuController">
     <stylesheets>
         <URL value="@css/style.css"/>
         <URL value="@css/main.css"/>

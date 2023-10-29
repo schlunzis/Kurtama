@@ -1,7 +1,6 @@
-package de.schlunzis.client.scene;
+package de.schlunzis.client.fx.scene;
 
 import de.schlunzis.client.events.ClientReadyEvent;
-import de.schlunzis.client.scene.events.SceneChangeEvent;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -11,7 +10,7 @@ import net.rgielen.fxweaver.core.FxWeaver;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import static de.schlunzis.client.scene.Scene.LOGIN;
+import static de.schlunzis.client.fx.scene.Scene.LOGIN;
 
 @Slf4j
 @Component

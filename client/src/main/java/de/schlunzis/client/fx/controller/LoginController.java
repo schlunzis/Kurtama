@@ -1,4 +1,4 @@
-package de.schlunzis.client.controller;
+package de.schlunzis.client.fx.controller;
 
 import de.schlunzis.common.messages.authentication.LoginFailedResponse;
 import de.schlunzis.common.messages.authentication.LoginRequest;

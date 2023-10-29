@@ -1,5 +1,6 @@
-package de.schlunzis.client;
+package de.schlunzis.client.fx;
 
+import de.schlunzis.client.ClientLauncher;
 import de.schlunzis.client.events.ClientClosingEvent;
 import de.schlunzis.client.events.ClientReadyEvent;
 import javafx.application.Application;
@@ -11,7 +12,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @Slf4j
 public class ClientApp extends Application {
-
 
     private ConfigurableApplicationContext context;
 
