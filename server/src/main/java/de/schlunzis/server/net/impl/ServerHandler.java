@@ -2,12 +2,12 @@ package de.schlunzis.server.net.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.schlunzis.common.messages.ClientMessage;
-import de.schlunzis.common.messages.ServerMessage;
+import de.schlunzis.common.messages.IClientMessage;
+import de.schlunzis.common.messages.IServerMessage;
 import de.schlunzis.common.messages.authentication.LogoutRequest;
 import de.schlunzis.server.net.ClientMessageDispatcher;
 import de.schlunzis.server.net.ClientMessageWrapper;
-import de.schlunzis.server.net.Session;
+import de.schlunzis.server.net.ISession;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -53,7 +53,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
         try {
             log.info("Message received: " + msg);
-            ClientMessage myMessage = objectMapper.readValue(msg, ClientMessage.class);
+            IClientMessage myMessage = objectMapper.readValue(msg, IClientMessage.class);
             log.info("converted to {}", myMessage);
             channelStore.get(ctx.channel()).ifPresentOrElse(
                     session -> clientMessageDispatcher.dispatch(myMessage, session),
@@ -73,7 +73,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
 
-    public void sendMessage(ServerMessage serverMessage) {
+    public void sendMessage(IServerMessage serverMessage) {
         sendMessageHelper(serverMessage, channelStore.getAll());
     }
 
@@ -83,14 +83,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
      * @param serverMessage
      * @param recipients
      */
-    public void sendMessage(ServerMessage serverMessage, Collection<Session> recipients) {
+    public void sendMessage(IServerMessage serverMessage, Collection<ISession> recipients) {
         if (recipients.isEmpty())
             sendMessage(serverMessage);
         else
             sendMessageHelper(serverMessage, channelStore.get(recipients));
     }
 
-    private void sendMessageHelper(ServerMessage serverMessage, Collection<Channel> channels) {
+    private void sendMessageHelper(IServerMessage serverMessage, Collection<Channel> channels) {
         channels.forEach(channel -> {
             try {
                 String msg = new ObjectMapper().writeValueAsString(serverMessage);

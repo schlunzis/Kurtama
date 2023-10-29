@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NetworkStartThread extends Thread {
 
-    private final NetworkClient networkClient;
+    private final INetworkClient networkClient;
 
     @EventListener
     public void onClientReadyEvent(ClientReadyEvent event) {

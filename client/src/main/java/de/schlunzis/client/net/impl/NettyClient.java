@@ -3,8 +3,8 @@ package de.schlunzis.client.net.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schlunzis.client.events.ClientClosingEvent;
-import de.schlunzis.client.net.NetworkClient;
-import de.schlunzis.common.messages.ClientMessage;
+import de.schlunzis.client.net.INetworkClient;
+import de.schlunzis.common.messages.IClientMessage;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public final class NettyClient implements NetworkClient {
+public final class NettyClient implements INetworkClient {
 
     private final EventLoopGroup group;
     private final Bootstrap b;
@@ -79,7 +79,7 @@ public final class NettyClient implements NetworkClient {
     }
 
     @Override
-    public void sendMessage(ClientMessage clientMessage) {
+    public void sendMessage(IClientMessage clientMessage) {
         try {
             String msg = objectMapper.writeValueAsString(clientMessage);
             log.info("Sending message {}", msg);

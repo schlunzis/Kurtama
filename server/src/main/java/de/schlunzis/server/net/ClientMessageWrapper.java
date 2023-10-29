@@ -1,14 +1,14 @@
 package de.schlunzis.server.net;
 
-import de.schlunzis.common.messages.ClientMessage;
+import de.schlunzis.common.messages.IClientMessage;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
 
 /**
  * thanks to <a href="https://stackoverflow.com/questions/71452445/eventlistener-for-generic-events-with-spring">StackOverflow</a>
  */
-public record ClientMessageWrapper<T extends ClientMessage>(T clientMessage,
-                                                            Session session) implements ResolvableTypeProvider {
+public record ClientMessageWrapper<T extends IClientMessage>(T clientMessage,
+                                                             ISession session) implements ResolvableTypeProvider {
 
     @Override
     public ResolvableType getResolvableType() {

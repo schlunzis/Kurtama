@@ -1,5 +1,6 @@
 package de.schlunzis.client.fx.scene;
 
+import de.schlunzis.client.fx.scene.events.SceneChangeEvent;
 import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
 import de.schlunzis.common.messages.authentication.LogoutSuccessfulResponse;
 import lombok.RequiredArgsConstructor;

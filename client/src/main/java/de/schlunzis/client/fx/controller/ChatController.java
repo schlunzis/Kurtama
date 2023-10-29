@@ -1,7 +1,7 @@
 package de.schlunzis.client.fx.controller;
 
 import de.schlunzis.client.service.ISessionService;
-import de.schlunzis.common.User;
+import de.schlunzis.common.IUser;
 import de.schlunzis.common.messages.chat.ClientChatMessage;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
 import javafx.application.Platform;
@@ -40,7 +40,7 @@ public class ChatController {
     public void initialize() {
         chatListView.getItems().addAll(messagesToAppend);
         messagesToAppend.clear();
-        String name = sessionService.getCurrentUser().map(User::getUsername).orElse("Jonas Doe");
+        String name = sessionService.getCurrentUser().map(IUser::getUsername).orElse("Jonas Doe");
         senderNameTextField.setText(name);
     }
 

@@ -1,7 +1,7 @@
 package de.schlunzis.server.auth;
 
 import de.schlunzis.common.messages.authentication.LoginRequest;
-import de.schlunzis.server.net.Session;
+import de.schlunzis.server.net.ISession;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class LoginEvent {
 
     private LoginRequest loginRequest;
-    private Session session;
+    private ISession session;
 
 }

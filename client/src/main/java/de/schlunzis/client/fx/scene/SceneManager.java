@@ -1,6 +1,7 @@
 package de.schlunzis.client.fx.scene;
 
 import de.schlunzis.client.events.ClientReadyEvent;
+import de.schlunzis.client.fx.scene.events.SceneChangeEvent;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

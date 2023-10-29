@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class InMemoryUserStore implements UserStore {
+public class InMemoryUserStore implements IUserStore {
 
     private final Map<UUID, ServerUser> userMap = new HashMap<>();
 

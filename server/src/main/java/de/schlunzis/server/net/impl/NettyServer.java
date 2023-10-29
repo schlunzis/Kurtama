@@ -1,8 +1,8 @@
 package de.schlunzis.server.net.impl;
 
-import de.schlunzis.common.messages.ServerMessage;
-import de.schlunzis.server.net.NetworkServer;
-import de.schlunzis.server.net.Session;
+import de.schlunzis.common.messages.IServerMessage;
+import de.schlunzis.server.net.INetworkServer;
+import de.schlunzis.server.net.ISession;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -21,7 +21,7 @@ import java.util.Collection;
 
 @Slf4j
 @Component
-public class NettyServer implements NetworkServer {
+public class NettyServer implements INetworkServer {
 
 
     private final ServerHandler serverHandler;
@@ -35,12 +35,12 @@ public class NettyServer implements NetworkServer {
     }
 
     @Override
-    public void sendMessage(ServerMessage serverMessage, Collection<Session> recipients) {
+    public void sendMessage(IServerMessage serverMessage, Collection<ISession> recipients) {
         serverHandler.sendMessage(serverMessage, recipients);
     }
 
     @Override
-    public void sendMessage(ServerMessage serverMessage) {
+    public void sendMessage(IServerMessage serverMessage) {
         serverHandler.sendMessage(serverMessage);
     }
 

@@ -2,7 +2,7 @@ package de.schlunzis.client.net.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schlunzis.client.net.ServerMessageDispatcher;
-import de.schlunzis.common.messages.ServerMessage;
+import de.schlunzis.common.messages.IServerMessage;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         log.info("Message from Server: {}", msg);
-        ServerMessage myMessage = objectMapper.readValue(msg, ServerMessage.class);
+        IServerMessage myMessage = objectMapper.readValue(msg, IServerMessage.class);
         dispatcher.dispatch(myMessage);
     }
 

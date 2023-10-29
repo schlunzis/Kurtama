@@ -1,4 +1,4 @@
 package de.schlunzis.server.net;
 
-public interface Session {
+public interface ISession {
 }

@@ -1,6 +1,6 @@
 package de.schlunzis.server.net;
 
-import de.schlunzis.common.messages.ClientMessage;
+import de.schlunzis.common.messages.IClientMessage;
 import de.schlunzis.common.messages.authentication.LoginRequest;
 import de.schlunzis.server.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class ClientMessageDispatcher {
     private final ApplicationEventPublisher eventBus;
 
 
-    public void dispatch(ClientMessage clientMessage, Session session) {
+    public void dispatch(IClientMessage clientMessage, ISession session) {
         log.info("going to dispatch message {}", clientMessage);
         if (clientMessage instanceof LoginRequest lir) {
             eventBus.publishEvent(new ClientMessageWrapper<>(lir, session));

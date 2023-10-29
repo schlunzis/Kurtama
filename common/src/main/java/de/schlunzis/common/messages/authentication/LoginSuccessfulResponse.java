@@ -1,7 +1,7 @@
 package de.schlunzis.common.messages.authentication;
 
-import de.schlunzis.common.User;
-import de.schlunzis.common.messages.ServerMessage;
+import de.schlunzis.common.IUser;
+import de.schlunzis.common.messages.IServerMessage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginSuccessfulResponse implements ServerMessage {
+public class LoginSuccessfulResponse implements IServerMessage {
 
-    private User user;
+    private IUser user;
 
 }

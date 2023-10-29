@@ -1,7 +1,7 @@
 package de.schlunzis.client.service.impl;
 
 import de.schlunzis.client.service.ISessionService;
-import de.schlunzis.common.User;
+import de.schlunzis.common.IUser;
 import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
 import de.schlunzis.common.messages.authentication.LogoutSuccessfulResponse;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class SessionService implements ISessionService {
 
-    private Optional<User> currentUser = Optional.empty();
+    private Optional<IUser> currentUser = Optional.empty();
 
     @EventListener
     public void onLoginSuccessfulResponse(LoginSuccessfulResponse lsr) {
