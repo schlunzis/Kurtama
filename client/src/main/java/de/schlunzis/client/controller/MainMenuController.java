@@ -6,10 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@FxmlView
 @Component
 @RequiredArgsConstructor
 public class MainMenuController {

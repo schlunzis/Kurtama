@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-class ClientHandler extends SimpleChannelInboundHandler<String> {
+public class ClientHandler extends SimpleChannelInboundHandler<String> {
 
     private final ServerMessageDispatcher dispatcher;
     private final ObjectMapper objectMapper;

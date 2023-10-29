@@ -1,4 +1,4 @@
-package de.schlunzis.client.scene.events;
+package de.schlunzis.client.events;
 
 import javafx.stage.Stage;
 

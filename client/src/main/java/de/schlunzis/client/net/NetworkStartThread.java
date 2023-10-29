@@ -1,6 +1,6 @@
 package de.schlunzis.client.net;
 
-import de.schlunzis.client.scene.events.ClientReadyEvent;
+import de.schlunzis.client.events.ClientReadyEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

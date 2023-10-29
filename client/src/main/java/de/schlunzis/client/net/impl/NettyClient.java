@@ -2,6 +2,7 @@ package de.schlunzis.client.net.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.schlunzis.client.events.ClientClosingEvent;
 import de.schlunzis.client.net.NetworkClient;
 import de.schlunzis.common.messages.ClientMessage;
 import io.netty.bootstrap.Bootstrap;
@@ -13,6 +14,7 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -47,6 +49,12 @@ public final class NettyClient implements NetworkClient {
                 });
     }
 
+    @EventListener
+    public void onClientClosingEvent(ClientClosingEvent cce) {
+        close();
+    }
+
+    @Override
     public void start() {
         f = b.connect(host, port);
         f.awaitUninterruptibly();
@@ -63,6 +71,7 @@ public final class NettyClient implements NetworkClient {
         }
     }
 
+    @Override
     public void close() {
         log.debug("Closing network client");
         f.channel().close();

@@ -1,7 +1,7 @@
 package de.schlunzis.client;
 
-import de.schlunzis.client.net.NetworkClient;
-import de.schlunzis.client.scene.events.ClientReadyEvent;
+import de.schlunzis.client.events.ClientClosingEvent;
+import de.schlunzis.client.events.ClientReadyEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -25,20 +25,13 @@ public class ClientApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         context.publishEvent(new ClientReadyEvent(primaryStage));
-
-
-       /* primaryStage.setOnCloseRequest(event -> {
-
-
-            // TODO: this whole thing could be moved to a separate service?
-        });*/
     }
 
     @Override
     public void stop() {
-        context.getBean(NetworkClient.class).close();
+        // to whom it may concern: application is closing
+        context.publishEvent(new ClientClosingEvent());
         this.context.close();
         Platform.exit();
     }
