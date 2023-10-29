@@ -1,5 +1,7 @@
 package de.schlunzis.client.controller;
 
+import de.schlunzis.client.LoggedInStore;
+import de.schlunzis.common.User;
 import de.schlunzis.common.messages.chat.ClientChatMessage;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
 import javafx.application.Platform;
@@ -24,7 +26,9 @@ import java.util.UUID;
 public class ChatController {
 
     private final ApplicationEventPublisher eventBus;
+    private final LoggedInStore loggedInStore;
     private final List<String> messagesToAppend = new ArrayList<>();
+
     @FXML
     private ListView<String> chatListView;
     @FXML
@@ -36,6 +40,8 @@ public class ChatController {
     public void initialize() {
         chatListView.getItems().addAll(messagesToAppend);
         messagesToAppend.clear();
+        String name = loggedInStore.getLoggedInUser().map(User::getUsername).orElse("Jonas Doe");
+        senderNameTextField.setText(name);
     }
 
     @FXML
@@ -57,8 +63,8 @@ public class ChatController {
     }
 
     @EventListener
-    void onServerChatMessage(ServerChatMessage message) {
+    public void onServerChatMessage(ServerChatMessage message) {
         log.debug("Received message from server: {}", message);
-        appendMessage(message.getSender(), message.getMessage());
+        appendMessage(message.getNickname(), message.getMessage());
     }
 }
