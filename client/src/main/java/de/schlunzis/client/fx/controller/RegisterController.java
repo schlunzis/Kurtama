@@ -20,20 +20,37 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RegisterController {
+
     private final ApplicationEventPublisher eventBus;
 
+    @FXML
+    private TextField usernameField;
     @FXML
     private TextField emailField;
 
     @FXML
     private PasswordField passwordField;
+    @FXML
+    private PasswordField passwordRepeatField;
+
+    // @FXML
+    // private JFXSnackbar snackbar;
 
     @FXML
     private void handleRegister() {
         log.info("Register button clicked");
-        String email = emailField.getText();
         String password = passwordField.getText();
-        String username = "Jonas Doe";
+        String passwordRepeat = passwordRepeatField.getText();
+        if (password.isBlank() || !password.equals(passwordRepeat)) {
+            log.info("Passwords do not match or password is empty");
+            Platform.runLater(() -> {
+                passwordField.setText("");
+                passwordRepeatField.setText("");
+            });
+            return;
+        }
+        String email = emailField.getText();
+        String username = usernameField.getText();
         RegisterRequest rr = new RegisterRequest(username, email, password);
         eventBus.publishEvent(rr);
     }
@@ -47,6 +64,10 @@ public class RegisterController {
     @EventListener
     void onRegisterFailedResponse(RegisterFailedResponse rfr) {
         log.info("Received RegisterFailedResponse {}", rfr);
-        Platform.runLater(() -> passwordField.setText(""));
+        Platform.runLater(() -> {
+            passwordField.setText("");
+            passwordRepeatField.setText("");
+            // snackbar.fireEvent(new JFXSnackbar.SnackbarEvent(new JFXSnackbarLayout("Registration Failed"), Duration.seconds(2), null));
+        });
     }
 }
