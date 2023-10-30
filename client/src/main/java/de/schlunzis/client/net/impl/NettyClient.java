@@ -24,9 +24,9 @@ public final class NettyClient implements INetworkClient {
     private final EventLoopGroup group;
     private final Bootstrap b;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    @Value("${chat.server.port}")
+    @Value("${kurtama.server.port}")
     private int port;
-    @Value("${chat.server.host}")
+    @Value("${kurtama.server.host}")
     private String host;
     private ChannelFuture f;
 

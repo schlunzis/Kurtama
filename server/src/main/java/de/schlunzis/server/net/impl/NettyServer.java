@@ -27,7 +27,7 @@ public class NettyServer implements INetworkServer {
     private final ServerHandler serverHandler;
 
     // Port where chat server will listen for connections.
-    @Value("${chat.server.port}")
+    @Value("${kurtama.server.port}")
     private int port;
 
     public NettyServer(ServerHandler serverHandler) {
