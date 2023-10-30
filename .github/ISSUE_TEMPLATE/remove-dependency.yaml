@@ -1,0 +1,26 @@
+name: Remove Dependency
+description: Remove a dependency
+title: "[Dependency]: "
+labels: [ "dependencies" ]
+projects: [ "schlunzis/1" ]
+assignees:
+  -
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the issue.
+  - type: textarea
+    id: dependency
+    attributes:
+      label: Which depencency should be removed.
+      placeholder: Name of the dependency.
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Why should the dependency be removed
+      placeholder: Description
+    validations:
+      required: true

@@ -1,0 +1,27 @@
+name: Update Dependency
+description: Update a dependency
+title: "[Dependency]: "
+labels: [ "dependencies" ]
+projects: [ "schlunzis/1" ]
+assignees:
+  -
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the issue.
+  - type: textarea
+    id: dependency
+    attributes:
+      label: Which depencency should be updated to which version.
+      placeholder: Name of the dependency and version
+    validations:
+      required: true
+  - type: textarea
+    id: dependency-maven
+    attributes:
+      label: Link to the maven repository
+      placeholder: link
+      value: "[Maven](https://mvnrepository.com/artifact)"
+    validations:
+      required: true
