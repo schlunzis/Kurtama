@@ -1,7 +1,7 @@
 package de.schlunzis.server.net;
 
 import de.schlunzis.common.messages.IClientMessage;
-import de.schlunzis.common.messages.authentication.LoginRequest;
+import de.schlunzis.common.messages.authentication.login.LoginRequest;
 import de.schlunzis.server.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,10 +1,14 @@
 package de.schlunzis.server.auth;
 
-import de.schlunzis.common.messages.authentication.*;
+import de.schlunzis.common.messages.authentication.login.LoginFailedResponse;
+import de.schlunzis.common.messages.authentication.login.LoginRequest;
+import de.schlunzis.common.messages.authentication.login.LoginSuccessfulResponse;
+import de.schlunzis.common.messages.authentication.logout.LogoutRequest;
+import de.schlunzis.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
 import de.schlunzis.server.net.ClientMessageWrapper;
-import de.schlunzis.server.net.ServerMessageWrapper;
 import de.schlunzis.server.net.ISession;
+import de.schlunzis.server.net.ServerMessageWrapper;
 import de.schlunzis.server.user.IUserStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

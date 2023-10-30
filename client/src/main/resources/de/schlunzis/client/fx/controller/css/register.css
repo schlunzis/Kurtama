@@ -17,10 +17,10 @@ TextField, PasswordField {
     -fx-pref-width: 300px;
 }
 
-#loginButton {
+#registerButton {
     -fx-max-width: 99999px;
 }
 
-#registerButton {
+#backButton {
     -fx-max-width: 99999px;
 }

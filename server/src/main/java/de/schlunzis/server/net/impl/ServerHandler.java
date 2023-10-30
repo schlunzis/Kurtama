@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schlunzis.common.messages.IClientMessage;
 import de.schlunzis.common.messages.IServerMessage;
-import de.schlunzis.common.messages.authentication.LogoutRequest;
+import de.schlunzis.common.messages.authentication.logout.LogoutRequest;
 import de.schlunzis.server.net.ClientMessageDispatcher;
 import de.schlunzis.server.net.ClientMessageWrapper;
 import de.schlunzis.server.net.ISession;

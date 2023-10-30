@@ -2,8 +2,8 @@ package de.schlunzis.client.fx.controller;
 
 import de.schlunzis.client.fx.scene.Scene;
 import de.schlunzis.client.fx.scene.events.SceneChangeEvent;
-import de.schlunzis.common.messages.authentication.login.LoginFailedResponse;
-import de.schlunzis.common.messages.authentication.login.LoginRequest;
+import de.schlunzis.common.messages.authentication.register.RegisterFailedResponse;
+import de.schlunzis.common.messages.authentication.register.RegisterRequest;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -16,36 +16,37 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@FxmlView("login.fxml")
+@FxmlView("register.fxml")
 @Component
 @RequiredArgsConstructor
-public class LoginController {
-
+public class RegisterController {
     private final ApplicationEventPublisher eventBus;
+
     @FXML
     private TextField emailField;
+
     @FXML
     private PasswordField passwordField;
 
     @FXML
-    private void handleLogin() {
-        log.info("Login button clicked");
+    private void handleRegister() {
+        log.info("Register button clicked");
         String email = emailField.getText();
         String password = passwordField.getText();
-        LoginRequest lr = new LoginRequest(email, password);
-        eventBus.publishEvent(lr);
+        String username = "Jonas Doe";
+        RegisterRequest rr = new RegisterRequest(username, email, password);
+        eventBus.publishEvent(rr);
     }
 
     @FXML
-    private void handleRegister() {
-        log.info("Register button clicked");
-        eventBus.publishEvent(new SceneChangeEvent(Scene.REGISTER));
+    private void handleBack() {
+        log.info("Back button clicked");
+        eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
     }
 
     @EventListener
-    void onLoginFailedResponse(LoginFailedResponse lfr) {
-        log.info("Received LoginFailedResponse {}", lfr);
+    void onRegisterFailedResponse(RegisterFailedResponse rfr) {
+        log.info("Received RegisterFailedResponse {}", rfr);
         Platform.runLater(() -> passwordField.setText(""));
     }
-
 }

@@ -1,4 +1,4 @@
-package de.schlunzis.common.messages.authentication;
+package de.schlunzis.common.messages.authentication.logout;
 
 import de.schlunzis.common.messages.IClientMessage;
 

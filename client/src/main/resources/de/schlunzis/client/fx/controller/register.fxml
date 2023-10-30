@@ -4,20 +4,21 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea"
-          fx:controller="de.schlunzis.client.fx.controller.LoginController">
+          fx:controller="de.schlunzis.client.fx.controller.RegisterController">
     <stylesheets>
         <URL value="@css/style.css"/>
-        <URL value="@css/login.css"/>
+        <URL value="@css/register.css"/>
     </stylesheets>
 
     <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
     <TextField fx:id="emailField" text="test1@test.de" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
     <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     <PasswordField fx:id="passwordField" text="test1" GridPane.columnIndex="1" GridPane.rowIndex="1"
-                   onAction="#handleLogin"/>
-    <Button fx:id="loginButton" text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
-            onAction="#handleLogin"/>
-    <Button fx:id="registerButton" text="Register" GridPane.columnIndex="0" GridPane.rowIndex="3"
-            GridPane.columnSpan="2"
+                   onAction="#handleRegister"/>
+    <Button fx:id="registerButton" text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
             onAction="#handleRegister"/>
+
+    <Button fx:id="backButton" text="Back" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"
+            onAction="#handleBack"/>
 </GridPane>
+
