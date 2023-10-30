@@ -5,11 +5,15 @@ import de.schlunzis.common.messages.authentication.login.LoginRequest;
 import de.schlunzis.common.messages.authentication.login.LoginSuccessfulResponse;
 import de.schlunzis.common.messages.authentication.logout.LogoutRequest;
 import de.schlunzis.common.messages.authentication.logout.LogoutSuccessfulResponse;
+import de.schlunzis.common.messages.authentication.register.RegisterFailedResponse;
+import de.schlunzis.common.messages.authentication.register.RegisterRequest;
+import de.schlunzis.common.messages.authentication.register.RegisterSuccessfullResponse;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
 import de.schlunzis.server.net.ClientMessageWrapper;
 import de.schlunzis.server.net.ISession;
 import de.schlunzis.server.net.ServerMessageWrapper;
 import de.schlunzis.server.user.IUserStore;
+import de.schlunzis.server.user.ServerUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -55,6 +59,22 @@ public class AuthenticationService {
         userSessionMap.remove(cmw.session());
         eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), cmw.session()));
         log.info("Client with session {} logged out", cmw.session());
+    }
+
+    @EventListener
+    public void onRegisterEvent(ClientMessageWrapper<RegisterRequest> cmw) {
+        RegisterRequest rr = cmw.clientMessage();
+        String email = rr.getEmail();
+        String username = rr.getUsername();
+        String password = rr.getPassword();
+        ServerUser serverUser = new ServerUser(email, username, password);
+        try {
+            userStore.createUser(serverUser);
+            eventBus.publishEvent(new ServerMessageWrapper(new RegisterSuccessfullResponse(), cmw.session()));
+        } catch (IllegalArgumentException iae) {
+            log.info("User with email {} already exists", email);
+            eventBus.publishEvent(new ServerMessageWrapper(new RegisterFailedResponse(), cmw.session()));
+        }
     }
 
     public boolean isLoggedIn(ISession session) {

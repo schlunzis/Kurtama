@@ -2,6 +2,7 @@ package de.schlunzis.server.net;
 
 import de.schlunzis.common.messages.IClientMessage;
 import de.schlunzis.common.messages.authentication.login.LoginRequest;
+import de.schlunzis.common.messages.authentication.register.RegisterRequest;
 import de.schlunzis.server.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,8 @@ public class ClientMessageDispatcher {
         log.info("going to dispatch message {}", clientMessage);
         if (clientMessage instanceof LoginRequest lir) {
             eventBus.publishEvent(new ClientMessageWrapper<>(lir, session));
+        } else if (clientMessage instanceof RegisterRequest rr) {
+            eventBus.publishEvent(new ClientMessageWrapper<>(rr, session));
         } else {
             log.info("Received ClientMessage");
             if (authenticationService.isLoggedIn(session))
