@@ -1,6 +1,6 @@
 package de.schlunzis.server.auth;
 
-import de.schlunzis.server.net.Session;
+import de.schlunzis.server.net.ISession;
 import de.schlunzis.server.user.ServerUser;
 import org.springframework.stereotype.Component;
 
@@ -12,26 +12,26 @@ import java.util.Optional;
 @Component
 public class UserSessionMap {
 
-    private final Map<ServerUser, Session> map = new HashMap<>();
+    private final Map<ServerUser, ISession> map = new HashMap<>();
 
-    public void put(ServerUser user, Session session) {
+    public void put(ServerUser user, ISession session) {
         map.put(user, session);
     }
 
-    public Session get(ServerUser user) {
+    public ISession get(ServerUser user) {
         return map.get(user);
     }
 
-    public Optional<ServerUser> get(Session session) {
-        Optional<Map.Entry<ServerUser, Session>> optionalUser = map.entrySet().stream().filter(e -> e.getValue().equals(session)).findFirst();
+    public Optional<ServerUser> get(ISession session) {
+        Optional<Map.Entry<ServerUser, ISession>> optionalUser = map.entrySet().stream().filter(e -> e.getValue().equals(session)).findFirst();
         return optionalUser.map(Map.Entry::getKey);
     }
 
-    public Collection<Session> getAllSessions() {
+    public Collection<ISession> getAllSessions() {
         return map.values();
     }
 
-    public boolean contains(Session session) {
+    public boolean contains(ISession session) {
         return map.containsValue(session);
     }
 
@@ -39,7 +39,7 @@ public class UserSessionMap {
         map.remove(user);
     }
 
-    public void remove(Session session) {
+    public void remove(ISession session) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(session));
     }
 

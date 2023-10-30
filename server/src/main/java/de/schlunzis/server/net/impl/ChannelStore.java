@@ -1,6 +1,6 @@
 package de.schlunzis.server.net.impl;
 
-import de.schlunzis.server.net.Session;
+import de.schlunzis.server.net.ISession;
 import de.schlunzis.server.net.UUIDSession;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import java.util.*;
 @Component
 public class ChannelStore implements IChannelStore {
 
-    private final Map<Session, Channel> channelMap = new HashMap<>();
+    private final Map<ISession, Channel> channelMap = new HashMap<>();
 
     @Override
     public void create(Channel channel) {
@@ -25,12 +25,12 @@ public class ChannelStore implements IChannelStore {
     }
 
     @Override
-    public Optional<Channel> get(Session session) {
+    public Optional<Channel> get(ISession session) {
         return Optional.ofNullable(channelMap.get(session));
     }
 
     @Override
-    public Optional<Session> get(Channel channel) {
+    public Optional<ISession> get(Channel channel) {
         return channelMap.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(channel))
                 .map(Map.Entry::getKey)
@@ -38,7 +38,7 @@ public class ChannelStore implements IChannelStore {
     }
 
     @Override
-    public void remove(Session session) {
+    public void remove(ISession session) {
         channelMap.remove(session);
     }
 
@@ -57,9 +57,9 @@ public class ChannelStore implements IChannelStore {
     }
 
     @Override
-    public Collection<Channel> get(Collection<Session> sessions) {
+    public Collection<Channel> get(Collection<ISession> sessions) {
         List<Channel> result = new ArrayList<>();
-        for (Session session : sessions) {
+        for (ISession session : sessions) {
             Optional<Channel> channel = get(session);
             channel.ifPresent(result::add);
         }

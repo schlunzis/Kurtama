@@ -1,7 +1,7 @@
-package de.schlunzis.client.controller;
+package de.schlunzis.client.fx.controller;
 
-import de.schlunzis.client.LoggedInStore;
-import de.schlunzis.common.User;
+import de.schlunzis.client.service.ISessionService;
+import de.schlunzis.common.IUser;
 import de.schlunzis.common.messages.chat.ClientChatMessage;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
 import javafx.application.Platform;
@@ -10,6 +10,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -19,12 +20,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
+@FxmlView("chat.fxml")
 @Component
 @RequiredArgsConstructor
 public class ChatController {
 
     private final ApplicationEventPublisher eventBus;
-    private final LoggedInStore loggedInStore;
+    private final ISessionService sessionService;
     private final List<String> messagesToAppend = new ArrayList<>();
 
     @FXML
@@ -38,7 +40,7 @@ public class ChatController {
     public void initialize() {
         chatListView.getItems().addAll(messagesToAppend);
         messagesToAppend.clear();
-        String name = loggedInStore.getLoggedInUser().map(User::getUsername).orElse("Jonas Doe");
+        String name = sessionService.getCurrentUser().map(IUser::getUsername).orElse("Jonas Doe");
         senderNameTextField.setText(name);
     }
 

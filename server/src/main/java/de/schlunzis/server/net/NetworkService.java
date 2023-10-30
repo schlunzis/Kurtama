@@ -1,6 +1,6 @@
 package de.schlunzis.server.net;
 
-import de.schlunzis.common.messages.ServerMessage;
+import de.schlunzis.common.messages.IServerMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NetworkService {
 
-    private final NetworkServer networkServer;
+    private final INetworkServer networkServer;
 
 
     public void start() {
@@ -19,7 +19,7 @@ public class NetworkService {
     }
 
     @EventListener
-    public void onServerMessage(ServerMessage serverMessage) {
+    public void onServerMessage(IServerMessage serverMessage) {
         networkServer.sendMessage(serverMessage);
     }
 

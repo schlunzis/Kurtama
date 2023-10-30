@@ -1,6 +1,6 @@
-package de.schlunzis.client.scene;
+package de.schlunzis.client.fx.scene;
 
-import de.schlunzis.client.scene.events.SceneChangeEvent;
+import de.schlunzis.client.fx.scene.events.SceneChangeEvent;
 import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
 import de.schlunzis.common.messages.authentication.LogoutSuccessfulResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +25,6 @@ public class SceneController {
     public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
     }
+
 
 }

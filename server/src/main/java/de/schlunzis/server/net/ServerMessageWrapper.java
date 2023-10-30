@@ -1,6 +1,6 @@
 package de.schlunzis.server.net;
 
-import de.schlunzis.common.messages.ServerMessage;
+import de.schlunzis.common.messages.IServerMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +15,10 @@ import java.util.List;
 @Setter
 public class ServerMessageWrapper {
 
-    private ServerMessage serverMessage;
-    private Collection<Session> recipients;
+    private IServerMessage serverMessage;
+    private Collection<ISession> recipients;
 
-    public ServerMessageWrapper(ServerMessage message, Session... sessions) {
+    public ServerMessageWrapper(IServerMessage message, ISession... sessions) {
         this(message, List.of(sessions));
     }
 

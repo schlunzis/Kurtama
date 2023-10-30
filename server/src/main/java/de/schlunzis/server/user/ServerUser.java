@@ -1,6 +1,6 @@
 package de.schlunzis.server.user;
 
-import de.schlunzis.common.User;
+import de.schlunzis.common.IUser;
 import de.schlunzis.common.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class ServerUser implements User {
+public class ServerUser implements IUser {
 
     private UUID uuid;
     private String email;

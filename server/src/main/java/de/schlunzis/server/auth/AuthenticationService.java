@@ -4,8 +4,8 @@ import de.schlunzis.common.messages.authentication.*;
 import de.schlunzis.common.messages.chat.ServerChatMessage;
 import de.schlunzis.server.net.ClientMessageWrapper;
 import de.schlunzis.server.net.ServerMessageWrapper;
-import de.schlunzis.server.net.Session;
-import de.schlunzis.server.user.UserStore;
+import de.schlunzis.server.net.ISession;
+import de.schlunzis.server.user.IUserStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -25,7 +25,7 @@ public class AuthenticationService {
 
     private final UserSessionMap userSessionMap;
 
-    private final UserStore userStore;
+    private final IUserStore userStore;
 
     @EventListener
     public void onLoginEvent(ClientMessageWrapper<LoginRequest> cmw) {
@@ -53,11 +53,11 @@ public class AuthenticationService {
         log.info("Client with session {} logged out", cmw.session());
     }
 
-    public boolean isLoggedIn(Session session) {
+    public boolean isLoggedIn(ISession session) {
         return userSessionMap.contains(session);
     }
 
-    public Collection<Session> getAllLoggedInSessions() {
+    public Collection<ISession> getAllLoggedInSessions() {
         return userSessionMap.getAllSessions();
     }
 

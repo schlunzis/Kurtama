@@ -1,4 +1,4 @@
-package de.schlunzis.client.controller;
+package de.schlunzis.client.fx.controller;
 
 import de.schlunzis.common.messages.authentication.LoginFailedResponse;
 import de.schlunzis.common.messages.authentication.LoginRequest;
@@ -9,11 +9,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@FxmlView("login.fxml")
 @Component
 @RequiredArgsConstructor
 public class LoginController {

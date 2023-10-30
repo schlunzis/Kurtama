@@ -1,13 +1,13 @@
 package de.schlunzis.client.net;
 
-import de.schlunzis.common.messages.ClientMessage;
+import de.schlunzis.common.messages.IClientMessage;
 
 /**
  * The network client interface. Provides a layer between the application and the network layer.
  *
  * @since 1.0
  */
-public interface NetworkClient {
+public interface INetworkClient {
 
     /**
      * Sends a message to the server
@@ -15,7 +15,7 @@ public interface NetworkClient {
      * @param clientMessage the message to send
      * @since 1.0
      */
-    void sendMessage(ClientMessage clientMessage);
+    void sendMessage(IClientMessage clientMessage);
 
     /**
      * Starts the network client and initiates the connection to the server

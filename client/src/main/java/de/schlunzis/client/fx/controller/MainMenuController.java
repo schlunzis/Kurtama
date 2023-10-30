@@ -1,4 +1,4 @@
-package de.schlunzis.client.controller;
+package de.schlunzis.client.fx.controller;
 
 import de.schlunzis.common.messages.authentication.LogoutRequest;
 import javafx.event.ActionEvent;
@@ -6,10 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@FxmlView("main.fxml")
 @Component
 @RequiredArgsConstructor
 public class MainMenuController {

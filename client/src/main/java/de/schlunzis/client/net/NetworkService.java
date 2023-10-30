@@ -1,6 +1,6 @@
 package de.schlunzis.client.net;
 
-import de.schlunzis.common.messages.ClientMessage;
+import de.schlunzis.common.messages.IClientMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NetworkService {
 
-    private final NetworkClient networkClient;
+    private final INetworkClient networkClient;
 
 
     @EventListener
-    void onClientMessage(ClientMessage clientMessage) {
+    void onClientMessage(IClientMessage clientMessage) {
         networkClient.sendMessage(clientMessage);
     }
 

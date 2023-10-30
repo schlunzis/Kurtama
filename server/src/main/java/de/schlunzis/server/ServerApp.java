@@ -1,26 +1,25 @@
 package de.schlunzis.server;
 
-import de.schlunzis.server.net.NetworkServer;
+import de.schlunzis.server.net.INetworkServer;
 import de.schlunzis.server.user.ServerUser;
-import de.schlunzis.server.user.UserStore;
+import de.schlunzis.server.user.IUserStore;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ComponentScan
+@SpringBootApplication
 public class ServerApp {
 
     public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext("de.schlunzis.server");
+        ApplicationContext context = SpringApplication.run(ServerApp.class, args);
+
 
         //TODO remove this
-        UserStore userStore = context.getBean(UserStore.class);
+        IUserStore userStore = context.getBean(IUserStore.class);
         for (int i = 0; i < 10; i++) {
             userStore.createUser(new ServerUser("test" + i + "@test.de", "test" + i, "test" + i));
         }
-        context.getBean(NetworkServer.class).start();
+        context.getBean(INetworkServer.class).start();
     }
 
 }

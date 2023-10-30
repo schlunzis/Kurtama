@@ -6,7 +6,7 @@ import de.schlunzis.common.util.InheritanceTypeIdResolver;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "discriminator")
 @JsonTypeIdResolver(InheritanceTypeIdResolver.class)
-public interface User {
+public interface IUser {
 
     String getUsername();
 
