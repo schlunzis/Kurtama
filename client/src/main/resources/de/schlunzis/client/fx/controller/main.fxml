@@ -19,7 +19,7 @@
         <RowConstraints percentHeight="50"/>
     </rowConstraints>
 
-    <fx:include source="ChatController.fxml" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <fx:include source="chat.fxml" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
         <Button mnemonicParsing="false" onAction="#logout" text="Logout"/>
         <Button mnemonicParsing="false" onAction="#settings" text="Settings"/>

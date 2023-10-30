@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@FxmlView
+@FxmlView("chat.fxml")
 @Component
 @RequiredArgsConstructor
 public class ChatController {

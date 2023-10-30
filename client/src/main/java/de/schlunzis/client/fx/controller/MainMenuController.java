@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@FxmlView
+@FxmlView("main.fxml")
 @Component
 @RequiredArgsConstructor
 public class MainMenuController {

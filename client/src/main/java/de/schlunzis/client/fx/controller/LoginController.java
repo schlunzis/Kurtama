@@ -15,7 +15,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@FxmlView
+@FxmlView("login.fxml")
 @Component
 @RequiredArgsConstructor
 public class LoginController {
