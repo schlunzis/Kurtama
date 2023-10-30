@@ -15,9 +15,8 @@
     <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     <PasswordField fx:id="passwordField" text="test1" GridPane.columnIndex="1" GridPane.rowIndex="1"
                    onAction="#handleLogin"/>
-    <Button fx:id="loginButton" text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
+    <Button text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
             onAction="#handleLogin"/>
-    <Button fx:id="registerButton" text="Register" GridPane.columnIndex="0" GridPane.rowIndex="3"
-            GridPane.columnSpan="2"
+    <Button text="Register" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"
             onAction="#handleRegister"/>
 </GridPane>

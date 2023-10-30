@@ -17,10 +17,6 @@ TextField, PasswordField {
     -fx-pref-width: 300px;
 }
 
-#registerButton {
-    -fx-max-width: 99999px;
-}
-
-#backButton {
+Button {
     -fx-max-width: 99999px;
 }

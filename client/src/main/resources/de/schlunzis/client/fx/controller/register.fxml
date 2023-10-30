@@ -19,11 +19,9 @@
     <Label text="Repeat Password:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
     <PasswordField fx:id="passwordRepeatField" text="test11" GridPane.columnIndex="1" GridPane.rowIndex="3"
                    onAction="#handleRegister"/>
-    <Button fx:id="registerButton" text="Register" GridPane.columnIndex="0" GridPane.rowIndex="4"
-            GridPane.columnSpan="2"
+    <Button text="Register" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2"
             onAction="#handleRegister"/>
-    <Button fx:id="backButton" text="Back" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2"
-            onAction="#handleBack"/>
+    <Button text="Back" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2" onAction="#handleBack"/>
     <!-- <JFXSnackbar fx:id="snackbar" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2"/> -->
 </GridPane>
 
