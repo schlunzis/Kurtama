@@ -12,7 +12,7 @@ import de.schlunzis.common.messages.chat.ServerChatMessage;
 import de.schlunzis.server.net.ClientMessageWrapper;
 import de.schlunzis.server.net.ISession;
 import de.schlunzis.server.net.ServerMessageWrapper;
-import de.schlunzis.server.user.IUserStore;
+import de.schlunzis.server.user.IUserService;
 import de.schlunzis.server.user.ServerUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class AuthenticationService {
 
     private final UserSessionMap userSessionMap;
 
-    private final IUserStore userStore;
+    private final IUserService userStore;
 
     @EventListener
     public void onLoginEvent(ClientMessageWrapper<LoginRequest> cmw) {

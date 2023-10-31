@@ -22,13 +22,14 @@
         <revision>0.0.1-SNAPSHOT</revision>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.source>21</maven.compiler.source>
+        <spring.boot.version>3.1.5</spring.boot.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>3.1.5</version>
+            <version>${spring.boot.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -39,7 +40,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
-            <version>3.1.5</version>
+            <version>${spring.boot.version}</version>
         </dependency>
 
         <dependency>
