@@ -2,6 +2,7 @@ package de.schlunzis.client.fx.scene;
 
 import de.schlunzis.client.fx.controller.LoginController;
 import de.schlunzis.client.fx.controller.MainMenuController;
+import de.schlunzis.client.fx.controller.RegisterController;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,8 @@ import lombok.RequiredArgsConstructor;
 public enum Scene {
 
     LOGIN("Login", LoginController.class),
-    MAIN("Kurtama", MainMenuController.class);
+    MAIN("Kurtama", MainMenuController.class),
+    REGISTER("Register", RegisterController.class);
 
     /**
      * Contains the lookup key for the title of the scene.

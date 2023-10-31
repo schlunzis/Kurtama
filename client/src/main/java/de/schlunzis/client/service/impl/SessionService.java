@@ -2,8 +2,8 @@ package de.schlunzis.client.service.impl;
 
 import de.schlunzis.client.service.ISessionService;
 import de.schlunzis.common.IUser;
-import de.schlunzis.common.messages.authentication.LoginSuccessfulResponse;
-import de.schlunzis.common.messages.authentication.LogoutSuccessfulResponse;
+import de.schlunzis.common.messages.authentication.login.LoginSuccessfulResponse;
+import de.schlunzis.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import lombok.Getter;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;

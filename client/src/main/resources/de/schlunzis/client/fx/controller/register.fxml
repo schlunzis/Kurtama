@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea"
+          fx:controller="de.schlunzis.client.fx.controller.RegisterController">
+    <stylesheets>
+        <URL value="@css/style.css"/>
+        <URL value="@css/register.css"/>
+    </stylesheets>
+
+    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextField fx:id="emailField" text="test11@test.de" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="usernameField" text="test11" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <PasswordField fx:id="passwordField" text="test11" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <Label text="Repeat Password:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <PasswordField fx:id="passwordRepeatField" text="test11" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                   onAction="#handleRegister"/>
+    <Button text="Register" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2"
+            onAction="#handleRegister"/>
+    <Button text="Back" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2" onAction="#handleBack"/>
+    <!-- <JFXSnackbar fx:id="snackbar" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2"/> -->
+</GridPane>
+

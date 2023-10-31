@@ -1,10 +1,11 @@
 package de.schlunzis.client.fx.controller;
 
-import de.schlunzis.common.messages.authentication.LoginFailedResponse;
-import de.schlunzis.common.messages.authentication.LoginRequest;
+import de.schlunzis.client.fx.scene.Scene;
+import de.schlunzis.client.fx.scene.events.SceneChangeEvent;
+import de.schlunzis.common.messages.authentication.login.LoginFailedResponse;
+import de.schlunzis.common.messages.authentication.login.LoginRequest;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
@@ -27,16 +28,18 @@ public class LoginController {
     private PasswordField passwordField;
 
     @FXML
-    private Button loginButton;
-
-
-    @FXML
     private void handleLogin() {
         log.info("Login button clicked");
         String email = emailField.getText();
         String password = passwordField.getText();
         LoginRequest lr = new LoginRequest(email, password);
         eventBus.publishEvent(lr);
+    }
+
+    @FXML
+    private void handleRegister() {
+        log.info("Register button clicked");
+        eventBus.publishEvent(new SceneChangeEvent(Scene.REGISTER));
     }
 
     @EventListener

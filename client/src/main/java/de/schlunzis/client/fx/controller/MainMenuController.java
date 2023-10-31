@@ -1,6 +1,6 @@
 package de.schlunzis.client.fx.controller;
 
-import de.schlunzis.common.messages.authentication.LogoutRequest;
+import de.schlunzis.common.messages.authentication.logout.LogoutRequest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
