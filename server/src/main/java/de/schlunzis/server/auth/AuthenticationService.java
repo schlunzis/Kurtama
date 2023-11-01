@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -30,10 +31,9 @@ public class AuthenticationService {
 
 
     private final ApplicationEventPublisher eventBus;
-
     private final UserSessionMap userSessionMap;
-
     private final IUserStore userStore;
+    private final PasswordEncoder passwordEncoder;
 
     @EventListener
     public void onLoginEvent(ClientMessageWrapper<LoginRequest> cmw) {
@@ -41,8 +41,8 @@ public class AuthenticationService {
         LoginRequest loginRequest = cmw.clientMessage();
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
-            if (user.getPassword().equals(loginRequest.getPassword())) {
-                userSessionMap.put(user, cmw.session());
+            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                userSessionMap.put(user, cmw.session()); // TODO: Don't keep password in user object
                 log.info("User {} logged in", user.getEmail());
                 eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toDTO()), cmw.session()));
                 eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(UUID.randomUUID(), "SERVER", null, "Welcome to the chat!"), getAllLoggedInSessions()));
