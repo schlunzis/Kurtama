@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea"
+<VBox xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
       fx:controller="de.schlunzis.client.fx.controller.ChatController">
     <stylesheets>
         <URL value="@css/style.css"/>

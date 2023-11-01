@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea"
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
           fx:controller="de.schlunzis.client.fx.controller.RegisterController">
     <stylesheets>
         <URL value="@css/style.css"/>
