@@ -11,5 +11,4 @@ public interface IUserStore {
 
     Optional<ServerUser> getUser(String email);
 
-
 }

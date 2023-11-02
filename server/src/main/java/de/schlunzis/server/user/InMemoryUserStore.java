@@ -1,13 +1,11 @@
 package de.schlunzis.server.user;
 
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-@Component
+// @Component
 public class InMemoryUserStore implements IUserStore {
 
     private final Map<UUID, ServerUser> userMap = new HashMap<>();

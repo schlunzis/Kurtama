@@ -1,8 +1,8 @@
 package de.schlunzis.server;
 
 import de.schlunzis.server.net.INetworkServer;
-import de.schlunzis.server.user.ServerUser;
 import de.schlunzis.server.user.IUserStore;
+import de.schlunzis.server.user.ServerUser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
