@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 // @Component
-public class InMemoryUserService implements IUserService {
+public class InMemoryUserStore implements IUserStore {
 
     private final Map<UUID, ServerUser> userMap = new HashMap<>();
 

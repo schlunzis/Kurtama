@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class H2UserService implements IUserService {
+public class H2UserStore implements IUserStore {
 
     private final UserRepository userRepository;
 
