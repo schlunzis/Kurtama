@@ -42,7 +42,7 @@ public class AuthenticationService {
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                userSessionMap.put(user, cmw.session()); // TODO: Don't keep password in user object
+                userSessionMap.put(user.toServerUser(), cmw.session()); // TODO: Don't keep password in user object
                 log.info("User {} logged in", user.getEmail());
                 eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toDTO()), cmw.session()));
                 eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(UUID.randomUUID(), "SERVER", null, "Welcome to the chat!"), getAllLoggedInSessions()));

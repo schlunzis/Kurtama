@@ -13,18 +13,18 @@ public class H2UserStore implements IUserStore {
     private final UserRepository userRepository;
 
     @Override
-    public UUID createUser(ServerUser user) {
-        ServerUser savedUser = userRepository.save(user);
-        return savedUser.getUuid();
+    public UUID createUser(DBUser user) {
+        DBUser dbUser = userRepository.save(user);
+        return dbUser.getUuid();
     }
 
     @Override
-    public Optional<ServerUser> getUser(UUID uuid) {
+    public Optional<DBUser> getUser(UUID uuid) {
         return userRepository.findById(uuid);
     }
 
     @Override
-    public Optional<ServerUser> getUser(String email) {
+    public Optional<DBUser> getUser(String email) {
         return userRepository.findByEmail(email);
     }
 }
