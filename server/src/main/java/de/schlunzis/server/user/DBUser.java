@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user")
+@AllArgsConstructor
+@Table(name = DBUser.TABLE_NAME)
+@Entity(name = DBUser.TABLE_NAME)
 public class DBUser implements IUser {
+
+    public static final String TABLE_NAME = "USERS";
 
     @Id
     @Column
@@ -25,6 +27,17 @@ public class DBUser implements IUser {
     private String username;
     @Column
     private String password;
+
+    /**
+     * @param email        the email
+     * @param username     the username
+     * @param passwordHash the password hash
+     */
+    public DBUser(String email, String username, String passwordHash) {
+        this.username = username;
+        this.password = passwordHash;
+        this.email = email;
+    }
 
     public ServerUser toServerUser() {
         return new ServerUser(uuid, email, username);

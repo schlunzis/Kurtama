@@ -18,7 +18,7 @@ public class ServerUser implements IUser {
     private String username;
 
     public UserDTO toDTO() {
-        return new UserDTO(uuid, username, email);
+        return new UserDTO(uuid, username, "");
     }
 
 }

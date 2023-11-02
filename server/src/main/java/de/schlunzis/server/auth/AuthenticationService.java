@@ -12,8 +12,8 @@ import de.schlunzis.common.messages.chat.ServerChatMessage;
 import de.schlunzis.server.net.ClientMessageWrapper;
 import de.schlunzis.server.net.ISession;
 import de.schlunzis.server.net.ServerMessageWrapper;
+import de.schlunzis.server.user.DBUser;
 import de.schlunzis.server.user.IUserStore;
-import de.schlunzis.server.user.ServerUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -42,9 +42,9 @@ public class AuthenticationService {
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                userSessionMap.put(user.toServerUser(), cmw.session()); // TODO: Don't keep password in user object
+                userSessionMap.put(user.toServerUser(), cmw.session());
                 log.info("User {} logged in", user.getEmail());
-                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toDTO()), cmw.session()));
+                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO()), cmw.session()));
                 eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(UUID.randomUUID(), "SERVER", null, "Welcome to the chat!"), getAllLoggedInSessions()));
             } else {
                 log.info("User {} tried to log in with wrong password", user.getEmail());
@@ -67,9 +67,8 @@ public class AuthenticationService {
         String email = rr.getEmail();
         String username = rr.getUsername();
         String password = rr.getPassword();
-        ServerUser serverUser = new ServerUser(email, username, password);
         try {
-            userStore.createUser(serverUser);
+            userStore.createUser(new DBUser(email, username, password));
             eventBus.publishEvent(new ServerMessageWrapper(new RegisterSuccessfullResponse(), cmw.session()));
         } catch (IllegalArgumentException iae) {
             log.info("User with email {} already exists", email);
