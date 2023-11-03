@@ -11,9 +11,9 @@
     </stylesheets>
 
     <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-    <TextField fx:id="emailField" text="test1@test.de" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
     <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <PasswordField fx:id="passwordField" text="test1" GridPane.columnIndex="1" GridPane.rowIndex="1"
+    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1"
                    onAction="#handleLogin"/>
     <Button text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
             onAction="#handleLogin"/>
