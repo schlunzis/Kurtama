@@ -26,7 +26,7 @@ public class DBUser implements IUser {
     @Column
     private String username;
     @Column
-    private String password;
+    private String passwordHash;
 
     /**
      * @param email        the email
@@ -35,7 +35,7 @@ public class DBUser implements IUser {
      */
     public DBUser(String email, String username, String passwordHash) {
         this.username = username;
-        this.password = passwordHash;
+        this.passwordHash = passwordHash;
         this.email = email;
     }
 

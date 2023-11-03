@@ -41,10 +41,10 @@ public class AuthenticationService {
         LoginRequest loginRequest = cmw.clientMessage();
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
-            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
                 userSessionMap.put(user.toServerUser(), cmw.session());
                 log.info("User {} logged in", user.getEmail());
-                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO()), cmw.session()));
+                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail()), cmw.session()));
                 eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(UUID.randomUUID(), "SERVER", null, "Welcome to the chat!"), getAllLoggedInSessions()));
             } else {
                 log.info("User {} tried to log in with wrong password", user.getEmail());

@@ -15,6 +15,4 @@ public class UserDTO implements IUser {
 
     private String username;
 
-    // empty string as default to allow marshaling when no email is present
-    private String email = "";
 }
