@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxWeaver;
 import org.schlunzis.kurtama.client.events.ClientReadyEvent;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.springframework.context.event.EventListener;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StageManager {
 
-    private final SceneFactory sceneFactory;
+    private final FxWeaver fxWeaver;
     private Stage stage;
 
     @EventListener
@@ -30,7 +31,7 @@ public class StageManager {
         Platform.runLater(() -> {
             // TODO: read the correct title string for each the current locale
             stage.setTitle(event.scene().getTitleKey());
-            Scene scene = sceneFactory.create(event.scene());
+            Scene scene = new Scene(fxWeaver.loadView(event.scene().getControllerClass()));
             stage.setScene(scene);
             stage.show();
         });
