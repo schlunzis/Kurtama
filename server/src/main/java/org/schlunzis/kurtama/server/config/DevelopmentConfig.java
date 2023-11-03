@@ -27,7 +27,7 @@ public class DevelopmentConfig {
     void developmentInitialization() {
         // creating some test users
         for (int i = 0; i < 10; i++) {
-            UUID id = userStore.createUser(new ServerUser("test" + i + "@test.de", "test" + i, "test" + i));
+            UUID id = userStore.createUser(new ServerUser("test" + i + "@schlunzis.org", "test" + i, "test" + i));
             log.debug("Created user with id {}", id);
         }
     }

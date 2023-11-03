@@ -13,7 +13,10 @@ import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedRes
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Slf4j
 @FxmlView("login.fxml")
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Component;
 public class LoginController {
 
     private final ApplicationEventPublisher eventBus;
+    private final Environment environment;
     @FXML
     private TextField emailField;
     @FXML
@@ -46,6 +50,16 @@ public class LoginController {
     void onLoginFailedResponse(LoginFailedResponse lfr) {
         log.info("Received LoginFailedResponse {}", lfr);
         Platform.runLater(() -> passwordField.setText(""));
+    }
+
+    public void initialize() {
+        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("dev"))))
+            devLogin();
+    }
+
+    void devLogin() {
+        emailField.setText("test1@schlunzis.org");
+        passwordField.setText("test1");
     }
 
 }
