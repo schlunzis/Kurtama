@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+          fx:controller="org.schlunzis.kurtama.client.fx.controller.MainMenuController">
+    <stylesheets>
+        <URL value="@css/style.css"/>
+        <URL value="@css/main.css"/>
+    </stylesheets>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50"/>
+        <ColumnConstraints percentWidth="50"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="50"/>
+        <RowConstraints percentHeight="50"/>
+    </rowConstraints>
+
+    <fx:include source="chat.fxml" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <Button mnemonicParsing="false" onAction="#logout" text="Logout"/>
+        <Button mnemonicParsing="false" onAction="#settings" text="Settings"/>
+    </VBox>
+
+    <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <ListView fx:id="lobbiesListView"/>
+        <HBox>
+            <Button mnemonicParsing="false" onAction="#joinLobby" text="Join Lobby"/>
+            <Button mnemonicParsing="false" onAction="#createLobby" text="CreateLobby"/>
+        </HBox>
+    </VBox>
+
+</GridPane>
