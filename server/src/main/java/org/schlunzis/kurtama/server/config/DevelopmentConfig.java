@@ -2,11 +2,12 @@ package org.schlunzis.kurtama.server.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.kurtama.server.user.DBUser;
 import org.schlunzis.kurtama.server.user.IUserStore;
-import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.UUID;
 
@@ -22,12 +23,13 @@ import java.util.UUID;
 public class DevelopmentConfig {
 
     private final IUserStore userStore;
+    private final PasswordEncoder pe;
 
     @Bean
     void developmentInitialization() {
         // creating some test users
         for (int i = 0; i < 10; i++) {
-            UUID id = userStore.createUser(new ServerUser("test" + i + "@schlunzis.org", "test" + i, "test" + i));
+            UUID id = userStore.createUser(new DBUser("test" + i + "@schlunzis.org", "test" + i, pe.encode("test" + i)));
             log.debug("Created user with id {}", id);
         }
     }

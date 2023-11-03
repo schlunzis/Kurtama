@@ -14,10 +14,11 @@ import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
 import org.schlunzis.kurtama.server.net.ClientMessageWrapper;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
+import org.schlunzis.kurtama.server.user.DBUser;
 import org.schlunzis.kurtama.server.user.IUserStore;
-import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -30,10 +31,9 @@ public class AuthenticationService {
 
 
     private final ApplicationEventPublisher eventBus;
-
     private final UserSessionMap userSessionMap;
-
     private final IUserStore userStore;
+    private final PasswordEncoder passwordEncoder;
 
     @EventListener
     public void onLoginEvent(ClientMessageWrapper<LoginRequest> cmw) {
@@ -41,10 +41,10 @@ public class AuthenticationService {
         LoginRequest loginRequest = cmw.clientMessage();
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
-            if (user.getPassword().equals(loginRequest.getPassword())) {
-                userSessionMap.put(user, cmw.session());
+            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
+                userSessionMap.put(user.toServerUser(), cmw.session());
                 log.info("User {} logged in", user.getEmail());
-                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toDTO()), cmw.session()));
+                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail()), cmw.session()));
                 eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(UUID.randomUUID(), "SERVER", null, "Welcome to the chat!"), getAllLoggedInSessions()));
             } else {
                 log.info("User {} tried to log in with wrong password", user.getEmail());
@@ -67,9 +67,8 @@ public class AuthenticationService {
         String email = rr.getEmail();
         String username = rr.getUsername();
         String password = rr.getPassword();
-        ServerUser serverUser = new ServerUser(email, username, password);
         try {
-            userStore.createUser(serverUser);
+            userStore.createUser(new DBUser(email, username, password));
             eventBus.publishEvent(new ServerMessageWrapper(new RegisterSuccessfullResponse(), cmw.session()));
         } catch (IllegalArgumentException iae) {
             log.info("User with email {} already exists", email);

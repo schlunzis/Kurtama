@@ -13,4 +13,6 @@ public class LoginSuccessfulResponse implements IServerMessage {
 
     private IUser user;
 
+    private String email;
+
 }
