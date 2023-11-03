@@ -12,7 +12,7 @@
         </File>
     </Appenders>
     <Loggers>
-        <Logger name="de.schlunzis" level="${sys:logging.level:-debug}">
+        <Logger name="org.schlunzis.kurtama" level="${sys:logging.level:-debug}">
             <AppenderRef ref="LogToFile"/>
         </Logger>
         <Root level="debug">
