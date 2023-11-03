@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<DialogPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
+
+    <content>
+        <HBox>
+            <Label text="Lobby Name: "/>
+            <TextField fx:id="lobbyNameField"/>
+        </HBox>
+    </content>
+
+    <ButtonType text="OK" buttonData="OK_DONE"/>
+    <ButtonType text="Cancel" buttonData="CANCEL_CLOSE"/>
+</DialogPane>
