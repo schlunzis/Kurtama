@@ -17,10 +17,12 @@ public class ChannelStore implements IChannelStore {
     @Override
     public void create(Channel channel) {
         UUID channelId;
+        boolean match;
         do {
             channelId = UUID.randomUUID();
-        } while (channelMap.containsKey(channelId)); //FIXME
-
+            final UUID finalID = channelId;
+            match = channelMap.keySet().stream().anyMatch(session -> session.getId().equals(finalID));
+        } while (match);
         channelMap.put(new UUIDSession(channelId), channel);
     }
 

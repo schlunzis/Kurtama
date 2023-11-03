@@ -7,10 +7,10 @@ import java.util.UUID;
 public class UUIDSession implements ISession {
 
     @Getter
-    private final UUID uuid;
+    private final UUID id;
 
     public UUIDSession(UUID uuid) {
-        this.uuid = uuid;
+        this.id = uuid;
     }
 
 }
