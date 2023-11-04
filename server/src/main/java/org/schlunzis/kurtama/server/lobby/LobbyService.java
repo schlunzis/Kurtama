@@ -54,7 +54,7 @@ public class LobbyService {
             ServerLobby lobby = lobbyStore.get(request.lobbyID());
             lobby.joinUser(user.get());
             log.info("User {} joined lobby with id: {}", user.get().getId(), lobby.getId());
-            eventBus.publishEvent(new ServerMessageWrapper(new JoinLobbySuccessfullyResponse(), cmw.session()));
+            eventBus.publishEvent(new ServerMessageWrapper(new JoinLobbySuccessfullyResponse(lobby.toDTO()), cmw.session()));
             // TODO update clients of users in lobby #8
             updateLobbyListInfo();
         } else {
