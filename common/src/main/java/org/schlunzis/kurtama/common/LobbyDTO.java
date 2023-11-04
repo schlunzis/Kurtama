@@ -2,24 +2,19 @@ package org.schlunzis.kurtama.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.UUID;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class LobbyDTO implements ILobby {
 
-    private final UUID id;
-    private final String name;
-    private final Collection<IUser> users;
-
-    public LobbyDTO(UUID uuid, String name) {
-        this.id = uuid;
-        this.name = name;
-        this.users = Collections.emptyList();
-    }
+    private UUID id;
+    private String name;
+    private Collection<UserDTO> users;
 
 }
 
