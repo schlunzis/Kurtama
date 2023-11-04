@@ -2,9 +2,9 @@ package org.schlunzis.kurtama.server.lobby;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.kurtama.common.messages.lobby.CreateLobbyRequest;
-import org.schlunzis.kurtama.common.messages.lobby.LobbyCreatedSuccessfullyResponse;
-import org.schlunzis.kurtama.common.messages.lobby.LobbyCreationFailedResponse;
+import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
+import org.schlunzis.kurtama.common.messages.lobby.server.LobbyCreatedSuccessfullyResponse;
+import org.schlunzis.kurtama.common.messages.lobby.server.LobbyCreationFailedResponse;
 import org.schlunzis.kurtama.server.auth.UserSessionMap;
 import org.schlunzis.kurtama.server.net.ClientMessageWrapper;
 import org.schlunzis.kurtama.server.net.ServerMessageWrapper;

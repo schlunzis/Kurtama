@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.common.messages.lobby;
+package org.schlunzis.kurtama.common.messages.lobby.server;
 
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 

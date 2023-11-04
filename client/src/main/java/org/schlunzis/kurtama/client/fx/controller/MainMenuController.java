@@ -10,7 +10,7 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.fx.dialog.CreateLobbyDialogResult;
 import org.schlunzis.kurtama.client.fx.dialog.DialogFactory;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
-import org.schlunzis.kurtama.common.messages.lobby.CreateLobbyRequest;
+import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
