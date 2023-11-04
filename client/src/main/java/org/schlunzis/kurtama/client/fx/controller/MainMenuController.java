@@ -9,8 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.fx.dialog.CreateLobbyDialogResult;
 import org.schlunzis.kurtama.client.fx.dialog.DialogFactory;
+import org.schlunzis.kurtama.client.service.ISessionService;
+import org.schlunzis.kurtama.common.ILobby;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
+import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -24,10 +27,15 @@ public class MainMenuController {
 
     private final ApplicationEventPublisher eventBus;
     private final DialogFactory dialogFactory;
+    private final ISessionService sessionService;
 
     @FXML
-    private ListView lobbiesListView; // TODO implement
+    private ListView<ILobby> lobbiesListView; // TODO cell factory
 
+    @FXML
+    private void initialize() {
+        lobbiesListView.setItems(sessionService.getLobbyList());
+    }
 
     @FXML
     private void logout() {
@@ -42,7 +50,7 @@ public class MainMenuController {
 
     @FXML
     private void joinLobby(ActionEvent actionEvent) {
-        // TODO implement
+        eventBus.publishEvent(new JoinLobbyRequest(lobbiesListView.getSelectionModel().getSelectedItem().getId()));
     }
 
     @FXML

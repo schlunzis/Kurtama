@@ -1,5 +1,7 @@
 package org.schlunzis.kurtama.client.service.impl;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import lombok.Getter;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.ILobby;
@@ -9,9 +11,11 @@ import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccess
 import org.schlunzis.kurtama.common.messages.lobby.server.JoinLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LeaveLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LobbyCreatedSuccessfullyResponse;
+import org.schlunzis.kurtama.common.messages.lobby.server.LobbyListInfoMessage;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -21,6 +25,7 @@ import java.util.Optional;
 @Service
 public class SessionService implements ISessionService {
 
+    private final ObservableList<ILobby> lobbyList = FXCollections.observableList(new ArrayList<>());
     private Optional<IUser> currentUser = Optional.empty();
     private Optional<ILobby> currentLobby = Optional.empty();
 
@@ -47,6 +52,11 @@ public class SessionService implements ISessionService {
     @EventListener
     public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse llsr) {
         currentLobby = Optional.empty();
+    }
+
+    @EventListener
+    public void onLobbyListInfoMessage(LobbyListInfoMessage llim) {
+        lobbyList.setAll(llim.lobbies().stream().map(l -> (ILobby) l).toList());
     }
 
 }
