@@ -30,7 +30,7 @@ public class StageManager {
         log.debug("Changing scene to {}", event.scene());
         Platform.runLater(() -> {
             // TODO: read the correct title string for each the current locale
-            stage.setTitle(event.scene().getTitleKey());
+            stage.setTitle("Kurtama-" + event.scene().getTitleKey());
             Scene scene = new Scene(fxWeaver.loadView(event.scene().getControllerClass()));
             stage.setScene(scene);
             stage.show();

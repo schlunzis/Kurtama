@@ -6,6 +6,7 @@ import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfullResponse;
+import org.schlunzis.kurtama.common.messages.lobby.LobbyCreatedSuccessfullyResponse;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,11 @@ public class SceneController {
     @EventListener
     public void onRegisterSuccessfulResponse(RegisterSuccessfullResponse rsr) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
+    }
+
+    @EventListener
+    public void onLobbyCreatedSuccessfullyResponse(LobbyCreatedSuccessfullyResponse lcsr) {
+        eventBus.publishEvent(new SceneChangeEvent(Scene.LOBBY));
     }
 
 }
