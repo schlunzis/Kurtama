@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserDTO implements IUser {
 
-    private UUID uuid;
+    private UUID id;
 
     private String username;
 
