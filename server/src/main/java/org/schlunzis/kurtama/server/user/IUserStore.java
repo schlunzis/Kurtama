@@ -5,10 +5,10 @@ import java.util.UUID;
 
 public interface IUserStore {
 
-    UUID createUser(ServerUser user);
+    UUID createUser(DBUser user);
 
-    Optional<ServerUser> getUser(UUID uuid);
+    Optional<DBUser> getUser(UUID uuid);
 
-    Optional<ServerUser> getUser(String email);
+    Optional<DBUser> getUser(String email);
 
 }

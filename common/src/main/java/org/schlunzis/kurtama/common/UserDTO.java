@@ -15,6 +15,4 @@ public class UserDTO implements IUser {
 
     private String username;
 
-    private String email;
-
 }
