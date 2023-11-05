@@ -17,7 +17,7 @@ public class H2UserStore implements IUserStore {
     @Override
     public UUID createUser(DBUser user) {
         DBUser dbUser = userRepository.save(user);
-        return dbUser.getUuid();
+        return dbUser.getId();
     }
 
     @Override

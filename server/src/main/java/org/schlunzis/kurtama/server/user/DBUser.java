@@ -20,7 +20,7 @@ public class DBUser implements IUser {
     @Id
     @Column
     @GeneratedValue
-    private UUID uuid;
+    private UUID id;
     @Column
     private String email;
     @Column
@@ -40,6 +40,6 @@ public class DBUser implements IUser {
     }
 
     public ServerUser toServerUser() {
-        return new ServerUser(uuid, email, username);
+        return new ServerUser(id, email, username);
     }
 }

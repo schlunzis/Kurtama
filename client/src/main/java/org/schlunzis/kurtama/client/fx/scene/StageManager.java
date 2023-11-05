@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SceneManager {
+public class StageManager {
 
     private final FxWeaver fxWeaver;
     private Stage stage;
 
     @EventListener
-    void onClientReadyEvent(ClientReadyEvent cre) {
+    public void onClientReadyEvent(ClientReadyEvent cre) {
         stage = cre.stage();
         onSceneChangeMessage(new SceneChangeEvent(org.schlunzis.kurtama.client.fx.scene.Scene.LOGIN));
     }
@@ -30,7 +30,7 @@ public class SceneManager {
         log.debug("Changing scene to {}", event.scene());
         Platform.runLater(() -> {
             // TODO: read the correct title string for each the current locale
-            stage.setTitle(event.scene().getTitleKey());
+            stage.setTitle("Kurtama-" + event.scene().getTitleKey());
             Scene scene = new Scene(fxWeaver.loadView(event.scene().getControllerClass()));
             stage.setScene(scene);
             stage.show();

@@ -13,12 +13,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ServerUser implements IUser {
 
-    private UUID uuid;
+    private UUID id;
     private String email;
     private String username;
 
     public UserDTO toDTO() {
-        return new UserDTO(uuid, username);
+        return new UserDTO(id, username);
     }
 
 }

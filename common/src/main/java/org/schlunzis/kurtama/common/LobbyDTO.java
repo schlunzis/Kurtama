@@ -1,18 +1,21 @@
 package org.schlunzis.kurtama.common;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
 import java.util.UUID;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO implements IUser {
+public class LobbyDTO implements ILobby {
 
     private UUID id;
-
-    private String username;
+    private String name;
+    private Collection<UserDTO> users;
 
 }
+
+
