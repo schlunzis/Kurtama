@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.client.service.impl;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
@@ -56,7 +57,9 @@ public class SessionService implements ISessionService {
 
     @EventListener
     public void onLobbyListInfoMessage(LobbyListInfoMessage llim) {
-        lobbyList.setAll(llim.lobbies().stream().map(l -> (ILobby) l).toList());
+        Platform.runLater(() ->
+                lobbyList.setAll(llim.lobbies().stream().map(l -> (ILobby) l).toList())
+        );
     }
 
 }
