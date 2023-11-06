@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.schlunzis.kurtama.common.ILobby;
 import org.schlunzis.kurtama.common.LobbyDTO;
+import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.server.user.ServerUser;
 
 import java.util.ArrayList;
@@ -30,4 +31,7 @@ public class ServerLobby implements ILobby {
         users.removeIf(u -> u.getId().equals(user.getId()));
     }
 
+    public LobbyInfo getInfo() {
+        return new LobbyInfo(id, name, users.size());
+    }
 }

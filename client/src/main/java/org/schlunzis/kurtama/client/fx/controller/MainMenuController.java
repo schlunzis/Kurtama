@@ -10,7 +10,7 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.fx.dialog.CreateLobbyDialogResult;
 import org.schlunzis.kurtama.client.fx.dialog.DialogFactory;
 import org.schlunzis.kurtama.client.service.ISessionService;
-import org.schlunzis.kurtama.common.ILobby;
+import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
@@ -30,7 +30,7 @@ public class MainMenuController {
     private final ISessionService sessionService;
 
     @FXML
-    private ListView<ILobby> lobbiesListView; // TODO cell factory
+    private ListView<LobbyInfo> lobbiesListView; // TODO cell factory
 
     @FXML
     private void initialize() {
@@ -50,7 +50,7 @@ public class MainMenuController {
 
     @FXML
     private void joinLobby(ActionEvent actionEvent) {
-        eventBus.publishEvent(new JoinLobbyRequest(lobbiesListView.getSelectionModel().getSelectedItem().getId()));
+        eventBus.publishEvent(new JoinLobbyRequest(lobbiesListView.getSelectionModel().getSelectedItem().lobbyID()));
     }
 
     @FXML

@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.ILobby;
 import org.schlunzis.kurtama.common.IUser;
+import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.JoinLobbySuccessfullyResponse;
@@ -26,7 +27,7 @@ import java.util.Optional;
 @Service
 public class SessionService implements ISessionService {
 
-    private final ObservableList<ILobby> lobbyList = FXCollections.observableList(new ArrayList<>());
+    private final ObservableList<LobbyInfo> lobbyList = FXCollections.observableList(new ArrayList<>());
     private Optional<IUser> currentUser = Optional.empty();
     private Optional<ILobby> currentLobby = Optional.empty();
 
@@ -58,7 +59,7 @@ public class SessionService implements ISessionService {
     @EventListener
     public void onLobbyListInfoMessage(LobbyListInfoMessage llim) {
         Platform.runLater(() ->
-                lobbyList.setAll(llim.lobbies().stream().map(l -> (ILobby) l).toList())
+                lobbyList.setAll(llim.lobbies())
         );
     }
 
