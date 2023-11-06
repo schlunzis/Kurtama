@@ -3,6 +3,7 @@ package org.schlunzis.kurtama.client.fx.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +31,22 @@ public class MainMenuController {
     private final ISessionService sessionService;
 
     @FXML
-    private ListView<LobbyInfo> lobbiesListView; // TODO cell factory
+    private ListView<LobbyInfo> lobbiesListView;
 
     @FXML
     private void initialize() {
         lobbiesListView.setItems(sessionService.getLobbyList());
+        lobbiesListView.setCellFactory(lobbyInfoListView -> new ListCell<>() {
+            @Override
+            protected void updateItem(LobbyInfo lobbyInfo, boolean empty) {
+                super.updateItem(lobbyInfo, empty);
+                if (empty || lobbyInfo == null) {
+                    setText(null);
+                } else {
+                    setText(lobbyInfo.lobbyName() + " (" + lobbyInfo.users() + ")");
+                }
+            }
+        });
     }
 
     @FXML
