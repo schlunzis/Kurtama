@@ -74,7 +74,10 @@ public class LobbyService {
             log.info("User {} left lobby with id: {}", user.get().getId(), lobby.getId());
             eventBus.publishEvent(new ServerMessageWrapper(new LeaveLobbySuccessfullyResponse(), cmw.session()));
             // TODO update clients of users in lobby #8
-            // TODO delete lobby if empty
+            if (lobby.getUsers().isEmpty()) {
+                lobbyStore.remove(lobby.getId());
+                log.info("Lobby {} was empty and was removed.", lobby.getId());
+            }
             updateLobbyListInfo();
         } else {
             log.info("Could not leave lobby. No user found for session.");
