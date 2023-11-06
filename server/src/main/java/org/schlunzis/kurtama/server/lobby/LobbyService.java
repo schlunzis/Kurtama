@@ -2,7 +2,7 @@ package org.schlunzis.kurtama.server.lobby;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.kurtama.common.LobbyDTO;
+import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.LeaveLobbyRequest;
@@ -83,8 +83,8 @@ public class LobbyService {
     }
 
     private void updateLobbyListInfo() {
-        Collection<LobbyDTO> lobbyDTOS = lobbyStore.getAll().stream().map(ServerLobby::toDTO).toList();
-        eventBus.publishEvent(new ServerMessageWrapper(new LobbyListInfoMessage(lobbyDTOS), userSessionMap.getAllSessions()));
+        Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(ServerLobby::getInfo).toList();
+        eventBus.publishEvent(new ServerMessageWrapper(new LobbyListInfoMessage(lobbyInfos), userSessionMap.getAllSessions()));
     }
 
 }
