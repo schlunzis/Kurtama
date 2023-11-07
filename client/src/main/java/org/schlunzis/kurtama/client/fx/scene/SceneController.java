@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
-import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfullResponse;
+import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.JoinLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LeaveLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LobbyCreatedSuccessfullyResponse;
@@ -31,7 +31,7 @@ public class SceneController {
     }
 
     @EventListener
-    public void onRegisterSuccessfulResponse(RegisterSuccessfullResponse rsr) {
+    public void onRegisterSuccessfulResponse(RegisterSuccessfulResponse rsr) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
     }
 

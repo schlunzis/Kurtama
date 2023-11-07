@@ -2,6 +2,7 @@ package org.schlunzis.kurtama.server.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
@@ -9,8 +10,9 @@ import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
-import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfullResponse;
+import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
+import org.schlunzis.kurtama.server.lobby.LobbyStore;
 import org.schlunzis.kurtama.server.net.ClientMessageWrapper;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
@@ -33,6 +35,7 @@ public class AuthenticationService {
     private final ApplicationEventPublisher eventBus;
     private final UserSessionMap userSessionMap;
     private final IUserStore userStore;
+    private final LobbyStore lobbyStore;
     private final PasswordEncoder passwordEncoder;
 
     @EventListener
@@ -44,7 +47,8 @@ public class AuthenticationService {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
                 userSessionMap.put(user.toServerUser(), cmw.session());
                 log.info("User {} logged in", user.getEmail());
-                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail()), cmw.session()));
+                Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(l -> new LobbyInfo(l.getId(), l.getName(), l.getUsers().size())).toList();
+                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail(), lobbyInfos), cmw.session()));
                 eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(UUID.randomUUID(), "SERVER", null, "Welcome to the chat!"), getAllLoggedInSessions()));
             } else {
                 log.info("User {} tried to log in with wrong password", user.getEmail());
@@ -69,7 +73,7 @@ public class AuthenticationService {
         String password = rr.getPassword();
         try {
             userStore.createUser(new DBUser(email, username, password));
-            eventBus.publishEvent(new ServerMessageWrapper(new RegisterSuccessfullResponse(), cmw.session()));
+            eventBus.publishEvent(new ServerMessageWrapper(new RegisterSuccessfulResponse(), cmw.session()));
         } catch (IllegalArgumentException iae) {
             log.info("User with email {} already exists", email);
             eventBus.publishEvent(new ServerMessageWrapper(new RegisterFailedResponse(), cmw.session()));

@@ -34,6 +34,7 @@ public class SessionService implements ISessionService {
     @EventListener
     public void onLoginSuccessfulResponse(LoginSuccessfulResponse lsr) {
         currentUser = Optional.of(lsr.getUser());
+        lobbyList.setAll(lsr.getLobbyInfos());
     }
 
     @EventListener
