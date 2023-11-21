@@ -42,6 +42,8 @@ public class ChatController {
         messagesToAppend.clear();
         String name = sessionService.getCurrentUser().map(IUser::getUsername).orElse("Jonas Doe");
         senderNameTextField.setText(name);
+
+
     }
 
     @FXML

@@ -10,13 +10,14 @@
         <URL value="@css/login.css"/>
     </stylesheets>
 
-    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <Label fx:id="emailLabel" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
     <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <Label fx:id="passwordLabel" text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1"
                    onAction="#handleLogin"/>
-    <Button text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
+    <Button fx:id="loginButton" text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
             onAction="#handleLogin"/>
-    <Button text="Register" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"
+    <Button fx:id="registerButton" text="Register" GridPane.columnIndex="0" GridPane.rowIndex="3"
+            GridPane.columnSpan="2"
             onAction="#handleRegister"/>
 </GridPane>
