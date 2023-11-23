@@ -33,6 +33,8 @@ import java.util.ResourceBundle;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class I18nUtils {
 
+    // TODO: consider: https://github.com/rgielen/javafx-weaver/issues/18
+
     /**
      * The resource bundle on which elements can bind in order to be updated on
      * language change.
