@@ -42,7 +42,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
         channelStore.get(ctx.channel()).ifPresentOrElse(
-                session -> eventBus.publishEvent(new ClientMessageWrapper<>(new LogoutRequest(), session)),
+                session -> eventBus.publishEvent(new ClientMessageWrapper<>(new LogoutRequest(), session, null)),
                 () -> log.error("No session found for channel " + ctx.channel()));
         log.info("Client left - " + ctx);
         channelStore.remove(ctx.channel());
