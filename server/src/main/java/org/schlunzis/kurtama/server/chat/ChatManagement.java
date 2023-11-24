@@ -29,4 +29,8 @@ public class ChatManagement {
         chatStore.remove(lobbyChatMap.get(lobbyID));
     }
 
+    public Optional<Chat> getChat(UUID chatID) {
+        return chatStore.get(chatID);
+    }
+
 }

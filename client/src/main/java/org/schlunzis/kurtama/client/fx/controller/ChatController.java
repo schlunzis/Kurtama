@@ -1,6 +1,5 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -10,9 +9,7 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.IUser;
 import org.schlunzis.kurtama.common.messages.chat.ClientChatMessage;
-import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -47,13 +44,4 @@ public class ChatController {
         chatTextField.setText("");
     }
 
-    private void appendMessage(String sender, String message) {
-        Platform.runLater(() -> sessionService.getChatMessages().add(sender + ": " + message));
-    }
-
-    @EventListener
-    public void onServerChatMessage(ServerChatMessage message) {
-        log.debug("Received message from server: {}", message);
-        appendMessage(message.getNickname(), message.getMessage());
-    }
 }

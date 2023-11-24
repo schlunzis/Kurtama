@@ -10,6 +10,7 @@ import org.schlunzis.kurtama.common.IUser;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
+import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
 import org.schlunzis.kurtama.common.messages.lobby.server.JoinLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LeaveLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LobbyCreatedSuccessfullyResponse;
@@ -28,9 +29,11 @@ import java.util.UUID;
 @Service
 public class SessionService implements ISessionService {
 
+    private static final UUID GLOBAL_CHAT_ID = new UUID(0, 0);
+
     private final ObservableList<LobbyInfo> lobbyList = FXCollections.observableList(new ArrayList<>());
     private final ObservableList<String> chatMessages = FXCollections.observableList(new ArrayList<>());
-    private UUID currentChatID = null;
+    private UUID currentChatID = GLOBAL_CHAT_ID;
     private Optional<IUser> currentUser = Optional.empty();
     private Optional<ILobby> currentLobby = Optional.empty();
 
@@ -43,7 +46,7 @@ public class SessionService implements ISessionService {
     @EventListener
     public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
         currentUser = Optional.empty();
-        currentChatID = null;
+        currentChatID = GLOBAL_CHAT_ID;
     }
 
     @EventListener
@@ -61,7 +64,7 @@ public class SessionService implements ISessionService {
     @EventListener
     public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse llsr) {
         currentLobby = Optional.empty();
-        currentChatID = null;
+        currentChatID = GLOBAL_CHAT_ID;
     }
 
     @EventListener
@@ -69,6 +72,13 @@ public class SessionService implements ISessionService {
         Platform.runLater(() ->
                 lobbyList.setAll(llim.lobbies())
         );
+    }
+
+    @EventListener
+    public void onServerChatMessage(ServerChatMessage message) {
+        if (message.getChatID().equals(currentChatID)) {
+            Platform.runLater(() -> chatMessages.add(message.getNickname() + ": " + message.getMessage()));
+        }
     }
 
 }

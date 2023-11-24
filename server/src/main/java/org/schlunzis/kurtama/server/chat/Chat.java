@@ -15,8 +15,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class Chat {
 
-    protected final UUID id;
-    protected final Collection<ServerUser> chatters = new ArrayList<>();
+    private final UUID id;
+    private final Collection<ServerUser> chatters = new ArrayList<>();
 
     public void addChatter(ServerUser user) {
         Objects.requireNonNull(user);
