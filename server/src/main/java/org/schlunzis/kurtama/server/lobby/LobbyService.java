@@ -21,11 +21,11 @@ import java.util.Optional;
 @Component
 public class LobbyService extends AbstractService {
 
-    private final LobbyStore lobbyStore;
+    private final LobbyManagement lobbyManagement;
 
-    public LobbyService(ApplicationEventPublisher eventBus, AuthenticationService authenticationService, LobbyStore lobbyStore) {
+    public LobbyService(ApplicationEventPublisher eventBus, AuthenticationService authenticationService, LobbyManagement lobbyManagement) {
         super(eventBus, authenticationService);
-        this.lobbyStore = lobbyStore;
+        this.lobbyManagement = lobbyManagement;
     }
 
     @EventListener
@@ -34,10 +34,7 @@ public class LobbyService extends AbstractService {
 
         Optional<ServerUser> user = authenticationService.getUserForSession(cmw.session());
         if (user.isPresent()) {
-            ServerLobby lobby = lobbyStore.create(request.name());
-            log.info("Created lobby with name: {} and id: {}", lobby.getName(), lobby.getId());
-            lobby.joinUser(user.get());
-            log.info("User {} joined lobby with id: {}", user.get().getId(), lobby.getId());
+            ServerLobby lobby = lobbyManagement.createLobby(request.name(), user.get());
             sendTo(new LobbyCreatedSuccessfullyResponse(lobby.toDTO()), user.get());
             updateLobbyListInfo();
         } else {
@@ -52,9 +49,7 @@ public class LobbyService extends AbstractService {
 
         Optional<ServerUser> user = authenticationService.getUserForSession(cmw.session());
         if (user.isPresent()) {
-            ServerLobby lobby = lobbyStore.get(request.lobbyID());
-            lobby.joinUser(user.get());
-            log.info("User {} joined lobby with id: {}", user.get().getId(), lobby.getId());
+            ServerLobby lobby = lobbyManagement.joinLobby(request.lobbyID(), user.get());
             sendTo(new JoinLobbySuccessfullyResponse(lobby.toDTO()), user.get());
             // TODO update clients of users in lobby #8
             updateLobbyListInfo();
@@ -70,15 +65,9 @@ public class LobbyService extends AbstractService {
 
         Optional<ServerUser> user = authenticationService.getUserForSession(cmw.session());
         if (user.isPresent()) {
-            ServerLobby lobby = lobbyStore.get(request.lobbyID());
-            lobby.leaveUser(user.get());
-            log.info("User {} left lobby with id: {}", user.get().getId(), lobby.getId());
+            lobbyManagement.leaveLobby(request.lobbyID(), user.get());
             sendTo(new LeaveLobbySuccessfullyResponse(), user.get());
             // TODO update clients of users in lobby #8
-            if (lobby.getUsers().isEmpty()) {
-                lobbyStore.remove(lobby.getId());
-                log.info("Lobby {} was empty and was removed.", lobby.getId());
-            }
             updateLobbyListInfo();
         } else {
             log.info("Could not leave lobby. No user found for session.");
@@ -87,7 +76,7 @@ public class LobbyService extends AbstractService {
     }
 
     private void updateLobbyListInfo() {
-        Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(ServerLobby::getInfo).toList();
+        Collection<LobbyInfo> lobbyInfos = lobbyManagement.getAll().stream().map(ServerLobby::getInfo).toList();
         sendToAll(new LobbyListInfoMessage(lobbyInfos));
     }
 

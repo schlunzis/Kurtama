@@ -17,4 +17,6 @@ public interface ILobby {
 
     Collection<? extends IUser> getUsers();
 
+    UUID getChatID();
+
 }
