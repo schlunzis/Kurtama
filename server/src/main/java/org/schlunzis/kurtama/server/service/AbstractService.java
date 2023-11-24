@@ -23,6 +23,8 @@ public abstract class AbstractService {
     protected final ApplicationEventPublisher eventBus;
     protected final IAuthenticationService authenticationService;
 
+    private final SecondaryRequestHandler secondaryRequestHandler;
+
     /**
      * This method sends the given message to all logged-in clients.
      *
@@ -67,6 +69,21 @@ public abstract class AbstractService {
      */
     protected void sendTo(IServerMessage message, ISession recipient) {
         eventBus.publishEvent(new ServerMessageWrapper(message, recipient));
+    }
+
+    /**
+     * This method sends the given message to the given recipient.
+     *
+     * @param message   the message to send
+     * @param recipient the user, which should receive the message
+     */
+    protected void requestAndSendTo(IServerMessage message, ServerUser recipient) {
+        Collection<IServerMessage> additionalMessages = secondaryRequestHandler.handle(message, recipient);
+
+        authenticationService.getSessionForUser(recipient).ifPresentOrElse(
+                r -> eventBus.publishEvent(new ServerMessageWrapper(message, r, additionalMessages)),
+                () -> log.warn("Could not get session for user")
+        );
     }
 
 }

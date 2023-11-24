@@ -12,6 +12,7 @@ import org.schlunzis.kurtama.common.messages.lobby.server.LobbyListInfoMessage;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
 import org.schlunzis.kurtama.server.net.ClientMessageWrapper;
 import org.schlunzis.kurtama.server.service.AbstractService;
+import org.schlunzis.kurtama.server.service.SecondaryRequestHandler;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -24,8 +25,9 @@ public class LobbyService extends AbstractService {
 
     private final LobbyStore lobbyStore;
 
-    public LobbyService(ApplicationEventPublisher eventBus, AuthenticationService authenticationService, LobbyStore lobbyStore) {
-        super(eventBus, authenticationService);
+    public LobbyService(ApplicationEventPublisher eventBus, AuthenticationService authenticationService,
+                        LobbyStore lobbyStore, SecondaryRequestHandler secondaryRequestHandler) {
+        super(eventBus, authenticationService, secondaryRequestHandler);
         this.lobbyStore = lobbyStore;
     }
 
