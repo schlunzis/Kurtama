@@ -18,25 +18,34 @@ import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
 import org.schlunzis.kurtama.server.user.DBUser;
 import org.schlunzis.kurtama.server.user.IUserStore;
+import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * This class handles all login-, logout- and registration events. It also provides information about whether a user is
+ * logged in. If a user is logged in, a session for that user can be retrieved.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AuthenticationService {
-
+public class AuthenticationService implements IAuthenticationService {
 
     private final ApplicationEventPublisher eventBus;
     private final UserSessionMap userSessionMap;
     private final IUserStore userStore;
     private final LobbyStore lobbyStore;
     private final PasswordEncoder passwordEncoder;
+
+    // ################################################
+    // Event Listeners
+    // ################################################
 
     @EventListener
     public void onLoginEvent(ClientMessageWrapper<LoginRequest> cmw) {
@@ -80,6 +89,10 @@ public class AuthenticationService {
         }
     }
 
+    // ################################################
+    // Other methods
+    // ################################################
+
     public boolean isLoggedIn(ISession session) {
         return userSessionMap.contains(session);
     }
@@ -88,5 +101,18 @@ public class AuthenticationService {
         return userSessionMap.getAllSessions();
     }
 
+    public Optional<ServerUser> getUserForSession(ISession session) {
+        return userSessionMap.get(session);
+    }
+
+    @Override
+    public Collection<ISession> getSessionsForUsers(Collection<ServerUser> users) {
+        return userSessionMap.getFor(users);
+    }
+
+    @Override
+    public Optional<ISession> getSessionForUser(ServerUser user) {
+        return userSessionMap.get(user);
+    }
 
 }

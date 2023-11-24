@@ -4,13 +4,10 @@ import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
-public class UserSessionMap {
+class UserSessionMap {
 
     private final Map<ServerUser, ISession> map = new HashMap<>();
 
@@ -18,13 +15,20 @@ public class UserSessionMap {
         map.put(user, session);
     }
 
-    public ISession get(ServerUser user) {
-        return map.get(user);
+    public Optional<ISession> get(ServerUser user) {
+        return Optional.ofNullable(map.get(user));
     }
 
     public Optional<ServerUser> get(ISession session) {
-        Optional<Map.Entry<ServerUser, ISession>> optionalUser = map.entrySet().stream().filter(e -> e.getValue().equals(session)).findFirst();
-        return optionalUser.map(Map.Entry::getKey);
+        Optional<Map.Entry<ServerUser, ISession>> optionalEntry = map.entrySet().stream().filter(e -> e.getValue().equals(session)).findFirst();
+        return optionalEntry.map(Map.Entry::getKey);
+    }
+
+    public Collection<ISession> getFor(Collection<ServerUser> users) {
+        return users.stream()
+                .map(map::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     public Collection<ISession> getAllSessions() {
