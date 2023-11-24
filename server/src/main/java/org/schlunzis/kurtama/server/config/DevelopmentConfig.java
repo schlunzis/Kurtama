@@ -1,10 +1,10 @@
 package org.schlunzis.kurtama.server.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.server.user.DBUser;
 import org.schlunzis.kurtama.server.user.IUserStore;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +25,7 @@ public class DevelopmentConfig {
     private final IUserStore userStore;
     private final PasswordEncoder pe;
 
-    @Bean
+    @PostConstruct
     void developmentInitialization() {
         // creating some test users
         for (int i = 0; i < 10; i++) {
