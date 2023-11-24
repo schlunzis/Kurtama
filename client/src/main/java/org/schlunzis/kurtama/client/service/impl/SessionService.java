@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * A component to save information about the current session. Like the user the client is logged in as.
@@ -28,6 +29,8 @@ import java.util.Optional;
 public class SessionService implements ISessionService {
 
     private final ObservableList<LobbyInfo> lobbyList = FXCollections.observableList(new ArrayList<>());
+    private final ObservableList<String> chatMessages = FXCollections.observableList(new ArrayList<>());
+    private UUID currentChatID = null;
     private Optional<IUser> currentUser = Optional.empty();
     private Optional<ILobby> currentLobby = Optional.empty();
 
@@ -40,21 +43,25 @@ public class SessionService implements ISessionService {
     @EventListener
     public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
         currentUser = Optional.empty();
+        currentChatID = null;
     }
 
     @EventListener
     public void onLobbyCreatedSuccessfullyResponse(LobbyCreatedSuccessfullyResponse lcsr) {
         currentLobby = Optional.of(lcsr.lobby());
+        currentChatID = lcsr.lobby().getChatID();
     }
 
     @EventListener
     public void onJoinLobbySuccessfullyResponse(JoinLobbySuccessfullyResponse jlsr) {
         currentLobby = Optional.of(jlsr.lobby());
+        currentChatID = jlsr.lobby().getChatID();
     }
 
     @EventListener
     public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse llsr) {
         currentLobby = Optional.empty();
+        currentChatID = null;
     }
 
     @EventListener

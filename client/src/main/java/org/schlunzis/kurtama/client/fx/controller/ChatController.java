@@ -15,10 +15,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 @Slf4j
 @FxmlView("chat.fxml")
 @Component
@@ -27,7 +23,6 @@ public class ChatController {
 
     private final ApplicationEventPublisher eventBus;
     private final ISessionService sessionService;
-    private final List<String> messagesToAppend = new ArrayList<>();
 
     @FXML
     private ListView<String> chatListView;
@@ -38,8 +33,7 @@ public class ChatController {
 
     @FXML
     public void initialize() {
-        chatListView.getItems().addAll(messagesToAppend);
-        messagesToAppend.clear();
+        chatListView.setItems(sessionService.getChatMessages());
         String name = sessionService.getCurrentUser().map(IUser::getUsername).orElse("Jonas Doe");
         senderNameTextField.setText(name);
     }
@@ -49,17 +43,12 @@ public class ChatController {
         String text = chatTextField.getText();
         if (text.isEmpty())
             return;
-        eventBus.publishEvent(new ClientChatMessage(UUID.randomUUID(), senderNameTextField.getText(), text));
+        eventBus.publishEvent(new ClientChatMessage(sessionService.getCurrentChatID(), senderNameTextField.getText(), text));
         chatTextField.setText("");
     }
 
     private void appendMessage(String sender, String message) {
-        Platform.runLater(() -> {
-            if (chatListView == null)
-                messagesToAppend.add(sender + ": " + message);
-            else
-                chatListView.getItems().add(sender + ": " + message);
-        });
+        Platform.runLater(() -> sessionService.getChatMessages().add(sender + ": " + message));
     }
 
     @EventListener
