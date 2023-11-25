@@ -3,10 +3,7 @@ package org.schlunzis.kurtama.server.lobby;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @NoArgsConstructor
@@ -20,7 +17,7 @@ public class LobbyStore {
             uuid = UUID.randomUUID();
         } while (lobbyMap.containsKey(uuid));
 
-        ServerLobby lobby = new ServerLobby(uuid, name);
+        ServerLobby lobby = new ServerLobby(uuid, name, null); // chatID is set by LobbyManagement
         lobbyMap.put(uuid, lobby);
         return lobby;
     }
@@ -29,9 +26,8 @@ public class LobbyStore {
         return lobbyMap.remove(uuid) != null;
     }
 
-    // TODO make this an optional and handle errors accordingly
-    public ServerLobby get(UUID uuid) {
-        return lobbyMap.get(uuid);
+    public Optional<ServerLobby> get(UUID uuid) {
+        return Optional.ofNullable(lobbyMap.get(uuid));
     }
 
     public Collection<ServerLobby> getAll() {
