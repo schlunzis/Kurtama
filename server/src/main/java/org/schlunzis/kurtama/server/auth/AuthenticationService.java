@@ -54,6 +54,13 @@ public class AuthenticationService implements IAuthenticationService {
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
+                
+                userSessionMap.get(user.toServerUser()).ifPresent(oldSession -> {
+                    log.info("User {} already logged in. Going to log out old session {}", user.getEmail(), oldSession);
+                    userSessionMap.remove(oldSession);
+                    eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), oldSession));
+                });
+
                 userSessionMap.put(user.toServerUser(), cmw.session());
                 log.info("User {} logged in", user.getEmail());
                 Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(l -> new LobbyInfo(l.getId(), l.getName(), l.getUsers().size())).toList();
