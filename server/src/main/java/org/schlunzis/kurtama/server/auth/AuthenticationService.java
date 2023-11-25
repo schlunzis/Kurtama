@@ -58,7 +58,7 @@ public class AuthenticationService implements IAuthenticationService {
                 log.info("User {} logged in", user.getEmail());
                 Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(l -> new LobbyInfo(l.getId(), l.getName(), l.getUsers().size())).toList();
                 eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail(), lobbyInfos), cmw.session()));
-                eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(new UUID(0, 0), "SERVER", null, "Welcome to the chat!"), getAllLoggedInSessions()));
+                eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(new UUID(0, 0), "SERVER", null, "Welcome to the chat!"), cmw.session()));
             } else {
                 log.info("User {} tried to log in with wrong password", user.getEmail());
                 eventBus.publishEvent(new LoginFailedResponse());
