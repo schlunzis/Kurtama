@@ -11,6 +11,7 @@ import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccess
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfulResponse;
+import org.schlunzis.kurtama.server.internal.ForcedLogoutEvent;
 import org.schlunzis.kurtama.server.lobby.LobbyStore;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
@@ -88,6 +89,11 @@ public class AuthenticationService implements IAuthenticationService {
             log.info("User with email {} already exists", email);
             eventBus.publishEvent(new ServerMessageWrapper(new RegisterFailedResponse(), cmw.getSession()));
         }
+    }
+
+    @EventListener
+    public void onLogoutRequest(ForcedLogoutEvent forcedLogoutEvent) {
+        logout(forcedLogoutEvent.session());
     }
 
     // ################################################
