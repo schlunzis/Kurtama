@@ -3,6 +3,7 @@ package org.schlunzis.kurtama.server.service;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
@@ -15,9 +16,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import java.util.Collection;
 
 @Slf4j
+@ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class AbstractMessageContext {
+public abstract class AbstractMessageContext {
 
     protected final ResponseAssembler responseAssembler;
 
@@ -28,10 +30,6 @@ public class AbstractMessageContext {
     protected final ISession session;
     @Getter
     protected final ServerUser user;
-
-    public void respond(IServerMessage message) {
-        responseAssembler.setMainResponse(new ServerMessageWrapper(message, session));
-    }
 
     public void respondAdditionally(IServerMessage message) {
         responseAssembler.addAdditionalMessage(new ServerMessageWrapper(message, session));

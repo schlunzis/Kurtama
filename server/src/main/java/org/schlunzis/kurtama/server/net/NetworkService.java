@@ -33,7 +33,7 @@ public class NetworkService {
     public void onMessageWrappers(ServerMessageWrappers messageWrappers) {
         // TODO optimize using org.schlunzis.kurtama.common.messages.ServerMessageBundle
         for (ServerMessageWrapper messageWrapper : messageWrappers.wrappers()) {
-            log.debug("Sending messages to {} recipients", messageWrapper.getRecipients().size());
+            log.debug("Sending message {} to {} recipients", messageWrapper.getServerMessage(), messageWrapper.getRecipients().size());
             networkServer.sendMessage(messageWrapper.getServerMessage(), messageWrapper.getRecipients());
         }
     }

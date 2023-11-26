@@ -42,6 +42,10 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
         this.clientMessage = clientMessage;
     }
 
+    public void respond(IServerMessage message) {
+        responseAssembler.setMainResponse(new ServerMessageWrapper(message, session));
+    }
+
     public void close() {
         eventBus.publishEvent(new ServerMessageWrappers(responseAssembler.assemble()));
     }
@@ -52,6 +56,7 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
             SecondaryRequestContext<T, IServerMessage> secondaryRequestContext =
                     new SecondaryRequestContext<>(mainResponse.get().getServerMessage(), this,
                             responseAssembler, authenticationService, eventBus);
+            log.info("sending secondary request {}", secondaryRequestContext);
             eventBus.publishEvent(secondaryRequestContext);
         }
         close();

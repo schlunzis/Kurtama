@@ -2,6 +2,7 @@ package org.schlunzis.kurtama.server.service;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
@@ -12,6 +13,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
 
 @Getter
+@ToString
 @EqualsAndHashCode(callSuper = true)
 public class SecondaryRequestContext<C extends IClientMessage, S extends IServerMessage> extends AbstractMessageContext implements ResolvableTypeProvider {
 
