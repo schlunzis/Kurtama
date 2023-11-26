@@ -24,16 +24,17 @@ public class ClientMessageDispatcher {
 
     public void dispatch(IClientMessage clientMessage, ISession session) {
         log.info("going to dispatch message {}", clientMessage);
+        ResponseAssembler responseAssembler = new ResponseAssembler(clientMessage);
         if (clientMessage instanceof LoginRequest lir) {
-            eventBus.publishEvent(new ClientMessageWrapper<>(lir, session, null));
+            eventBus.publishEvent(new ClientMessageContext<>(lir, session, null, responseAssembler));
         } else if (clientMessage instanceof RegisterRequest rr) {
-            eventBus.publishEvent(new ClientMessageWrapper<>(rr, session, null));
+            eventBus.publishEvent(new ClientMessageContext<>(rr, session, null, responseAssembler));
         } else {
             Optional<ServerUser> user = authenticationService.getUserForSession(session);
             user.ifPresentOrElse(
                     u -> {
                         log.info("Received authenticated ClientMessage");
-                        eventBus.publishEvent(new ClientMessageWrapper<>(clientMessage, session, u));
+                        eventBus.publishEvent(new ClientMessageContext<>(clientMessage, session, u, responseAssembler));
                     },
                     () -> log.info("Received unauthenticated ClientMessage")
             );

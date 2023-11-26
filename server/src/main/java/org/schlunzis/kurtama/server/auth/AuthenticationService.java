@@ -13,7 +13,7 @@ import org.schlunzis.kurtama.common.messages.authentication.register.RegisterReq
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
 import org.schlunzis.kurtama.server.lobby.LobbyStore;
-import org.schlunzis.kurtama.server.net.ClientMessageWrapper;
+import org.schlunzis.kurtama.server.net.ClientMessageContext;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
 import org.schlunzis.kurtama.server.user.DBUser;
@@ -48,17 +48,17 @@ public class AuthenticationService implements IAuthenticationService {
     // ################################################
 
     @EventListener
-    public void onLoginEvent(ClientMessageWrapper<LoginRequest> cmw) {
+    public void onLoginEvent(ClientMessageContext<LoginRequest> cmw) {
         log.info("Received LoginEvent. Going to authenticate user");
-        LoginRequest loginRequest = cmw.clientMessage();
+        LoginRequest loginRequest = cmw.getClientMessage();
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
-                userSessionMap.put(user.toServerUser(), cmw.session());
+                userSessionMap.put(user.toServerUser(), cmw.getSession());
                 log.info("User {} logged in", user.getEmail());
                 Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(l -> new LobbyInfo(l.getId(), l.getName(), l.getUsers().size())).toList();
-                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail(), lobbyInfos), cmw.session()));
-                eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(new UUID(0, 0), "SERVER", null, "Welcome to the chat!"), cmw.session()));
+                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail(), lobbyInfos), cmw.getSession()));
+                eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(new UUID(0, 0), "SERVER", null, "Welcome to the chat!"), cmw.getSession()));
             } else {
                 log.info("User {} tried to log in with wrong password", user.getEmail());
                 eventBus.publishEvent(new LoginFailedResponse());
@@ -68,24 +68,24 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @EventListener
-    public void onLogoutRequest(ClientMessageWrapper<LogoutRequest> cmw) {
-        userSessionMap.remove(cmw.session());
-        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), cmw.session()));
-        log.info("Client with session {} logged out", cmw.session());
+    public void onLogoutRequest(ClientMessageContext<LogoutRequest> cmw) {
+        userSessionMap.remove(cmw.getSession());
+        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), cmw.getSession()));
+        log.info("Client with session {} logged out", cmw.getSession());
     }
 
     @EventListener
-    public void onRegisterEvent(ClientMessageWrapper<RegisterRequest> cmw) {
-        RegisterRequest rr = cmw.clientMessage();
+    public void onRegisterEvent(ClientMessageContext<RegisterRequest> cmw) {
+        RegisterRequest rr = cmw.getClientMessage();
         String email = rr.getEmail();
         String username = rr.getUsername();
         String password = rr.getPassword();
         try {
             userStore.createUser(new DBUser(email, username, password));
-            eventBus.publishEvent(new ServerMessageWrapper(new RegisterSuccessfulResponse(), cmw.session()));
+            eventBus.publishEvent(new ServerMessageWrapper(new RegisterSuccessfulResponse(), cmw.getSession()));
         } catch (IllegalArgumentException iae) {
             log.info("User with email {} already exists", email);
-            eventBus.publishEvent(new ServerMessageWrapper(new RegisterFailedResponse(), cmw.session()));
+            eventBus.publishEvent(new ServerMessageWrapper(new RegisterFailedResponse(), cmw.getSession()));
         }
     }
 
