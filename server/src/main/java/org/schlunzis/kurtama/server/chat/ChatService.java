@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.chat.ClientChatMessage;
 import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
-import org.schlunzis.kurtama.server.net.ClientMessageContext;
+import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 

@@ -8,7 +8,7 @@ import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.LeaveLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.server.*;
 import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
-import org.schlunzis.kurtama.server.net.ClientMessageContext;
+import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 

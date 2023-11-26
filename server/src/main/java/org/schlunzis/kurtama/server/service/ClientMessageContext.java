@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.server.net;
+package org.schlunzis.kurtama.server.service;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,8 +9,10 @@ import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
-import org.schlunzis.kurtama.server.service.AbstractMessageContext;
-import org.schlunzis.kurtama.server.service.SecondaryRequestContext;
+import org.schlunzis.kurtama.server.net.ISession;
+import org.schlunzis.kurtama.server.net.ResponseAssembler;
+import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
+import org.schlunzis.kurtama.server.net.ServerMessageWrappers;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;

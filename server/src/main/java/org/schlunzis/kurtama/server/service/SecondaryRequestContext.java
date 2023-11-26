@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
-import org.schlunzis.kurtama.server.net.ClientMessageContext;
 import org.schlunzis.kurtama.server.net.ResponseAssembler;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;

@@ -6,6 +6,7 @@ import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
+import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
