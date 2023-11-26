@@ -54,11 +54,10 @@ public class AuthenticationService implements IAuthenticationService {
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
-                
+
                 userSessionMap.get(user.toServerUser()).ifPresent(oldSession -> {
                     log.info("User {} already logged in. Going to log out old session {}", user.getEmail(), oldSession);
-                    userSessionMap.remove(oldSession);
-                    eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), oldSession));
+                    logout(oldSession);
                 });
 
                 userSessionMap.put(user.toServerUser(), cmw.session());
@@ -76,9 +75,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     @EventListener
     public void onLogoutRequest(ClientMessageWrapper<LogoutRequest> cmw) {
-        userSessionMap.remove(cmw.session());
-        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), cmw.session()));
-        log.info("Client with session {} logged out", cmw.session());
+        logout(cmw.session());
     }
 
     @EventListener
@@ -120,6 +117,12 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public Optional<ISession> getSessionForUser(ServerUser user) {
         return userSessionMap.get(user);
+    }
+
+    private void logout(ISession session) {
+        userSessionMap.remove(session);
+        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), session));
+        log.info("Client with session {} logged out", session);
     }
 
 }
