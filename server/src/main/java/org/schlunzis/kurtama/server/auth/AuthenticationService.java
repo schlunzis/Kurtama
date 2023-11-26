@@ -72,23 +72,24 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @EventListener
-    public void onLogoutRequest(ClientMessageContext<LogoutRequest> cmw) {
-        logout(cmw.getSession());
+    public void onLogoutRequest(ClientMessageContext<LogoutRequest> cmc) {
+        logout(cmc.getSession());
     }
 
     @EventListener
-    public void onRegisterEvent(ClientMessageContext<RegisterRequest> cmw) {
-        RegisterRequest rr = cmw.getClientMessage();
+    public void onRegisterEvent(ClientMessageContext<RegisterRequest> cmc) {
+        RegisterRequest rr = cmc.getClientMessage();
         String email = rr.getEmail();
         String username = rr.getUsername();
         String password = rr.getPassword();
         try {
             userStore.createUser(new DBUser(email, username, password));
-            eventBus.publishEvent(new ServerMessageWrapper(new RegisterSuccessfulResponse(), cmw.getSession()));
+            cmc.respond(new RegisterSuccessfulResponse());
         } catch (IllegalArgumentException iae) {
             log.info("User with email {} already exists", email);
-            eventBus.publishEvent(new ServerMessageWrapper(new RegisterFailedResponse(), cmw.getSession()));
+            cmc.respond(new RegisterFailedResponse());
         }
+        cmc.close();
     }
 
     @EventListener
@@ -122,6 +123,7 @@ public class AuthenticationService implements IAuthenticationService {
         return userSessionMap.get(user);
     }
 
+    // not using the ClientMessageContext due to the ForcedLogoutEvent. might be changed in the future
     private void logout(ISession session) {
         userSessionMap.remove(session);
         eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), session));
