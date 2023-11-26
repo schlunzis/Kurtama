@@ -58,8 +58,8 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
     public void closeWithReRequest() {
         Optional<ServerMessageWrapper> mainResponse = responseAssembler.getMainResponse();
         if (mainResponse.isPresent()) {
-            SecondaryRequestContext<T, IServerMessage> secondaryRequestContext =
-                    new SecondaryRequestContext<>(mainResponse.get().getServerMessage(), this,
+            SecondaryRequestContext<IServerMessage> secondaryRequestContext =
+                    new SecondaryRequestContext<>(mainResponse.get().getServerMessage(), session, user,
                             responseAssembler, authenticationService, eventBus);
             log.info("sending secondary request {}", secondaryRequestContext);
             eventBus.publishEvent(secondaryRequestContext);
