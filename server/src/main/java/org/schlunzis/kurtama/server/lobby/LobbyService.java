@@ -10,6 +10,7 @@ import org.schlunzis.kurtama.server.auth.AuthenticationService;
 import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
 import org.schlunzis.kurtama.server.net.ClientMessageWrapper;
 import org.schlunzis.kurtama.server.service.AbstractService;
+import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,12 @@ public class LobbyService extends AbstractService {
         try {
             ServerLobby lobby = lobbyManagement.joinLobby(request.lobbyID(), cmw.user());
             sendTo(new JoinLobbySuccessfullyResponse(lobby.toDTO()), cmw.user());
-            // TODO update clients of users in lobby #8
+
+            // inform all other users in lobby
+            Collection<ServerUser> users = lobby.getUsers();
+            users.remove(cmw.user());
+            sendToMany(new UserJoinedLobbyMessage(cmw.user().toDTO()), users);
+
             updateLobbyListInfo();
         } catch (LobbyNotFoundException e) {
             log.info("Could not join lobby. Lobby not found.");
@@ -64,7 +70,12 @@ public class LobbyService extends AbstractService {
         try {
             lobbyManagement.leaveLobby(request.lobbyID(), cmw.user());
             sendTo(new LeaveLobbySuccessfullyResponse(), cmw.user());
-            // TODO update clients of users in lobby #8
+
+            // inform all other users in lobby
+            Collection<ServerUser> users = lobbyManagement.getLobby(request.lobbyID()).getUsers();
+            users.remove(cmw.user());
+            sendToMany(new UserLeftLobbyMessage(cmw.user().toDTO()), users);
+
             updateLobbyListInfo();
         } catch (LobbyNotFoundException e) {
             log.info("Could not leave lobby. Lobby not found.");
@@ -75,6 +86,9 @@ public class LobbyService extends AbstractService {
         }
     }
 
+    /**
+     * Updates the lobby list info for all users in the main menu.
+     */
     private void updateLobbyListInfo() {
         Collection<LobbyInfo> lobbyInfos = lobbyManagement.getAll().stream().map(ServerLobby::getInfo).toList();
         sendToAll(new LobbyListInfoMessage(lobbyInfos));

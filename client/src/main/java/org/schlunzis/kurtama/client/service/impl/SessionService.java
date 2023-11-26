@@ -11,10 +11,7 @@ import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
-import org.schlunzis.kurtama.common.messages.lobby.server.JoinLobbySuccessfullyResponse;
-import org.schlunzis.kurtama.common.messages.lobby.server.LeaveLobbySuccessfullyResponse;
-import org.schlunzis.kurtama.common.messages.lobby.server.LobbyCreatedSuccessfullyResponse;
-import org.schlunzis.kurtama.common.messages.lobby.server.LobbyListInfoMessage;
+import org.schlunzis.kurtama.common.messages.lobby.server.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +30,7 @@ public class SessionService implements ISessionService {
 
     private final ObservableList<LobbyInfo> lobbyList = FXCollections.observableList(new ArrayList<>());
     private final ObservableList<String> chatMessages = FXCollections.observableList(new ArrayList<>());
+    private final ObservableList<String> lobbyUsersList = FXCollections.observableList(new ArrayList<>());
     private UUID currentChatID = GLOBAL_CHAT_ID;
     private Optional<IUser> currentUser = Optional.empty();
     private Optional<ILobby> currentLobby = Optional.empty();
@@ -53,18 +51,36 @@ public class SessionService implements ISessionService {
     public void onLobbyCreatedSuccessfullyResponse(LobbyCreatedSuccessfullyResponse lcsr) {
         currentLobby = Optional.of(lcsr.lobby());
         currentChatID = lcsr.lobby().getChatID();
+        Platform.runLater(() -> {
+            lobbyUsersList.clear();
+            lcsr.lobby().getUsers().forEach(u -> lobbyUsersList.add(u.getUsername()));
+        });
     }
 
     @EventListener
     public void onJoinLobbySuccessfullyResponse(JoinLobbySuccessfullyResponse jlsr) {
         currentLobby = Optional.of(jlsr.lobby());
         currentChatID = jlsr.lobby().getChatID();
+        Platform.runLater(() -> {
+            lobbyUsersList.clear();
+            jlsr.lobby().getUsers().forEach(u -> lobbyUsersList.add(u.getUsername()));
+        });
     }
 
     @EventListener
     public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse llsr) {
         currentLobby = Optional.empty();
         currentChatID = GLOBAL_CHAT_ID;
+    }
+
+    @EventListener
+    void onUserLeftLobbyMessage(UserLeftLobbyMessage ullm) {
+        Platform.runLater(() -> lobbyUsersList.remove(ullm.leavingLobbyMember().getUsername()));
+    }
+
+    @EventListener
+    void onUserJoinedLobbyMessage(UserJoinedLobbyMessage ujlm) {
+        Platform.runLater(() -> lobbyUsersList.add(ujlm.joiningLobbyMember().getUsername()));
     }
 
     @EventListener

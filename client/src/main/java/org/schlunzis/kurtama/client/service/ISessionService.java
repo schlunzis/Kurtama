@@ -18,6 +18,8 @@ public interface ISessionService {
 
     ObservableList<String> getChatMessages();
 
+    ObservableList<String> getLobbyUsersList();
+
     UUID getCurrentChatID();
 
 }
