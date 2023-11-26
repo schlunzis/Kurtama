@@ -52,6 +52,12 @@ public class AuthenticationService implements IAuthenticationService {
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
+
+                userSessionMap.get(user.toServerUser()).ifPresent(oldSession -> {
+                    log.info("User {} already logged in. Going to log out old session {}", user.getEmail(), oldSession);
+                    logout(oldSession);
+                });
+
                 userSessionMap.put(user.toServerUser(), cmc.getSession());
                 log.info("User {} logged in", user.getEmail());
                 Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(l -> new LobbyInfo(l.getId(), l.getName(), l.getUsers().size())).toList();
@@ -66,9 +72,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     @EventListener
     public void onLogoutRequest(ClientMessageContext<LogoutRequest> cmw) {
-        userSessionMap.remove(cmw.getSession());
-        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), cmw.getSession()));
-        log.info("Client with session {} logged out", cmw.getSession());
+        logout(cmw.getSession());
     }
 
     @EventListener
@@ -110,6 +114,12 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public Optional<ISession> getSessionForUser(ServerUser user) {
         return userSessionMap.get(user);
+    }
+
+    private void logout(ISession session) {
+        userSessionMap.remove(session);
+        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), session));
+        log.info("Client with session {} logged out", session);
     }
 
 }
