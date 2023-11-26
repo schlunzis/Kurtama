@@ -1,19 +1,21 @@
 package org.schlunzis.kurtama.server.net;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
+import org.schlunzis.kurtama.server.service.AbstractMessageContext;
 import org.schlunzis.kurtama.server.service.SecondaryRequestContext;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
 
-import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -30,60 +32,14 @@ import java.util.Optional;
 @Slf4j
 @Getter
 @ToString
-@EqualsAndHashCode
-@RequiredArgsConstructor
-public class ClientMessageContext<T extends IClientMessage> implements ResolvableTypeProvider {
+@EqualsAndHashCode(callSuper = true)
+public class ClientMessageContext<T extends IClientMessage> extends AbstractMessageContext implements ResolvableTypeProvider {
 
     private final T clientMessage;
-    private final ISession session;
-    private final ServerUser user;
 
-    @Getter(AccessLevel.NONE)
-    private final ResponseAssembler responseAssembler;
-
-    @Getter(AccessLevel.NONE)
-    private final AuthenticationService authenticationService;
-    @Getter(AccessLevel.NONE)
-    private final ApplicationEventPublisher eventBus;
-
-    public void respond(IServerMessage message) {
-        responseAssembler.setMainResponse(new ServerMessageWrapper(message, session));
-    }
-
-    /**
-     * This method sends the given message to the given recipient.
-     *
-     * @param message   the message to send
-     * @param recipient the user, which should receive the message
-     */
-    public void sendTo(IServerMessage message, ServerUser recipient) {
-        authenticationService.getSessionForUser(recipient).ifPresentOrElse(
-                s -> responseAssembler.addAdditionalMessage(new ServerMessageWrapper(message, s)),
-                () -> log.warn("Could not get session for user")
-        );
-    }
-
-    /**
-     * This method sends the given message to the given recipients.
-     *
-     * @param message    the message to send
-     * @param recipients the users, which should receive the message
-     */
-    public void sendToMany(IServerMessage message, Collection<ServerUser> recipients) {
-        Collection<ISession> sessions = authenticationService.getSessionsForUsers(recipients);
-        if (sessions.size() != recipients.size()) {
-            log.warn("Tried to retrieve session for not logged-in users");
-        }
-        responseAssembler.addAdditionalMessage(new ServerMessageWrapper(message, sessions));
-    }
-
-    /**
-     * This method sends the given message to all logged-in clients.
-     *
-     * @param message the message to send
-     */
-    public void sendToAll(IServerMessage message) {
-        responseAssembler.addAdditionalMessage(new ServerMessageWrapper(message, authenticationService.getAllLoggedInSessions()));
+    public ClientMessageContext(T clientMessage, ISession session, ServerUser user, ResponseAssembler responseAssembler, AuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
+        super(responseAssembler, authenticationService, eventBus, session, user);
+        this.clientMessage = clientMessage;
     }
 
     public void close() {

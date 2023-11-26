@@ -11,7 +11,6 @@ import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccess
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfulResponse;
-import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
 import org.schlunzis.kurtama.server.lobby.LobbyStore;
 import org.schlunzis.kurtama.server.net.ClientMessageContext;
 import org.schlunzis.kurtama.server.net.ISession;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * This class handles all login-, logout- and registration events. It also provides information about whether a user is
@@ -48,23 +46,22 @@ public class AuthenticationService implements IAuthenticationService {
     // ################################################
 
     @EventListener
-    public void onLoginEvent(ClientMessageContext<LoginRequest> cmw) {
+    public void onLoginEvent(ClientMessageContext<LoginRequest> cmc) {
         log.info("Received LoginEvent. Going to authenticate user");
-        LoginRequest loginRequest = cmw.getClientMessage();
+        LoginRequest loginRequest = cmc.getClientMessage();
 
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
-                userSessionMap.put(user.toServerUser(), cmw.getSession());
+                userSessionMap.put(user.toServerUser(), cmc.getSession());
                 log.info("User {} logged in", user.getEmail());
                 Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(l -> new LobbyInfo(l.getId(), l.getName(), l.getUsers().size())).toList();
-                eventBus.publishEvent(new ServerMessageWrapper(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail(), lobbyInfos), cmw.getSession()));
-                eventBus.publishEvent(new ServerMessageWrapper(new ServerChatMessage(new UUID(0, 0), "SERVER", null, "Welcome to the chat!"), cmw.getSession()));
+                cmc.respond(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail(), lobbyInfos));
             } else {
                 log.info("User {} tried to log in with wrong password", user.getEmail());
-                eventBus.publishEvent(new LoginFailedResponse());
+                cmc.respond(new LoginFailedResponse());
             }
         }, () -> log.info("User {} not found", loginRequest.getEmail()));
-
+        cmc.closeWithReRequest();
     }
 
     @EventListener
