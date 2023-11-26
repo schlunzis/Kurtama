@@ -45,6 +45,7 @@ public class ChatService {
                     () -> log.info("No Chat for ChatMessage: {}", ccm)
             );
         }
+        cmc.close();
     }
 
 }

@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -49,7 +50,9 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
     }
 
     public void close() {
-        eventBus.publishEvent(new ServerMessageWrappers(responseAssembler.assemble()));
+        List<ServerMessageWrapper> wrappers = responseAssembler.assemble();
+        if (!wrappers.isEmpty())
+            eventBus.publishEvent(new ServerMessageWrappers(wrappers));
     }
 
     public void closeWithReRequest() {

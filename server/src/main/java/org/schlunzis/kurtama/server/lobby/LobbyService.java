@@ -54,6 +54,7 @@ public class LobbyService {
             log.error("Could not join lobby.", e);
             cmc.respond(new JoinLobbyFailedResponse());
         }
+        cmc.close();
     }
 
     @EventListener
@@ -71,6 +72,7 @@ public class LobbyService {
             log.error("Could not leave lobby.", e);
             cmc.respond(new LobbyLeaveFailedResponse());
         }
+        cmc.close();
     }
 
     private void updateLobbyListInfo(ClientMessageContext<? extends IClientMessage> cmc) {
