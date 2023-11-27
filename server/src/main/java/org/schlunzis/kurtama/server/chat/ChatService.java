@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.chat.ClientChatMessage;
 import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
-import org.schlunzis.kurtama.server.auth.AuthenticationService;
-import org.schlunzis.kurtama.server.net.ClientMessageWrapper;
-import org.schlunzis.kurtama.server.service.AbstractService;
-import org.springframework.context.ApplicationEventPublisher;
+import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -15,20 +12,19 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-public class ChatService extends AbstractService {
+public class ChatService {
 
     private static final UUID GLOBAL_CHAT_ID = new UUID(0, 0);
 
     private final ChatManagement chatManagement;
 
-    public ChatService(ApplicationEventPublisher eventBus, AuthenticationService authenticationService, ChatManagement chatManagement) {
-        super(eventBus, authenticationService);
+    public ChatService(ChatManagement chatManagement) {
         this.chatManagement = chatManagement;
     }
 
     @EventListener
-    public void onClientChatMessage(ClientMessageWrapper<ClientChatMessage> cmw) {
-        ClientChatMessage ccm = cmw.clientMessage();
+    public void onClientChatMessage(ClientMessageContext<ClientChatMessage> cmc) {
+        ClientChatMessage ccm = cmc.getClientMessage();
         log.debug("Processing chat message {}", ccm);
 
         if (ccm.getChatID() == null) {
@@ -36,19 +32,20 @@ public class ChatService extends AbstractService {
             return;
         }
 
-        IServerMessage message = new ServerChatMessage(ccm.getChatID(), ccm.getNickname(), cmw.user().toDTO(), ccm.getMessage());
+        IServerMessage message = new ServerChatMessage(ccm.getChatID(), ccm.getNickname(), cmc.getUser().toDTO(), ccm.getMessage());
         if (ccm.getChatID().equals(GLOBAL_CHAT_ID)) {
             log.info("CHAT[GLOBAL]: {}; {}", ccm.getNickname(), ccm.getMessage());
-            sendToAll(message);
+            cmc.sendToAll(message);
         } else {
             chatManagement.getChat(ccm.getChatID()).ifPresentOrElse(
                     chat -> {
                         log.info("CHAT[{}]: {}; {}", ccm.getChatID(), ccm.getNickname(), ccm.getMessage());
-                        sendToMany(message, chat.getChatters());
+                        cmc.sendToMany(message, chat.getChatters());
                     },
                     () -> log.info("No Chat for ChatMessage: {}", ccm)
             );
         }
+        cmc.close();
     }
 
 }
