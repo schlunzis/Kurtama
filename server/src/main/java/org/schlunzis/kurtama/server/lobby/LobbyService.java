@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.server.lobby;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
@@ -16,13 +17,10 @@ import java.util.Collection;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class LobbyService {
 
     private final LobbyManagement lobbyManagement;
-
-    public LobbyService(LobbyManagement lobbyManagement) {
-        this.lobbyManagement = lobbyManagement;
-    }
 
     @EventListener
     public void onCreateLobbyRequest(ClientMessageContext<CreateLobbyRequest> cmc) {
@@ -44,7 +42,7 @@ public class LobbyService {
 
         try {
             ServerLobby lobby = lobbyManagement.joinLobby(request.lobbyID(), cmc.getUser());
-            cmc.sendTo(new JoinLobbySuccessfullyResponse(lobby.toDTO()), cmc.getUser());
+            cmc.respond(new JoinLobbySuccessfullyResponse(lobby.toDTO()));
             // TODO update clients of users in lobby #8
             updateLobbyListInfo(cmc);
         } catch (LobbyNotFoundException e) {

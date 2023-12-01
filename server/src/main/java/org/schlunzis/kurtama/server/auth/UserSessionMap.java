@@ -12,19 +12,24 @@ class UserSessionMap {
     private final Map<ServerUser, ISession> map = new HashMap<>();
 
     public void put(ServerUser user, ISession session) {
+        Objects.requireNonNull(user);
+        Objects.requireNonNull(session);
         map.put(user, session);
     }
 
     public Optional<ISession> get(ServerUser user) {
+        Objects.requireNonNull(user);
         return Optional.ofNullable(map.get(user));
     }
 
     public Optional<ServerUser> get(ISession session) {
+        Objects.requireNonNull(session);
         Optional<Map.Entry<ServerUser, ISession>> optionalEntry = map.entrySet().stream().filter(e -> e.getValue().equals(session)).findFirst();
         return optionalEntry.map(Map.Entry::getKey);
     }
 
     public Collection<ISession> getFor(Collection<ServerUser> users) {
+        Objects.requireNonNull(users);
         return users.stream()
                 .map(map::get)
                 .filter(Objects::nonNull)
@@ -36,14 +41,17 @@ class UserSessionMap {
     }
 
     public boolean contains(ISession session) {
+        Objects.requireNonNull(session);
         return map.containsValue(session);
     }
 
     public void remove(ServerUser user) {
+        Objects.requireNonNull(user);
         map.remove(user);
     }
 
     public void remove(ISession session) {
+        Objects.requireNonNull(session);
         map.entrySet().removeIf(entry -> entry.getValue().equals(session));
     }
 
