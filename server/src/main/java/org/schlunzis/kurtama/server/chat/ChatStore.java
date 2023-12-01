@@ -2,10 +2,7 @@ package org.schlunzis.kurtama.server.chat;
 
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 class ChatStore {
@@ -24,10 +21,12 @@ class ChatStore {
     }
 
     public void remove(UUID uuid) {
+        Objects.requireNonNull(uuid);
         chats.remove(uuid);
     }
 
     public Optional<Chat> get(UUID uuid) {
+        Objects.requireNonNull(uuid);
         return Optional.ofNullable(chats.get(uuid));
     }
 
