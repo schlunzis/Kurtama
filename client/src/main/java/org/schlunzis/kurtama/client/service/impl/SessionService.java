@@ -5,14 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import org.schlunzis.kurtama.client.service.ISessionService;
-import org.schlunzis.kurtama.common.ILobby;
 import org.schlunzis.kurtama.common.IUser;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
-import org.schlunzis.kurtama.common.messages.lobby.server.JoinLobbySuccessfullyResponse;
-import org.schlunzis.kurtama.common.messages.lobby.server.LeaveLobbySuccessfullyResponse;
-import org.schlunzis.kurtama.common.messages.lobby.server.LobbyCreatedSuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LobbyListInfoMessage;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -27,41 +23,26 @@ import java.util.Optional;
 @Service
 public class SessionService implements ISessionService {
 
-
     private final ObservableList<LobbyInfo> lobbyList = FXCollections.observableList(new ArrayList<>());
     private Optional<IUser> currentUser = Optional.empty();
-    private Optional<ILobby> currentLobby = Optional.empty();
 
     @EventListener
     public void onLoginSuccessfulResponse(LoginSuccessfulResponse lsr) {
         currentUser = Optional.of(lsr.getUser());
-        lobbyList.setAll(lsr.getLobbyInfos());
+        Platform.runLater(() ->
+                lobbyList.setAll(lsr.getLobbyInfos())
+        );
     }
 
     @EventListener
-    public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
+    public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse ignored) {
         currentUser = Optional.empty();
     }
 
     @EventListener
-    public void onLobbyCreatedSuccessfullyResponse(LobbyCreatedSuccessfullyResponse lcsr) {
-        currentLobby = Optional.of(lcsr.lobby());
-    }
-
-    @EventListener
-    public void onJoinLobbySuccessfullyResponse(JoinLobbySuccessfullyResponse jlsr) {
-        currentLobby = Optional.of(jlsr.lobby());
-    }
-
-    @EventListener
-    public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse llsr) {
-        currentLobby = Optional.empty();
-    }
-
-    @EventListener
-    public void onLobbyListInfoMessage(LobbyListInfoMessage llim) {
+    public void onLobbyListInfoMessage(LobbyListInfoMessage lim) {
         Platform.runLater(() ->
-                lobbyList.setAll(llim.lobbies())
+                lobbyList.setAll(lim.lobbies())
         );
     }
 
