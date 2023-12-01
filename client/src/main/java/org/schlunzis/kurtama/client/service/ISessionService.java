@@ -6,7 +6,6 @@ import org.schlunzis.kurtama.common.IUser;
 import org.schlunzis.kurtama.common.LobbyInfo;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public interface ISessionService {
 
@@ -15,9 +14,5 @@ public interface ISessionService {
     Optional<ILobby> getCurrentLobby();
 
     ObservableList<LobbyInfo> getLobbyList();
-
-    ObservableList<String> getChatMessages();
-
-    UUID getCurrentChatID();
 
 }
