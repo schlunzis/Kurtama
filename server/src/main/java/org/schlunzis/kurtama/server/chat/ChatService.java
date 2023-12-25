@@ -8,6 +8,7 @@ import org.schlunzis.kurtama.common.messages.chat.ClientChatMessage;
 import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -21,9 +22,10 @@ public class ChatService {
 
     private final ChatManagement chatManagement;
 
+    @Async
     @EventListener
-    public void onClientChatMessage(ClientMessageContext<ClientChatMessage> cmc) {
-        ClientChatMessage ccm = cmc.getClientMessage();
+    public void onClientChatMessage(final ClientMessageContext<ClientChatMessage> cmc) {
+        final ClientChatMessage ccm = cmc.getClientMessage();
         log.debug("Processing chat message {}", ccm);
 
         if (!validateArguments(cmc)) {
@@ -31,7 +33,7 @@ public class ChatService {
             return;
         }
 
-        IServerMessage message = new ServerChatMessage(ccm.getChatID(), ccm.getNickname(), cmc.getUser().toDTO(), ccm.getMessage());
+        final IServerMessage message = new ServerChatMessage(ccm.getChatID(), ccm.getNickname(), cmc.getUser().toDTO(), ccm.getMessage());
         if (ccm.getChatID().equals(GLOBAL_CHAT_ID)) {
             log.info("CHAT[GLOBAL]: {}; {}", ccm.getNickname(), ccm.getMessage());
             cmc.sendToAll(message);
@@ -51,7 +53,7 @@ public class ChatService {
     }
 
     private boolean validateArguments(ClientMessageContext<ClientChatMessage> cmc) {
-        ClientChatMessage ccm = cmc.getClientMessage();
+        final ClientChatMessage ccm = cmc.getClientMessage();
 
         if (ccm.getChatID() == null) {
             log.info("chat id is null");
