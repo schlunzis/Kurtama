@@ -6,10 +6,7 @@ import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.schlunzis.kurtama.client.service.ISessionService;
-import org.schlunzis.kurtama.common.IUser;
-import org.schlunzis.kurtama.common.messages.chat.ClientChatMessage;
-import org.springframework.context.ApplicationEventPublisher;
+import org.schlunzis.kurtama.client.service.IChatService;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -18,8 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final ApplicationEventPublisher eventBus;
-    private final ISessionService sessionService;
+    private final IChatService chatService;
 
     @FXML
     private ListView<String> chatListView;
@@ -30,17 +26,16 @@ public class ChatController {
 
     @FXML
     public void initialize() {
-        chatListView.setItems(sessionService.getChatMessages());
-        String name = sessionService.getCurrentUser().map(IUser::getUsername).orElse("Jonas Doe");
-        senderNameTextField.setText(name);
+        chatListView.setItems(chatService.getChatMessages());
+        senderNameTextField.setText(chatService.getCurrentUsername());
     }
 
     @FXML
     private void sendMessage() {
         String text = chatTextField.getText();
-        if (text.isEmpty())
+        if (text.isBlank())
             return;
-        eventBus.publishEvent(new ClientChatMessage(sessionService.getCurrentChatID(), senderNameTextField.getText(), text));
+        chatService.sendMessage(senderNameTextField.getText(), text);
         chatTextField.setText("");
     }
 
