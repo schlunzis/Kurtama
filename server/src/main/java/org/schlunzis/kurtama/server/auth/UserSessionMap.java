@@ -2,102 +2,63 @@ package org.schlunzis.kurtama.server.auth;
 
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
+import org.schlunzis.kurtama.server.util.ConcurrentHashMapExt;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @Component
 class UserSessionMap {
 
-    private final Map<ServerUser, ISession> map = new HashMap<>();
-
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
-    private final ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
+    private final ConcurrentHashMapExt<ServerUser, ISession> map = new ConcurrentHashMapExt<>();
 
     public void put(ServerUser user, ISession session) {
         Objects.requireNonNull(user);
         Objects.requireNonNull(session);
-        writeLock.lock();
-        try {
-            map.put(user, session);
-        } finally {
-            writeLock.unlock();
-        }
+        map.put(user, session);
     }
 
     public Optional<ISession> get(ServerUser user) {
         Objects.requireNonNull(user);
-        readLock.lock();
-        try {
-            return Optional.ofNullable(map.get(user));
-        } finally {
-            readLock.unlock();
-        }
+        return Optional.ofNullable(map.get(user));
     }
 
     public Optional<ServerUser> get(ISession session) {
         Objects.requireNonNull(session);
-        readLock.lock();
-        try {
-            Optional<Map.Entry<ServerUser, ISession>> optionalEntry = map.entrySet().stream().filter(e -> e.getValue().equals(session)).findFirst();
-            return optionalEntry.map(Map.Entry::getKey);
-        } finally {
-            readLock.unlock();
-        }
+
+        Optional<Map.Entry<ServerUser, ISession>> optionalEntry = map.entrySet().stream().filter(e -> e.getValue().equals(session)).findFirst();
+        return optionalEntry.map(Map.Entry::getKey);
     }
 
     public Collection<ISession> getFor(Collection<ServerUser> users) {
         Objects.requireNonNull(users);
-        readLock.lock();
-        try {
-            return users.stream()
-                    .map(map::get)
-                    .filter(Objects::nonNull)
-                    .toList();
-        } finally {
-            readLock.unlock();
-        }
+
+        return users.stream()
+                .map(map::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     public Collection<ISession> getAllSessions() {
-        readLock.lock();
-        try {
-            return map.values();
-        } finally {
-            readLock.unlock();
-        }
+        return map.values();
     }
 
     public boolean contains(ISession session) {
         Objects.requireNonNull(session);
-        readLock.lock();
-        try {
-            return map.containsValue(session);
-        } finally {
-            readLock.unlock();
-        }
+        return map.containsValue(session);
     }
 
     public void remove(ServerUser user) {
         Objects.requireNonNull(user);
-        writeLock.lock();
-        try {
-            map.remove(user);
-        } finally {
-            writeLock.unlock();
-        }
+        map.remove(user);
     }
 
     public void remove(ISession session) {
         Objects.requireNonNull(session);
-        writeLock.lock();
-        try {
-            map.entrySet().removeIf(entry -> entry.getValue().equals(session));
-        } finally {
-            writeLock.unlock();
-        }
+        map.removeIfValue(value -> value.equals(session));
     }
 
 }
