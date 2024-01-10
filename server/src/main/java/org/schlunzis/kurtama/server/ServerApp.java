@@ -1,6 +1,6 @@
 package org.schlunzis.kurtama.server;
 
-import org.schlunzis.kurtama.server.net.INetworkServer;
+import org.schlunzis.kurtama.server.net.NetworkServerInitializer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -10,7 +10,7 @@ public class ServerApp {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(ServerApp.class, args);
-        context.getBean(INetworkServer.class).start();
+        context.getBean(NetworkServerInitializer.class).start();
     }
 
 }

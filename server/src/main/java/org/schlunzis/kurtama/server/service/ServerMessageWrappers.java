@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.server.net;
+package org.schlunzis.kurtama.server.service;
 
 import java.util.List;
 

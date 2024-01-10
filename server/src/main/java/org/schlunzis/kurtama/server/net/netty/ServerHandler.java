@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.server.net.impl;
+package org.schlunzis.kurtama.server.net.netty;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,10 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
-import org.schlunzis.kurtama.server.internal.ForcedLogoutEvent;
+import org.schlunzis.kurtama.server.net.ChannelStore;
 import org.schlunzis.kurtama.server.net.ClientMessageDispatcher;
-import org.schlunzis.kurtama.server.net.ISession;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -26,22 +24,21 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final IChannelStore channelStore;
+    private final ChannelStore<NettySession, Channel> channelStore = new ChannelStore<>(NettySession::new);
 
     private final ClientMessageDispatcher clientMessageDispatcher;
 
-    private final ApplicationEventPublisher eventBus;
-
     @Override
-    public void channelActive(final ChannelHandlerContext ctx) throws JsonProcessingException {
+    public void channelActive(final ChannelHandlerContext ctx) {
         log.info("Client joined - " + ctx);
-        channelStore.create(ctx.channel());
+        NettySession session = channelStore.create(ctx.channel());
+        clientMessageDispatcher.newClient(session);
     }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
         channelStore.get(ctx.channel()).ifPresentOrElse(
-                session -> eventBus.publishEvent(new ForcedLogoutEvent(session)),
+                clientMessageDispatcher::clientDisconnected,
                 () -> log.error("No session found for channel " + ctx.channel()));
         log.info("Client left - " + ctx);
         channelStore.remove(ctx.channel());
@@ -82,7 +79,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
      * @param serverMessage
      * @param recipients
      */
-    public void sendMessage(IServerMessage serverMessage, Collection<ISession> recipients) {
+    public void sendMessage(IServerMessage serverMessage, Collection<NettySession> recipients) {
         if (recipients.isEmpty())
             sendMessage(serverMessage);
         else

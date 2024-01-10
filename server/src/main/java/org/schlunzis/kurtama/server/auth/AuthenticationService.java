@@ -14,8 +14,8 @@ import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuc
 import org.schlunzis.kurtama.server.internal.ForcedLogoutEvent;
 import org.schlunzis.kurtama.server.lobby.LobbyStore;
 import org.schlunzis.kurtama.server.net.ISession;
-import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
+import org.schlunzis.kurtama.server.service.ServerMessageWrapper;
 import org.schlunzis.kurtama.server.user.DBUser;
 import org.schlunzis.kurtama.server.user.IUserStore;
 import org.schlunzis.kurtama.server.user.ServerUser;
@@ -126,7 +126,7 @@ public class AuthenticationService implements IAuthenticationService {
     // not using the ClientMessageContext due to the ForcedLogoutEvent. might be changed in the future
     private void logout(ISession session) {
         userSessionMap.remove(session);
-        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), session));
+        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), user));
         log.info("Client with session {} logged out", session);
     }
 

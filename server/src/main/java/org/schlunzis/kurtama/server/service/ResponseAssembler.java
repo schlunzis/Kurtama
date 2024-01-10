@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.server.net;
+package org.schlunzis.kurtama.server.service;
 
 import lombok.AccessLevel;
 import lombok.Getter;

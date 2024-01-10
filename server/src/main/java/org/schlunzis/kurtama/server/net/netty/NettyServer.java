@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.server.net.impl;
+package org.schlunzis.kurtama.server.net.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -13,7 +13,6 @@ import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.net.INetworkServer;
-import org.schlunzis.kurtama.server.net.ISession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +20,13 @@ import java.util.Collection;
 
 @Slf4j
 @Component
-public class NettyServer implements INetworkServer {
+public class NettyServer implements INetworkServer<NettySession> {
 
 
     private final ServerHandler serverHandler;
 
     // Port where chat server will listen for connections.
-    @Value("${kurtama.server.port}")
+    @Value("${kurtama.server.netty.port}")
     private int port;
 
     public NettyServer(ServerHandler serverHandler) {
@@ -35,7 +34,7 @@ public class NettyServer implements INetworkServer {
     }
 
     @Override
-    public void sendMessage(IServerMessage serverMessage, Collection<ISession> recipients) {
+    public void sendMessage(IServerMessage serverMessage, Collection<NettySession> recipients) {
         serverHandler.sendMessage(serverMessage, recipients);
     }
 
