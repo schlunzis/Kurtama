@@ -2,18 +2,18 @@ package org.schlunzis.kurtama.server.auth;
 
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
-import org.schlunzis.kurtama.server.util.ConcurrentHashMapExt;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 class UserSessionMap {
 
-    private final ConcurrentHashMapExt<ServerUser, ISession> map = new ConcurrentHashMapExt<>();
+    private final ConcurrentHashMap<ServerUser, ISession> map = new ConcurrentHashMap<>();
 
     public void put(ServerUser user, ISession session) {
         Objects.requireNonNull(user);
@@ -58,7 +58,7 @@ class UserSessionMap {
 
     public void remove(ISession session) {
         Objects.requireNonNull(session);
-        map.removeIfValue(value -> value.equals(session));
+        map.entrySet().removeIf(e -> e.getValue().equals(session));
     }
 
 }
