@@ -1,97 +1,106 @@
 package org.schlunzis.kurtama.server.lobby;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.LobbyInfo;
+import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.LeaveLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.server.*;
-import org.schlunzis.kurtama.server.auth.AuthenticationService;
 import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
-import org.schlunzis.kurtama.server.net.ClientMessageWrapper;
-import org.schlunzis.kurtama.server.service.AbstractService;
+import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.schlunzis.kurtama.server.user.ServerUser;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Slf4j
 @Component
-public class LobbyService extends AbstractService {
+@RequiredArgsConstructor
+public class LobbyService {
 
     private final LobbyManagement lobbyManagement;
 
-    public LobbyService(ApplicationEventPublisher eventBus, AuthenticationService authenticationService, LobbyManagement lobbyManagement) {
-        super(eventBus, authenticationService);
-        this.lobbyManagement = lobbyManagement;
-    }
-
     @EventListener
-    public void onCreateLobbyRequest(ClientMessageWrapper<CreateLobbyRequest> cmw) {
-        CreateLobbyRequest request = cmw.clientMessage();
+    public void onCreateLobbyRequest(ClientMessageContext<CreateLobbyRequest> cmc) {
+        CreateLobbyRequest request = cmc.getClientMessage();
         try {
-            ServerLobby lobby = lobbyManagement.createLobby(request.name(), cmw.user());
-            sendTo(new LobbyCreatedSuccessfullyResponse(lobby.toDTO()), cmw.user());
-            updateLobbyListInfo();
+            ServerLobby lobby = lobbyManagement.createLobby(request.name(), cmc.getUser());
+            cmc.respond(new LobbyCreatedSuccessfullyResponse(lobby.toDTO()));
+            updateLobbyListInfo(cmc);
         } catch (Exception e) {
             log.info("Could not create lobby. No user found for session.");
-            sendTo(new LobbyCreationFailedResponse(), cmw.session());
+            cmc.respond(new LobbyCreationFailedResponse());
         }
+        cmc.close();
     }
 
     @EventListener
-    public void onJoinLobbyRequest(ClientMessageWrapper<JoinLobbyRequest> cmw) {
-        JoinLobbyRequest request = cmw.clientMessage();
+    public void onJoinLobbyRequest(ClientMessageContext<JoinLobbyRequest> cmc) {
+        JoinLobbyRequest request = cmc.getClientMessage();
 
         try {
-            ServerLobby lobby = lobbyManagement.joinLobby(request.lobbyID(), cmw.user());
-            sendTo(new JoinLobbySuccessfullyResponse(lobby.toDTO()), cmw.user());
-
+            ServerLobby lobby = lobbyManagement.joinLobby(request.lobbyID(), cmc.getUser());
+            cmc.respond(new JoinLobbySuccessfullyResponse(lobby.toDTO()));
+            // TODO update clients of users in lobby #8
             // inform all other users in lobby
-            Collection<ServerUser> users = lobby.getUsers();
-            users.remove(cmw.user());
-            sendToMany(new UserJoinedLobbyMessage(cmw.user().toDTO()), users);
-
-            updateLobbyListInfo();
+            Collection<ServerUser> users = new ArrayList<>(lobby.getUsers());
+            users.remove(cmc.getUser());
+            cmc.sendToMany(new UserJoinedLobbyMessage(cmc.getUser().toDTO()), users);
+            updateLobbyListInfo(cmc);
         } catch (LobbyNotFoundException e) {
             log.info("Could not join lobby. Lobby not found.");
-            sendTo(new JoinLobbyFailedResponse(), cmw.session());
+            cmc.respond(new JoinLobbyFailedResponse());
         } catch (Exception e) {
             log.error("Could not join lobby.", e);
-            sendTo(new JoinLobbyFailedResponse(), cmw.session());
+            cmc.respond(new JoinLobbyFailedResponse());
         }
+        cmc.close();
     }
 
     @EventListener
-    public void onLeaveLobbyRequest(ClientMessageWrapper<LeaveLobbyRequest> cmw) {
-        LeaveLobbyRequest request = cmw.clientMessage();
+    public void onLeaveLobbyRequest(ClientMessageContext<LeaveLobbyRequest> cmc) {
+        LeaveLobbyRequest request = cmc.getClientMessage();
         try {
-            lobbyManagement.leaveLobby(request.lobbyID(), cmw.user());
-            sendTo(new LeaveLobbySuccessfullyResponse(), cmw.user());
 
-            // inform all other users in lobby
-            Collection<ServerUser> users = lobbyManagement.getLobby(request.lobbyID()).getUsers();
-            users.remove(cmw.user());
-            sendToMany(new UserLeftLobbyMessage(cmw.user().toDTO()), users);
+            lobbyManagement.leaveLobby(request.lobbyID(), cmc.getUser());
+            cmc.respond(new LeaveLobbySuccessfullyResponse());
 
-            updateLobbyListInfo();
+
+            informRemainingUsersInLobby(cmc);
+
+            updateLobbyListInfo(cmc);
         } catch (LobbyNotFoundException e) {
             log.info("Could not leave lobby. Lobby not found.");
-            sendTo(new LobbyLeaveFailedResponse(), cmw.user());
+            cmc.respond(new LobbyLeaveFailedResponse());
         } catch (Exception e) {
             log.error("Could not leave lobby.", e);
-            sendTo(new LobbyLeaveFailedResponse(), cmw.user());
+            cmc.respond(new LobbyLeaveFailedResponse());
         }
+        cmc.close();
     }
 
     /**
      * Updates the lobby list info for all users in the main menu.
      */
-    private void updateLobbyListInfo() {
+
+    private void updateLobbyListInfo(ClientMessageContext<? extends IClientMessage> cmc) {
         Collection<LobbyInfo> lobbyInfos = lobbyManagement.getAll().stream().map(ServerLobby::getInfo).toList();
-        sendToAll(new LobbyListInfoMessage(lobbyInfos));
+        cmc.sendToAll(new LobbyListInfoMessage(lobbyInfos));
+    }
+
+    private void informRemainingUsersInLobby(ClientMessageContext<LeaveLobbyRequest> cmc) {
+        try {
+            Collection<ServerUser> users = new ArrayList<>(lobbyManagement.getLobby(cmc.getClientMessage().lobbyID()).getUsers());
+            users.remove(cmc.getUser());
+            cmc.sendToMany(new UserLeftLobbyMessage(cmc.getUser().toDTO()), users);
+        } catch (LobbyNotFoundException e) {
+            log.info("Could not get list of remaining users. Lobby probably empty.");
+        }
+
     }
 
 }

@@ -6,6 +6,7 @@ import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
+import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -24,16 +25,19 @@ public class ClientMessageDispatcher {
 
     public void dispatch(IClientMessage clientMessage, ISession session) {
         log.info("going to dispatch message {}", clientMessage);
+        ResponseAssembler responseAssembler = new ResponseAssembler(clientMessage);
         if (clientMessage instanceof LoginRequest lir) {
-            eventBus.publishEvent(new ClientMessageWrapper<>(lir, session, null));
+            eventBus.publishEvent(new ClientMessageContext<>(lir, session, null, responseAssembler, authenticationService, eventBus));
         } else if (clientMessage instanceof RegisterRequest rr) {
-            eventBus.publishEvent(new ClientMessageWrapper<>(rr, session, null));
+            eventBus.publishEvent(new ClientMessageContext<>(rr, session, null, responseAssembler, authenticationService, eventBus));
         } else {
             Optional<ServerUser> user = authenticationService.getUserForSession(session);
             user.ifPresentOrElse(
                     u -> {
                         log.info("Received authenticated ClientMessage");
-                        eventBus.publishEvent(new ClientMessageWrapper<>(clientMessage, session, u));
+                        eventBus.publishEvent(
+                                new ClientMessageContext<>(clientMessage, session, u, responseAssembler, authenticationService, eventBus)
+                        );
                     },
                     () -> log.info("Received unauthenticated ClientMessage")
             );
