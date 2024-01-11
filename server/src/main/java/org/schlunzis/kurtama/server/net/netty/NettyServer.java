@@ -13,6 +13,7 @@ import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.net.INetworkServer;
+import org.schlunzis.kurtama.server.net.ISession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +21,7 @@ import java.util.Collection;
 
 @Slf4j
 @Component
-public class NettyServer implements INetworkServer<NettySession> {
-
+public class NettyServer implements INetworkServer {
 
     private final ServerHandler serverHandler;
 
@@ -34,7 +34,7 @@ public class NettyServer implements INetworkServer<NettySession> {
     }
 
     @Override
-    public void sendMessage(IServerMessage serverMessage, Collection<NettySession> recipients) {
+    public void sendMessage(IServerMessage serverMessage, Collection<ISession> recipients) {
         serverHandler.sendMessage(serverMessage, recipients);
     }
 

@@ -3,24 +3,19 @@ package org.schlunzis.kurtama.server.net;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
-import org.schlunzis.kurtama.server.auth.AuthenticationService;
-import org.schlunzis.kurtama.server.net.netty.NettySession;
 import org.schlunzis.kurtama.server.service.ServerMessageWrapper;
 import org.schlunzis.kurtama.server.service.ServerMessageWrappers;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class NetworkService {
 
-    private final AuthenticationService authenticationService;
-
-    private final INetworkServer<NettySession> nettyNetworkServer;
+    private final INetworkServer nettyNetworkServer;
 
     @EventListener
     public void onServerMessage(IServerMessage serverMessage) {
@@ -30,9 +25,8 @@ public class NetworkService {
     @EventListener
     public void onMessageWrapper(ServerMessageWrapper messageWrapper) {
         log.debug("Sending messages to {} recipients", messageWrapper.getRecipients().size());
-        Collection<NettySession> nettySessions = messageWrapper.getRecipients().stream()
-                .map(s -> s instanceof NettySession ns ? ns : null)
-                .filter(Objects::nonNull)
+        Collection<ISession> nettySessions = messageWrapper.getRecipients().stream()
+                .filter(s -> s.getSessionType().equals(SessionType.NETTY))
                 .toList();
         nettyNetworkServer.sendMessage(messageWrapper.getServerMessage(), nettySessions);
     }

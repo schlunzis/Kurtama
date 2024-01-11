@@ -12,6 +12,8 @@ import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.net.ChannelStore;
 import org.schlunzis.kurtama.server.net.ClientMessageDispatcher;
+import org.schlunzis.kurtama.server.net.ISession;
+import org.schlunzis.kurtama.server.net.SessionType;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -24,14 +26,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final ChannelStore<NettySession, Channel> channelStore = new ChannelStore<>(NettySession::new);
+    private final ChannelStore<Channel> channelStore = new ChannelStore<>(SessionType.NETTY);
 
     private final ClientMessageDispatcher clientMessageDispatcher;
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         log.info("Client joined - " + ctx);
-        NettySession session = channelStore.create(ctx.channel());
+        ISession session = channelStore.create(ctx.channel());
         clientMessageDispatcher.newClient(session);
     }
 
@@ -79,7 +81,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
      * @param serverMessage
      * @param recipients
      */
-    public void sendMessage(IServerMessage serverMessage, Collection<NettySession> recipients) {
+    public void sendMessage(IServerMessage serverMessage, Collection<ISession> recipients) {
         if (recipients.isEmpty())
             sendMessage(serverMessage);
         else

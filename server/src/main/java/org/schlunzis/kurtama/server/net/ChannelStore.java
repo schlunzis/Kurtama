@@ -4,34 +4,33 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
-import java.util.function.Function;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ChannelStore<S extends ISession, C> {
+public class ChannelStore<C> {
 
-    private final Map<S, C> channelMap = new HashMap<>();
-    private final Function<UUID, S> sessionConstructor;
+    private final Map<ISession, C> channelMap = new HashMap<>();
+    private final SessionType sessionType;
 
-    public S create(C channel) {
+    public ISession create(C channel) {
         UUID channelId = UUID.randomUUID();
-        S session = sessionConstructor.apply(channelId);
+        ISession session = new UUIDSession(channelId, sessionType);
         channelMap.put(session, channel);
         return session;
     }
 
-    public Optional<C> get(S session) {
+    public Optional<C> get(ISession session) {
         return Optional.ofNullable(channelMap.get(session));
     }
 
-    public Optional<S> get(C channel) {
+    public Optional<ISession> get(C channel) {
         return channelMap.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(channel))
                 .map(Map.Entry::getKey)
                 .findFirst();
     }
 
-    public void remove(S session) {
+    public void remove(ISession session) {
         channelMap.remove(session);
     }
 
@@ -47,9 +46,9 @@ public class ChannelStore<S extends ISession, C> {
         return channelMap.values();
     }
 
-    public Collection<C> get(Collection<S> sessions) {
+    public Collection<C> get(Collection<ISession> sessions) {
         List<C> result = new ArrayList<>();
-        for (S session : sessions) {
+        for (ISession session : sessions) {
             Optional<C> channel = get(session);
             channel.ifPresent(result::add);
         }
