@@ -10,7 +10,7 @@ public class ServerApp {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(ServerApp.class, args);
-        context.getBean(NetworkServerInitializer.class).start();
+        context.getBean(NetworkServerInitializer.class).init();
     }
 
 }

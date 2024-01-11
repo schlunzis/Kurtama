@@ -9,13 +9,17 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NetworkServerInitializer {
 
+    private final NetworkService networkService;
+
     private final NettyServer nettyServer;
     @Value("${kurtama.server.netty.enable}")
     private boolean nettyEnable;
 
-    public void start() {
-        if (nettyEnable)
+    public void init() {
+        if (nettyEnable) {
+            networkService.addServer(SessionType.NETTY, nettyServer);
             nettyServer.start();
+        }
     }
 
 }
