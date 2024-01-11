@@ -29,7 +29,6 @@ abstract class AbstractMessageContext {
     @Getter
     protected final ServerUser user;
 
-
     public void respondAdditionally(IServerMessage message) {
         responseAssembler.addAdditionalMessage(new ServerMessageWrapper(message, session));
     }
