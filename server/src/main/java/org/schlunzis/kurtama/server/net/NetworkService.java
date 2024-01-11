@@ -30,8 +30,7 @@ public class NetworkService {
     @EventListener
     public void onMessageWrapper(ServerMessageWrapper messageWrapper) {
         log.debug("Sending messages to {} recipients", messageWrapper.getRecipients().size());
-        Collection<ISession> sessions = authenticationService.getSessionsForUsers(messageWrapper.getRecipients());
-        Collection<NettySession> nettySessions = sessions.stream()
+        Collection<NettySession> nettySessions = messageWrapper.getRecipients().stream()
                 .map(s -> s instanceof NettySession ns ? ns : null)
                 .filter(Objects::nonNull)
                 .toList();

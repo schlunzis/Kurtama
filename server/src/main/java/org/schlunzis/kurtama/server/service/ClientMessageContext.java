@@ -8,6 +8,7 @@ import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
+import org.schlunzis.kurtama.server.auth.AuthenticationService;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
@@ -36,13 +37,13 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
 
     private final T clientMessage;
 
-    public ClientMessageContext(T clientMessage, ISession session, ServerUser user, ResponseAssembler responseAssembler, ApplicationEventPublisher eventBus) {
-        super(responseAssembler, eventBus, session, user);
+    public ClientMessageContext(T clientMessage, ISession session, ServerUser user, ApplicationEventPublisher eventBus, AuthenticationService authenticationService) {
+        super(new ResponseAssembler(clientMessage), eventBus, authenticationService, session, user);
         this.clientMessage = clientMessage;
     }
 
     public void respond(IServerMessage message) {
-        responseAssembler.setMainResponse(new ServerMessageWrapper(message, user));
+        responseAssembler.setMainResponse(new ServerMessageWrapper(message, session));
     }
 
     public void close() {
@@ -56,7 +57,7 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
         if (mainResponse.isPresent()) {
             SecondaryRequestContext<IServerMessage> secondaryRequestContext =
                     new SecondaryRequestContext<>(mainResponse.get().getServerMessage(), session, user,
-                            responseAssembler, eventBus);
+                            responseAssembler, eventBus, authenticationService);
             log.info("sending secondary request {}", secondaryRequestContext);
             eventBus.publishEvent(secondaryRequestContext);
         }

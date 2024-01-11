@@ -126,7 +126,7 @@ public class AuthenticationService implements IAuthenticationService {
     // not using the ClientMessageContext due to the ForcedLogoutEvent. might be changed in the future
     private void logout(ISession session) {
         userSessionMap.remove(session);
-        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), user));
+        eventBus.publishEvent(new ServerMessageWrapper(new LogoutSuccessfulResponse(), session));
         log.info("Client with session {} logged out", session);
     }
 

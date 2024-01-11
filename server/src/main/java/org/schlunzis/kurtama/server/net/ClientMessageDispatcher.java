@@ -8,7 +8,6 @@ import org.schlunzis.kurtama.common.messages.authentication.register.RegisterReq
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
 import org.schlunzis.kurtama.server.internal.ForcedLogoutEvent;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
-import org.schlunzis.kurtama.server.service.ResponseAssembler;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -26,23 +25,24 @@ public class ClientMessageDispatcher {
 
     public void dispatch(IClientMessage clientMessage, ISession session) {
         log.info("going to dispatch message {}", clientMessage);
-        ResponseAssembler responseAssembler = new ResponseAssembler(clientMessage);
         if (clientMessage instanceof LoginRequest lir) {
-            eventBus.publishEvent(new ClientMessageContext<>(lir, session, null, responseAssembler, eventBus));
+            publishContext(lir, session, null);
         } else if (clientMessage instanceof RegisterRequest rr) {
-            eventBus.publishEvent(new ClientMessageContext<>(rr, session, null, responseAssembler, eventBus));
+            publishContext(rr, session, null);
         } else {
             Optional<ServerUser> user = authenticationService.getUserForSession(session);
             user.ifPresentOrElse(
                     u -> {
                         log.info("Received authenticated ClientMessage");
-                        eventBus.publishEvent(
-                                new ClientMessageContext<>(clientMessage, session, u, responseAssembler, eventBus)
-                        );
+                        publishContext(clientMessage, session, u);
                     },
                     () -> log.info("Received unauthenticated ClientMessage")
             );
         }
+    }
+
+    private void publishContext(IClientMessage clientMessage, ISession session, ServerUser user) {
+        eventBus.publishEvent(new ClientMessageContext<>(clientMessage, session, user, eventBus, authenticationService));
     }
 
     public void newClient(ISession session) {
