@@ -37,7 +37,7 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
 
     private final T clientMessage;
 
-    public ClientMessageContext(T clientMessage, ISession session, ServerUser user, ApplicationEventPublisher eventBus, AuthenticationService authenticationService) {
+    public ClientMessageContext(T clientMessage, ISession session, ServerUser user, AuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
         super(new ResponseAssembler(clientMessage), authenticationService, eventBus, session, user);
         this.clientMessage = clientMessage;
     }
