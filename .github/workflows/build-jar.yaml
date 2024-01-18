@@ -66,4 +66,4 @@ jobs:
           overwrite: true
           tag: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}
-          release_name: ${{ inputs.version }}
+          release_name: ${{ inputs.tag }}
