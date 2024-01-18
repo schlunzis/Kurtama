@@ -34,7 +34,7 @@ jobs:
     with:
       os: ${{ matrix.os.name }}
       mvn: ${{ matrix.os.mvn }}
-      tag: ${ inputs.tag }}
+      tag: ${{ inputs.tag }}
       version: ${{ inputs.version }}
       github-release: ${{ inputs.github-release }}
       prerelease: ${{ inputs.prerelease }}
