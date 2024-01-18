@@ -21,8 +21,8 @@ abstract class AbstractMessageContext {
 
     protected final ResponseAssembler responseAssembler;
 
-    protected final ApplicationEventPublisher eventBus;
     protected final AuthenticationService authenticationService;
+    protected final ApplicationEventPublisher eventBus;
 
     @Getter
     protected final ISession session;

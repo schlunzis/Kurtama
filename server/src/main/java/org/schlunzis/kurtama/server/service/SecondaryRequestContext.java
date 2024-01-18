@@ -19,8 +19,8 @@ public class SecondaryRequestContext<S extends IServerMessage> extends AbstractM
     private final S mainResponse;
 
     SecondaryRequestContext(S mainResponse, ISession session, ServerUser user, ResponseAssembler responseAssembler,
-                            ApplicationEventPublisher eventBus, AuthenticationService authenticationService) {
-        super(responseAssembler, eventBus, authenticationService, session, user);
+                            AuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
+        super(responseAssembler, authenticationService, eventBus, session, user);
         this.mainResponse = mainResponse;
     }
 

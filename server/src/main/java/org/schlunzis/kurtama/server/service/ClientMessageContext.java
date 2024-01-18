@@ -38,7 +38,7 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
     private final T clientMessage;
 
     public ClientMessageContext(T clientMessage, ISession session, ServerUser user, ApplicationEventPublisher eventBus, AuthenticationService authenticationService) {
-        super(new ResponseAssembler(clientMessage), eventBus, authenticationService, session, user);
+        super(new ResponseAssembler(clientMessage), authenticationService, eventBus, session, user);
         this.clientMessage = clientMessage;
     }
 
@@ -57,7 +57,7 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
         if (mainResponse.isPresent()) {
             SecondaryRequestContext<IServerMessage> secondaryRequestContext =
                     new SecondaryRequestContext<>(mainResponse.get().getServerMessage(), session, user,
-                            responseAssembler, eventBus, authenticationService);
+                            responseAssembler, authenticationService, eventBus);
             log.info("sending secondary request {}", secondaryRequestContext);
             eventBus.publishEvent(secondaryRequestContext);
         }
