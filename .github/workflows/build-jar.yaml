@@ -21,6 +21,9 @@ on:
       prerelease:
         required: true
         type: boolean
+      jar-file-modifier:
+        required: true
+        type: string
 
 jobs:
   build-to-jar:
@@ -46,7 +49,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: client/target/client-${{ inputs.version }}.jar
-          asset_name: kurtama-client-${{ inputs.version }}.jar
+          asset_name: kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
           overwrite: true
           tag: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}
@@ -59,7 +62,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: server/target/server-${{ inputs.version }}.jar
-          asset_name: kurtama-server-${{ inputs.version }}.jar
+          asset_name: kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
           overwrite: true
           tag: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}

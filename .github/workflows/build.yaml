@@ -28,8 +28,8 @@ jobs:
     strategy:
       matrix:
         os: [
-          { name: ubuntu-latest, mvn: "./mvnw" },
-          { name: windows-latest, mvn: "./mvnw.cmd" }
+          { name: ubuntu-latest, mvn: "./mvnw", jar-file-modifier: "linux" },
+          { name: windows-latest, mvn: "./mvnw.cmd", jar-file-modifier: "linux" }
         ]
     with:
       os: ${{ matrix.os.name }}
@@ -38,4 +38,5 @@ jobs:
       version: ${{ inputs.version }}
       github-release: ${{ inputs.github-release }}
       prerelease: ${{ inputs.prerelease }}
+      jar-file-modifier: ${{ matrix.os.jar-file-modifier }}
     secrets: inherit
