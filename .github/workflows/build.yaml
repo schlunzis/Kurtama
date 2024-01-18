@@ -29,7 +29,7 @@ jobs:
       matrix:
         os: [
           { name: ubuntu-latest, mvn: "./mvnw", jar-file-modifier: "linux" },
-          { name: windows-latest, mvn: "./mvnw.cmd", jar-file-modifier: "linux" }
+          { name: windows-latest, mvn: "./mvnw.cmd", jar-file-modifier: "win" }
         ]
     with:
       os: ${{ matrix.os.name }}
