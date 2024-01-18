@@ -1,0 +1,66 @@
+name: Build jar with Dependencies
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      mvn:
+        required: true
+        type: string
+      tag:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      github-release:
+        required: true
+        type: boolean
+      prerelease:
+        required: true
+        type: boolean
+
+jobs:
+  build-to-jar:
+    name: Build on ${{ input.os }} to jar
+    runs-on: ${{ input.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: |
+          ${{ inputs.mvn }} --batch-mode --update-snapshots clean install package
+
+      - name: Upload client jar to release
+        if: ${{ inputs.github-release }}
+        uses: svenstaro/upload-release-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: client/target/client-${{ inputs.version }}.jar
+          asset_name: kurtama-client-${{ inputs.version }}.jar
+          overwrite: true
+          tag: ${{ inputs.tag }}
+          prerelease: ${{ inputs.prerelease }}
+          release_name: ${{ inputs.version }}
+      - name: Upload server jar to release
+        if: ${{ inputs.github-release }}
+        uses: svenstaro/upload-release-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: server/target/server-${{ inputs.version }}.jar
+          asset_name: kurtama-server-${{ inputs.version }}.jar
+          overwrite: true
+          tag: ${{ inputs.tag }}
+          prerelease: ${{ inputs.prerelease }}
+          release_name: ${{ inputs.version }}

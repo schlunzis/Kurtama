@@ -1,0 +1,41 @@
+name: build all targets
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      github-release:
+        required: false
+        type: boolean
+        default: false
+      prerelease:
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  verify:
+    uses: ./.github/workflows/verify.yaml
+
+  build-to-jar:
+    needs: verify
+    uses: ./.github/workflows/build-jar.yaml
+    strategy:
+      matrix:
+        os: [
+          { name: ubuntu-latest, mvn: "./mvnw" },
+          { name: windows-latest, mvn: "mvnw.cmd" }
+        ]
+    with:
+      os: ${{ matrix.os.name }}
+      mvn: ${{ matrix.os.mvn }}
+      tag: ${ inputs.tag }}
+      version: ${{ inputs.version }}
+      release: ${{ inputs.github-release }}
+      prerelease: ${{ inputs.prerelease }}
+    secrets: inherit
