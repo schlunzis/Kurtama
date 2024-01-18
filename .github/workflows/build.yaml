@@ -36,6 +36,6 @@ jobs:
       mvn: ${{ matrix.os.mvn }}
       tag: ${ inputs.tag }}
       version: ${{ inputs.version }}
-      release: ${{ inputs.github-release }}
+      github-release: ${{ inputs.github-release }}
       prerelease: ${{ inputs.prerelease }}
     secrets: inherit
