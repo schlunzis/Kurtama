@@ -24,8 +24,8 @@ on:
 
 jobs:
   build-to-jar:
-    name: Build to jar
-    runs-on: ${{ input.os }}
+    name: Build on ${{ inputs.os }} to jar
+    runs-on: ${{ inputs.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
