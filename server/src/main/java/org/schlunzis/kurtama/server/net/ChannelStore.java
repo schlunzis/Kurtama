@@ -4,17 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RequiredArgsConstructor
 public class ChannelStore<C> {
 
-    private final Map<ISession, C> channelMap = new HashMap<>();
+    private final Map<ISession, C> channelMap = new ConcurrentHashMap<>();
     private final SessionType sessionType;
 
     public ISession create(C channel) {
-        UUID channelId = UUID.randomUUID();
-        ISession session = new UUIDSession(channelId, sessionType);
+        final UUID channelId = UUID.randomUUID();
+        final ISession session = new UUIDSession(channelId, sessionType);
         channelMap.put(session, channel);
         return session;
     }
@@ -47,9 +48,9 @@ public class ChannelStore<C> {
     }
 
     public Collection<C> get(Collection<ISession> sessions) {
-        List<C> result = new ArrayList<>();
+        final List<C> result = new ArrayList<>();
         for (ISession session : sessions) {
-            Optional<C> channel = get(session);
+            final Optional<C> channel = get(session);
             channel.ifPresent(result::add);
         }
         return result;
