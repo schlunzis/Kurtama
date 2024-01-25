@@ -1,7 +1,10 @@
-package org.schlunzis.kurtama.server.net;
+package org.schlunzis.kurtama.server.net.util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.kurtama.server.net.ISession;
+import org.schlunzis.kurtama.server.net.SessionType;
+import org.schlunzis.kurtama.server.net.UUIDSession;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
