@@ -26,10 +26,9 @@ public class DialogFactory {
     }
 
     public Optional<Dialog<CreateLobbyDialogResult>> createCreateLobbyDialog() {
-        CreateLobbyDialog dialog = null;
+        CreateLobbyDialog dialog = new CreateLobbyDialog();
 
         try {
-            dialog = new CreateLobbyDialog();
             final FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/org/schlunzis/kurtama/client/fx/controller/createLobby.fxml")
             );
@@ -39,9 +38,10 @@ public class DialogFactory {
             dialog.initOwner(stage);
         } catch (IOException e) {
             log.error("Could not load dialog!", e);
+            return Optional.empty();
         }
 
-        return Optional.ofNullable(dialog);
+        return Optional.of(dialog);
     }
 
 }
