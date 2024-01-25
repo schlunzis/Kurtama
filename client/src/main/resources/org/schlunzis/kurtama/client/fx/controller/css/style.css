@@ -1,8 +1,5 @@
 * {
-    -fx-font-size: 14px;
-
-    k-grey: #8f8f8f;
-    k-grey-highlight: #c2c2c2;
+    -fx-text-fill: seaShell;
 }
 
 .root {
@@ -10,11 +7,32 @@
 }
 
 Button {
-    -fx-pref-height: 40px;
-    -fx-background-color: k-grey;
-    -fx-text-fill: white;
+    -fx-background-color: #4CAF50; /* Green background */
+    -fx-border: none; /* No border */
+    -fx-color: white; /* White text */
+    -fx-text-fill: white; /* White text */
+    -fx-font-size: 16px; /* Text size */
+    -fx-padding: 10px 24px; /* Some padding */
+    -fx-text-align: center; /* Centered text */
+    -fx-text-decoration: none; /* No underline */
+    -fx-cursor: hand; /* Mouse pointer on hover */
+    -fx-border-radius: 0px; /* Rounded corners */
 }
 
 Button:hover {
-    -fx-background-color: k-grey-highlight;
+    -fx-background-color: #3e9343; /* Green background on hover */
+}
+
+TextField, PasswordField {;
+    -fx-background-color: #404040;
+    -fx-padding: 10px;
+    -fx-pref-width: 300px;
+    -fx-text-box-border: transparent;
+
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 0, 0;
+}
+
+TextField:focused, PasswordField:focused {
+    -fx-background-color: #505050;
 }
