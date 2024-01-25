@@ -1,13 +1,19 @@
 * {
     -fx-text-fill: seaShell;
+
+    k-background: #343434;
+    k-button: #4CAF50;
+    k-button-hover: #3e9343;
+    k-textfield-background: #404040;
+    k-textfield-focused: #505050;
 }
 
 .root {
-    -fx-background-color: #343434;
+    -fx-background-color: k-background;
 }
 
 Button {
-    -fx-background-color: #4CAF50; /* Green background */
+    -fx-background-color: k-button; /* Green background */
     -fx-border: none; /* No border */
     -fx-color: white; /* White text */
     -fx-text-fill: white; /* White text */
@@ -20,11 +26,11 @@ Button {
 }
 
 Button:hover {
-    -fx-background-color: #3e9343; /* Green background on hover */
+    -fx-background-color: k-button-hover; /* Green background on hover */
 }
 
 TextField, PasswordField {;
-    -fx-background-color: #404040;
+    -fx-background-color: k-textfield-background;
     -fx-padding: 10px;
     -fx-pref-width: 300px;
     -fx-text-box-border: transparent;
@@ -34,5 +40,10 @@ TextField, PasswordField {;
 }
 
 TextField:focused, PasswordField:focused {
-    -fx-background-color: #505050;
+    -fx-background-color: k-textfield-focused;
 }
+
+.list-view, .list-cell {
+    -fx-background-color: k-background;
+}
+

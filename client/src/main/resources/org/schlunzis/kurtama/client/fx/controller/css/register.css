@@ -5,16 +5,6 @@ GridPane {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
     -fx-padding: 20px;
-    -fx-background-color: #ffffff;
-}
-
-Label {
-    -fx-text-fill: black;
-}
-
-TextField, PasswordField {
-    -fx-padding: 10px;
-    -fx-pref-width: 300px;
 }
 
 Button {
