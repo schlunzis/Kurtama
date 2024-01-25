@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public interface ISession {
 
-    UUID getId();
+    UUID id();
 
-    SessionType getSessionType();
+    SessionType sessionType();
 
 }

@@ -39,7 +39,7 @@ public class NetworkService {
         log.debug("Sending messages to {} recipients", messageWrapper.getRecipients().size());
         for (var entry : servers.entrySet()) {
             Collection<ISession> sessions = messageWrapper.getRecipients().stream()
-                    .filter(s -> s.getSessionType().equals(entry.getKey()))
+                    .filter(s -> s.sessionType().equals(entry.getKey()))
                     .toList();
             entry.getValue().sendMessage(messageWrapper.getServerMessage(), sessions);
         }
