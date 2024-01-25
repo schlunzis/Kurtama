@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
+import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.LeaveLobbyRequest;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -45,11 +47,9 @@ public class LobbyService {
         try {
             ServerLobby lobby = lobbyManagement.joinLobby(request.lobbyID(), cmc.getUser());
             cmc.respond(new JoinLobbySuccessfullyResponse(lobby.toDTO()));
-            // TODO update clients of users in lobby #8
-            // inform all other users in lobby
-            Collection<ServerUser> users = new ArrayList<>(lobby.getUsers());
-            users.remove(cmc.getUser());
-            cmc.sendToMany(new UserJoinedLobbyMessage(cmc.getUser().toDTO()), users);
+
+            var userJoinedLobbyMessage = new UserJoinedLobbyMessage(cmc.getUser().toDTO());
+            informUsersInLobby(userJoinedLobbyMessage, request.lobbyID(), cmc);
             updateLobbyListInfo(cmc);
         } catch (LobbyNotFoundException e) {
             log.info("Could not join lobby. Lobby not found.");
@@ -65,13 +65,10 @@ public class LobbyService {
     public void onLeaveLobbyRequest(ClientMessageContext<LeaveLobbyRequest> cmc) {
         LeaveLobbyRequest request = cmc.getClientMessage();
         try {
-
             lobbyManagement.leaveLobby(request.lobbyID(), cmc.getUser());
             cmc.respond(new LeaveLobbySuccessfullyResponse());
-
-
-            informRemainingUsersInLobby(cmc);
-
+            var userLeftLobbyMessage = new UserLeftLobbyMessage(cmc.getUser().toDTO());
+            informUsersInLobby(userLeftLobbyMessage, request.lobbyID(), cmc);
             updateLobbyListInfo(cmc);
         } catch (LobbyNotFoundException e) {
             log.info("Could not leave lobby. Lobby not found.");
@@ -92,15 +89,14 @@ public class LobbyService {
         cmc.sendToAll(new LobbyListInfoMessage(lobbyInfos));
     }
 
-    private void informRemainingUsersInLobby(ClientMessageContext<LeaveLobbyRequest> cmc) {
+    private void informUsersInLobby(IServerMessage message, UUID lobbyID, ClientMessageContext<? extends IClientMessage> cmc) {
         try {
-            Collection<ServerUser> users = new ArrayList<>(lobbyManagement.getLobby(cmc.getClientMessage().lobbyID()).getUsers());
+            Collection<ServerUser> users = new ArrayList<>(lobbyManagement.getLobby(lobbyID).getUsers());
             users.remove(cmc.getUser());
-            cmc.sendToMany(new UserLeftLobbyMessage(cmc.getUser().toDTO()), users);
+            cmc.sendToMany(message, users);
         } catch (LobbyNotFoundException e) {
-            log.info("Could not get list of remaining users. Lobby probably empty.");
+            log.error("Failed to inform users in lobby. Lobby not found. ", e);
         }
-
     }
 
 }
