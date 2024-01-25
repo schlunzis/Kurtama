@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.server.net;
+package org.schlunzis.kurtama.server.service;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,22 +13,22 @@ import java.util.Optional;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class ResponseAssembler {
+class ResponseAssembler {
 
     private final IClientMessage clientRequest;
     private final List<ServerMessageWrapper> additionalMessages = new ArrayList<>();
     @Getter(AccessLevel.NONE)
     private ServerMessageWrapper mainResponse = null;
 
-    public void addAdditionalMessage(ServerMessageWrapper message) {
+    void addAdditionalMessage(ServerMessageWrapper message) {
         additionalMessages.add(message);
     }
 
-    public Optional<ServerMessageWrapper> getMainResponse() {
+    Optional<ServerMessageWrapper> getMainResponse() {
         return Optional.ofNullable(mainResponse);
     }
 
-    public List<ServerMessageWrapper> assemble() {
+    List<ServerMessageWrapper> assemble() {
         List<ServerMessageWrapper> wrappers = new ArrayList<>();
         if (mainResponse != null)
             wrappers.add(mainResponse);
