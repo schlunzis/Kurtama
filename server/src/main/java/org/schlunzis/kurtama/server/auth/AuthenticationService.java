@@ -34,7 +34,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AuthenticationService implements IAuthenticationService {
+class AuthenticationService implements IAuthenticationService {
 
     private final ApplicationEventPublisher eventBus;
     private final UserSessionMap userSessionMap;
