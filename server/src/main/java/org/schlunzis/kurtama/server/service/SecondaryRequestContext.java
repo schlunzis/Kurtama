@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
 import org.schlunzis.kurtama.server.net.ISession;
-import org.schlunzis.kurtama.server.net.ResponseAssembler;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
@@ -19,8 +18,8 @@ public class SecondaryRequestContext<S extends IServerMessage> extends AbstractM
 
     private final S mainResponse;
 
-    public SecondaryRequestContext(S mainResponse, ISession session, ServerUser user, ResponseAssembler responseAssembler,
-                                   AuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
+    SecondaryRequestContext(S mainResponse, ISession session, ServerUser user, ResponseAssembler responseAssembler,
+                            AuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
         super(responseAssembler, authenticationService, eventBus, session, user);
         this.mainResponse = mainResponse;
     }

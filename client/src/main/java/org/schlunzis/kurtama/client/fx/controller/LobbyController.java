@@ -1,6 +1,7 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -16,8 +17,17 @@ public class LobbyController {
     private final ILobbyService lobbyService;
 
     @FXML
-    private void leaveLobby() {
+    private ListView<String> userListView;
+
+
+    public void leaveLobby() {
         lobbyService.leaveLobby();
     }
+
+    @FXML
+    public void initialize() {
+        userListView.setItems(lobbyService.getLobbyUsersList());
+    }
+
 
 }

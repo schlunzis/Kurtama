@@ -6,6 +6,7 @@ import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
+import org.schlunzis.kurtama.server.internal.ForcedLogoutEvent;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
@@ -22,25 +23,34 @@ public class ClientMessageDispatcher {
 
     private final ApplicationEventPublisher eventBus;
 
-
     public void dispatch(IClientMessage clientMessage, ISession session) {
         log.info("going to dispatch message {}", clientMessage);
-        ResponseAssembler responseAssembler = new ResponseAssembler(clientMessage);
         if (clientMessage instanceof LoginRequest lir) {
-            eventBus.publishEvent(new ClientMessageContext<>(lir, session, null, responseAssembler, authenticationService, eventBus));
+            publishContext(lir, session, null);
         } else if (clientMessage instanceof RegisterRequest rr) {
-            eventBus.publishEvent(new ClientMessageContext<>(rr, session, null, responseAssembler, authenticationService, eventBus));
+            publishContext(rr, session, null);
         } else {
             Optional<ServerUser> user = authenticationService.getUserForSession(session);
             user.ifPresentOrElse(
                     u -> {
                         log.info("Received authenticated ClientMessage");
-                        eventBus.publishEvent(
-                                new ClientMessageContext<>(clientMessage, session, u, responseAssembler, authenticationService, eventBus)
-                        );
+                        publishContext(clientMessage, session, u);
                     },
                     () -> log.info("Received unauthenticated ClientMessage")
             );
         }
     }
+
+    private void publishContext(IClientMessage clientMessage, ISession session, ServerUser user) {
+        eventBus.publishEvent(new ClientMessageContext<>(clientMessage, session, user, authenticationService, eventBus));
+    }
+
+    public void newClient(ISession session) {
+        // some things could be done here
+    }
+
+    public void clientDisconnected(ISession session) {
+        eventBus.publishEvent(new ForcedLogoutEvent(session));
+    }
+
 }

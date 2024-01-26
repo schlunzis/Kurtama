@@ -10,9 +10,6 @@ import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
 import org.schlunzis.kurtama.server.net.ISession;
-import org.schlunzis.kurtama.server.net.ResponseAssembler;
-import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
-import org.schlunzis.kurtama.server.net.ServerMessageWrappers;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
@@ -40,8 +37,8 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
 
     private final T clientMessage;
 
-    public ClientMessageContext(T clientMessage, ISession session, ServerUser user, ResponseAssembler responseAssembler, AuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
-        super(responseAssembler, authenticationService, eventBus, session, user);
+    public ClientMessageContext(T clientMessage, ISession session, ServerUser user, AuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
+        super(new ResponseAssembler(clientMessage), authenticationService, eventBus, session, user);
         this.clientMessage = clientMessage;
     }
 

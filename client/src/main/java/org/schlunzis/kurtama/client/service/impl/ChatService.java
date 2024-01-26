@@ -37,6 +37,7 @@ public class ChatService implements IChatService {
     @EventListener
     public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
         currentChatID = GLOBAL_CHAT_ID;
+        Platform.runLater(chatMessages::clear);
     }
 
     @EventListener

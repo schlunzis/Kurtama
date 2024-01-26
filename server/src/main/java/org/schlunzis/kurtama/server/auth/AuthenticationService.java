@@ -14,8 +14,8 @@ import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuc
 import org.schlunzis.kurtama.server.internal.ForcedLogoutEvent;
 import org.schlunzis.kurtama.server.lobby.LobbyStore;
 import org.schlunzis.kurtama.server.net.ISession;
-import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
+import org.schlunzis.kurtama.server.service.ServerMessageWrapper;
 import org.schlunzis.kurtama.server.user.DBUser;
 import org.schlunzis.kurtama.server.user.IUserStore;
 import org.schlunzis.kurtama.server.user.ServerUser;

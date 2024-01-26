@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.server.net.impl;
+package org.schlunzis.kurtama.server.net.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -23,11 +23,10 @@ import java.util.Collection;
 @Component
 public class NettyServer implements INetworkServer {
 
-
     private final ServerHandler serverHandler;
 
     // Port where chat server will listen for connections.
-    @Value("${kurtama.server.port}")
+    @Value("${kurtama.server.netty.port}")
     private int port;
 
     public NettyServer(ServerHandler serverHandler) {

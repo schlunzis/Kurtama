@@ -8,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.auth.AuthenticationService;
 import org.schlunzis.kurtama.server.net.ISession;
-import org.schlunzis.kurtama.server.net.ResponseAssembler;
-import org.schlunzis.kurtama.server.net.ServerMessageWrapper;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -19,7 +17,7 @@ import java.util.Collection;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public abstract class AbstractMessageContext {
+abstract class AbstractMessageContext {
 
     protected final ResponseAssembler responseAssembler;
 
