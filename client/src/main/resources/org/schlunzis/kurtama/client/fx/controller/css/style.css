@@ -19,6 +19,8 @@ Button {
     -fx-cursor: hand; /* Mouse pointer on hover */
     -fx-background-radius: 5px;
     -fx-pref-height: 40px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
 }
 
 Button:hover {
@@ -30,6 +32,7 @@ TextField, PasswordField {;
     -fx-padding: 10px;
     -fx-pref-width: 300px;
     -fx-text-box-border: transparent;
+    -fx-min-height: 40px;
     -fx-pref-height: 40px;
     -fx-background-radius: 5px;
 }

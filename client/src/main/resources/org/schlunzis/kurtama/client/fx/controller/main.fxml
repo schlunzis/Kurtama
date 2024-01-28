@@ -11,9 +11,9 @@
     </stylesheets>
 
     <columnConstraints>
-        <ColumnConstraints percentWidth="45"/>
+        <ColumnConstraints percentWidth="48"/>
         <ColumnConstraints percentWidth="4"/>
-        <ColumnConstraints percentWidth="45"/>
+        <ColumnConstraints percentWidth="48"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints percentHeight="30"/>
@@ -24,17 +24,24 @@
     <fx:include source="chat.fxml" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
 
     <VBox styleClass="menu-buttons" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <Button mnemonicParsing="false" onAction="#createLobby" text="CreateLobby"/>
         <Button mnemonicParsing="false" onAction="#settings" text="Settings"/>
         <Button mnemonicParsing="false" onAction="#logout" text="Logout"/>
         <Button mnemonicParsing="false" onAction="#logout" text="Quit"/>
     </VBox>
 
     <VBox GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="3">
-        <ListView fx:id="lobbiesListView"/>
-        <HBox>
-            <Button mnemonicParsing="false" onAction="#joinLobby" text="Join Lobby"/>
-            <Button mnemonicParsing="false" onAction="#createLobby" text="CreateLobby"/>
+        <HBox styleClass="lobby-search">
+            <TextField fx:id="lobbiesSearchFiled" promptText="Search Lobbies" HBox.hgrow="ALWAYS"/>
+            <Button mnemonicParsing="false">
+                <graphic>
+                    <Region styleClass="search-button-shape"/>
+                </graphic>
+            </Button>
         </HBox>
+        <ListView fx:id="lobbiesListView" VBox.vgrow="ALWAYS"/>
+        <Button styleClass="join-button" mnemonicParsing="false" onAction="#joinLobby" text="Join Lobby"
+                HBox.hgrow="ALWAYS"/>
     </VBox>
 
 </GridPane>
