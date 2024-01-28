@@ -5,6 +5,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 <?import java.net.URL?>
 <VBox xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
       fx:controller="org.schlunzis.kurtama.client.fx.controller.ChatController">
@@ -17,6 +18,10 @@
     <HBox>
         <TextField fx:id="senderNameTextField" text="Jon Doe"/>
         <TextField fx:id="chatTextField" onAction="#sendMessage" HBox.hgrow="ALWAYS"/>
-        <Button mnemonicParsing="false" onAction="#sendMessage" text="Senden" textOverrun="CLIP"/>
+        <Button mnemonicParsing="false" onAction="#sendMessage">
+            <graphic>
+                <SVGPath content="M0,0 L0,16 L10,8 z"/>
+            </graphic>
+        </Button>
     </HBox>
 </VBox>

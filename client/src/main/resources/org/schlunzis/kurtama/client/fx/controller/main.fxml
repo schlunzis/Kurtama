@@ -11,21 +11,25 @@
     </stylesheets>
 
     <columnConstraints>
-        <ColumnConstraints percentWidth="50"/>
-        <ColumnConstraints percentWidth="50"/>
+        <ColumnConstraints percentWidth="45"/>
+        <ColumnConstraints percentWidth="4"/>
+        <ColumnConstraints percentWidth="45"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="50"/>
-        <RowConstraints percentHeight="50"/>
+        <RowConstraints percentHeight="30"/>
+        <RowConstraints percentHeight="10"/>
+        <RowConstraints percentHeight="60"/>
     </rowConstraints>
 
-    <fx:include source="chat.fxml" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
-        <Button mnemonicParsing="false" onAction="#logout" text="Logout"/>
+    <fx:include source="chat.fxml" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+    <VBox styleClass="menu-buttons" GridPane.columnIndex="0" GridPane.rowIndex="0">
         <Button mnemonicParsing="false" onAction="#settings" text="Settings"/>
+        <Button mnemonicParsing="false" onAction="#logout" text="Logout"/>
+        <Button mnemonicParsing="false" onAction="#logout" text="Quit"/>
     </VBox>
 
-    <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <VBox GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="3">
         <ListView fx:id="lobbiesListView"/>
         <HBox>
             <Button mnemonicParsing="false" onAction="#joinLobby" text="Join Lobby"/>

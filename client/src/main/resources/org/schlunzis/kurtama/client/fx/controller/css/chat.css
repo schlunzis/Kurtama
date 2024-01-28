@@ -1,9 +1,3 @@
-VBox {
-    -fx-border-color: k-button;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-}
-
 ListView {
     -fx-padding: 1px;
     -fx-border-radius: 5px;
@@ -13,4 +7,14 @@ ListView {
 TextField {
     -fx-min-width: 0;
     -fx-pref-width: 100;
+}
+
+Button {
+    -fx-content-display: graphic-only;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 40px;
+}
+
+Button SVGPath {
+    -fx-fill: white;
 }
