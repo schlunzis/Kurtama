@@ -2,10 +2,7 @@ package org.schlunzis.kurtama.client.fx.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -40,6 +37,7 @@ public class MainMenuController {
     @FXML
     private void initialize() {
         lobbiesListView.setItems(sessionService.getLobbyList());
+        lobbiesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         lobbiesListView.setCellFactory(lobbyInfoListView -> new ListCell<>() {
             @Override
             protected void updateItem(LobbyInfo lobbyInfo, boolean empty) {
@@ -51,14 +49,12 @@ public class MainMenuController {
                 }
             }
         });
-        lobbiesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                log.debug("Selected lobby: {}", newValue);
-                joinLobbyButton.setDisable(false);
-            } else {
-                log.debug("No lobby selected");
-                joinLobbyButton.setDisable(true);
-            }
+        lobbiesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+                joinLobbyButton.setDisable(newValue == null)
+        );
+        lobbiesListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2)
+                joinLobby();
         });
         joinLobbyButton.setDisable(true);
     }
