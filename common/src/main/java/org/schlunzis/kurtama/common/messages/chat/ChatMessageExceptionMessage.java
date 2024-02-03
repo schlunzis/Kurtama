@@ -7,6 +7,11 @@ import org.schlunzis.kurtama.common.messages.IServerMessage;
  */
 public record ChatMessageExceptionMessage(ErrorCode errorCode) implements IServerMessage {
 
+    public ChatMessageExceptionMessage {
+        if (errorCode == null)
+            throw new IllegalArgumentException("Invalid error code");
+    }
+
     public enum ErrorCode {
         INVALID_CHAT_ID,
         INVALID_NICKNAME,
