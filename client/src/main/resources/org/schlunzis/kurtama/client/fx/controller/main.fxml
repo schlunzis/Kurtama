@@ -30,7 +30,7 @@
         <Button mnemonicParsing="false" onAction="#logout" text="Quit"/>
     </VBox>
 
-    <VBox GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="3">
+    <VBox styleClass="lobbiesVBox" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="3">
         <HBox styleClass="lobby-search">
             <TextField fx:id="lobbiesSearchFiled" promptText="Search Lobbies" HBox.hgrow="ALWAYS"/>
             <Button mnemonicParsing="false">

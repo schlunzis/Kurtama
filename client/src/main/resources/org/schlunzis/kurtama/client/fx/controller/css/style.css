@@ -1,6 +1,5 @@
 * {
-    -fx-text-fill: seaShell;
-
+    k-text-color: seaShell;
     k-background: #343434;
     k-button: #4CAF50;
     k-button-hover: #3e9343;
@@ -13,6 +12,14 @@
     -fx-font-size: 16px;
 }
 
+/*
+ General CSS for all views
+ */
+
+/*
+ Button
+ */
+
 Button {
     -fx-background-color: k-button;
     -fx-text-align: center;
@@ -21,11 +28,16 @@ Button {
     -fx-pref-height: 40px;
     -fx-min-height: 40px;
     -fx-max-height: 40px;
+    -fx-text-fill: k-text-color;
 }
 
 Button:hover {
     -fx-background-color: k-button-hover; /* Green background on hover */
 }
+
+/*
+ TextField
+ */
 
 TextField, PasswordField {;
     -fx-background-color: k-textfield-background;
@@ -35,13 +47,57 @@ TextField, PasswordField {;
     -fx-min-height: 40px;
     -fx-pref-height: 40px;
     -fx-background-radius: 5px;
+    -fx-text-fill: k-text-color;
 }
 
 TextField:focused, PasswordField:focused {
     -fx-background-color: k-textfield-focused;
 }
 
+/*
+ ListView
+ */
+
+.list-view {
+    -fx-border-color: k-textfield-background;
+    -fx-border-insets: 0;
+    -fx-padding: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
 .list-view, .list-cell {
+    -fx-background-color: k-background;
+    -fx-text-fill: k-text-color;
+}
+
+.list-cell:selected {
+    -fx-background-color: k-textfield-focused;
+}
+
+.list-view .scroll-bar:vertical {
     -fx-background-color: k-background;
 }
 
+.list-view .increment-button, .list-view .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.list-view .scroll-bar:vertical .thumb {
+    -fx-background-color: k-textfield-background;
+    -fx-background-insets: 5, 5, 5;
+    -fx-background-radius: 5;
+}
+
+.list-view .scroll-bar:horizontal,
+.list-view .scroll-bar:horizontal .increment-arrow,
+.list-view .scroll-bar:horizontal .decrement-arrow,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button,
+.virtual-flow .corner {
+    -fx-padding: 0;
+    -fx-scale-x: 0;
+    -fx-scale-y: 0;
+    -fx-background-color: k-background;
+}

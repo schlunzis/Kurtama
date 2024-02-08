@@ -6,6 +6,10 @@ GridPane {
     -fx-padding: 10px;
 }
 
+.lobbiesVBox {
+    -fx-spacing: 5px;
+}
+
 .menu-buttons {
     -fx-spacing: 10px;
 }
