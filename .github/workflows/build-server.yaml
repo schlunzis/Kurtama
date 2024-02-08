@@ -1,4 +1,4 @@
-name: on client changes
+name: on server changes
 
 # run this workflow, if a push changes a file outside the 'client' directory and some other files
 on:
