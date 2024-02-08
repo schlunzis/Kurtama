@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.server.net.impl;
+package org.schlunzis.kurtama.server.net.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -8,6 +8,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +25,10 @@ import java.util.Collection;
 @Component
 public class NettyServer implements INetworkServer {
 
-
     private final ServerHandler serverHandler;
 
     // Port where chat server will listen for connections.
-    @Value("${kurtama.server.port}")
+    @Value("${kurtama.server.netty.port}")
     private int port;
 
     public NettyServer(ServerHandler serverHandler) {
@@ -56,6 +57,8 @@ public class NettyServer implements INetworkServer {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
+                            p.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
+                            p.addLast(new LengthFieldPrepender(4));
                             p.addLast(new StringDecoder());
                             p.addLast(new StringEncoder());
                             p.addLast(serverHandler);

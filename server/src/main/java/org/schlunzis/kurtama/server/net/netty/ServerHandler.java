@@ -1,7 +1,6 @@
-package org.schlunzis.kurtama.server.net.impl;
+package org.schlunzis.kurtama.server.net.netty;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -10,10 +9,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
-import org.schlunzis.kurtama.server.internal.ForcedLogoutEvent;
 import org.schlunzis.kurtama.server.net.ClientMessageDispatcher;
 import org.schlunzis.kurtama.server.net.ISession;
-import org.springframework.context.ApplicationEventPublisher;
+import org.schlunzis.kurtama.server.net.SessionType;
+import org.schlunzis.kurtama.server.net.util.ChannelStore;
+import org.schlunzis.kurtama.server.net.util.MessageConverter;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -24,24 +24,22 @@ import java.util.Collection;
 @ChannelHandler.Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ChannelStore<Channel> channelStore = new ChannelStore<>(SessionType.NETTY);
 
-    private final IChannelStore channelStore;
-
+    private final MessageConverter messageConverter;
     private final ClientMessageDispatcher clientMessageDispatcher;
 
-    private final ApplicationEventPublisher eventBus;
-
     @Override
-    public void channelActive(final ChannelHandlerContext ctx) throws JsonProcessingException {
+    public void channelActive(final ChannelHandlerContext ctx) {
         log.info("Client joined - " + ctx);
-        channelStore.create(ctx.channel());
+        ISession session = channelStore.create(ctx.channel());
+        clientMessageDispatcher.newClient(session);
     }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
         channelStore.get(ctx.channel()).ifPresentOrElse(
-                session -> eventBus.publishEvent(new ForcedLogoutEvent(session)),
+                clientMessageDispatcher::clientDisconnected,
                 () -> log.error("No session found for channel " + ctx.channel()));
         log.info("Client left - " + ctx);
         channelStore.remove(ctx.channel());
@@ -52,13 +50,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
         try {
             log.info("Message received: " + msg);
-            IClientMessage myMessage = objectMapper.readValue(msg, IClientMessage.class);
+            IClientMessage myMessage = messageConverter.toClientMessage(msg);
             log.info("converted to {}", myMessage);
             channelStore.get(ctx.channel()).ifPresentOrElse(
                     session -> clientMessageDispatcher.dispatch(myMessage, session),
-                    () -> log.error("No session found for channel " + ctx.channel()));
-
-
+                    () -> log.error("No session found for channel " + ctx.channel())
+            );
         } catch (Throwable t) {
             log.error("Error during message conversion occurred:", t);
         }
@@ -92,7 +89,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private void sendMessageHelper(IServerMessage serverMessage, Collection<Channel> channels) {
         channels.forEach(channel -> {
             try {
-                String msg = new ObjectMapper().writeValueAsString(serverMessage);
+                String msg = messageConverter.toJson(serverMessage);
                 channel.writeAndFlush(msg);
             } catch (JsonProcessingException e) {
                 log.error("Error during message conversion occurred:", e);

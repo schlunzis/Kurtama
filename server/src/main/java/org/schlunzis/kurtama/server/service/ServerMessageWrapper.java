@@ -1,9 +1,10 @@
-package org.schlunzis.kurtama.server.net;
+package org.schlunzis.kurtama.server.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
+import org.schlunzis.kurtama.server.net.ISession;
 
 import java.util.Collection;
 import java.util.List;

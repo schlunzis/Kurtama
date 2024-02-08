@@ -59,6 +59,15 @@ public class LobbyManagement {
         }
     }
 
+    public ServerLobby getLobby(UUID lobbyID) throws LobbyNotFoundException {
+        Optional<ServerLobby> lobby = lobbyStore.get(lobbyID);
+        if (lobby.isPresent()) {
+            return lobby.get();
+        } else {
+            throw new LobbyNotFoundException();
+        }
+    }
+
     public Collection<ServerLobby> getAll() {
         return lobbyStore.getAll();
     }
