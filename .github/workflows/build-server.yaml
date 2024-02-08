@@ -1,0 +1,28 @@
+name: on client changes
+
+# run this workflow, if a push changes a file outside the 'client' directory and some other files
+on:
+  push:
+    paths-ignore:
+      - 'client'
+      - '.editorconfig'
+      - '.gitattributes'
+      - '.gitignore'
+      - '.mailmap'
+      - 'README.md'
+
+jobs:
+  verify-server:
+    name: verify server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: |
+          ./mvnw -pl server -am --batch-mode --update-snapshots verify
