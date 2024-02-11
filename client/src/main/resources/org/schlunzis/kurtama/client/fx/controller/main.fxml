@@ -28,7 +28,7 @@
     <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
         <ListView fx:id="lobbiesListView"/>
         <HBox>
-            <Button mnemonicParsing="false" onAction="#joinLobby" text="Join Lobby"/>
+            <Button fx:id="joinLobbyButton" mnemonicParsing="false" onAction="#joinLobby" text="Join Lobby"/>
             <Button mnemonicParsing="false" onAction="#createLobby" text="CreateLobby"/>
         </HBox>
     </VBox>

@@ -95,7 +95,7 @@ public class LobbyService {
             users.remove(cmc.getUser());
             cmc.sendToMany(message, users);
         } catch (LobbyNotFoundException e) {
-            log.error("Failed to inform users in lobby. Lobby not found. ", e);
+            log.debug("Could not inform other lobby members. Probably the last member in lobby left and the lobby was removed.");
         }
     }
 
