@@ -12,6 +12,7 @@ import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -24,11 +25,12 @@ public class ClientMessageDispatcher {
     private final ApplicationEventPublisher eventBus;
 
     public void dispatch(IClientMessage clientMessage, ISession session) {
+        Objects.requireNonNull(clientMessage);
+        Objects.requireNonNull(session);
         log.info("going to dispatch message {}", clientMessage);
-        if (clientMessage instanceof LoginRequest lir) {
-            publishContext(lir, session, null);
-        } else if (clientMessage instanceof RegisterRequest rr) {
-            publishContext(rr, session, null);
+
+        if (clientMessage instanceof LoginRequest || clientMessage instanceof RegisterRequest) { // no authentication needed
+            publishContext(clientMessage, session, null);
         } else {
             Optional<ServerUser> user = authenticationService.getUserForSession(session);
             user.ifPresentOrElse(
@@ -36,7 +38,7 @@ public class ClientMessageDispatcher {
                         log.info("Received authenticated ClientMessage");
                         publishContext(clientMessage, session, u);
                     },
-                    () -> log.info("Received unauthenticated ClientMessage")
+                    () -> log.info("Received unauthenticated ClientMessage") //TODO inform client
             );
         }
     }
@@ -50,6 +52,7 @@ public class ClientMessageDispatcher {
     }
 
     public void clientDisconnected(ISession session) {
+        Objects.requireNonNull(session);
         eventBus.publishEvent(new ForcedLogoutEvent(session));
     }
 
