@@ -7,15 +7,15 @@ import java.util.Collection;
 public interface INetworkServer {
 
     /**
-     * Sends the message to all clients connected to the server via the implementation.
+     * Sends the message to all clients connected to the server.
      *
      * @param serverMessage the message to send
      */
     void sendMessage(IServerMessage serverMessage);
 
     /**
-     * Sends the given message to all given recipients. Implementation can assume, that all given sessions have the type
-     * they were registered for by the Initializer.
+     * Sends the given message to all given recipients. Implementations can assume that all given sessions have the
+     * type they were registered for by the {@link NetworkServerInitializer}.
      *
      * @param serverMessage the message to send
      * @param recipients    the sessions of the recipients
