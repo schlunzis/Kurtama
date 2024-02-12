@@ -85,10 +85,11 @@ public class NetworkService {
             return Collections.emptyList();
         }
         return messageWrapper.getRecipients().stream()
-                .<ISession>mapMulti(((session, downstream) -> {
-                    if (session == null || session.sessionType() == null || session.id() == null)
+                .filter((session -> {
+                    if (session == null || session.sessionType() == null || session.id() == null) {
                         log.debug("Malformed ServerMessageWrapper! ignoring session");
-                    else downstream.accept(session);
+                        return false;
+                    } else return true;
                 }))
                 .toList();
     }
