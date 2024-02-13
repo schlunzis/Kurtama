@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - 121-issue-packaging # for testing, to be removed
 
 jobs:
   build:

@@ -1,8 +1,6 @@
 name: Verify Project
 
 on:
-  push:
-  pull_request:
   workflow_call:
 
 jobs:

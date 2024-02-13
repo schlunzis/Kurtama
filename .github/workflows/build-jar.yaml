@@ -1,4 +1,4 @@
-name: Build jar with Dependencies
+name: Build jar with dependencies
 
 on:
   workflow_call:
