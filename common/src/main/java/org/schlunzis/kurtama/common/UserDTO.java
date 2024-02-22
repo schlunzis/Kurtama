@@ -15,4 +15,9 @@ public class UserDTO implements IUser {
 
     private String username;
 
+    @Override
+    public UserDTO toDTO() {
+        return this;
+    }
+
 }

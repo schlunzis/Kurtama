@@ -16,4 +16,6 @@ public interface IUser {
 
     void setUsername(String username);
 
+    UserDTO toDTO();
+
 }
