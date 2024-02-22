@@ -1,6 +1,5 @@
 package org.schlunzis.kurtama.client.fx;
 
-import fr.brouillard.oss.cssfx.CSSFX;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -26,7 +25,7 @@ public class ClientApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        CSSFX.start();
+        //CSSFX.start();
         context.publishEvent(new ClientReadyEvent(primaryStage));
     }
 
