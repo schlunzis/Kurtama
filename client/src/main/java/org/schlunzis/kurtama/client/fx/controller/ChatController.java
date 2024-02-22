@@ -1,6 +1,7 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,20 @@ public class ChatController {
     public void initialize() {
         chatListView.setItems(chatService.getChatMessages());
         senderNameTextField.setText(chatService.getCurrentUsername());
+        chatListView.setCellFactory(listView -> new ListCell<>() {
+            @Override
+            protected void updateItem(String message, boolean empty) {
+                super.updateItem(message, empty);
+                if (empty || message == null) {
+                    setText(null);
+                } else {
+                    setText(message);
+                }
+                this.setFocusTraversable(false);
+                this.setMouseTransparent(true);
+                this.setDisable(true);
+            }
+        });
     }
 
     @FXML

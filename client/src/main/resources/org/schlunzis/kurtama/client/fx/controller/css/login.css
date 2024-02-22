@@ -1,22 +1,45 @@
-GridPane {
-    -fx-pref-width: 500px;
-    -fx-pref-height: 250px;
+.root {
     -fx-alignment: center;
+    -fx-pref-height: 400;
+    -fx-pref-width: 1000;
+}
+
+GridPane {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
-    -fx-padding: 20px;
-    -fx-background-color: #ffffff;
-}
-
-Label {
-    -fx-text-fill: black;
-}
-
-TextField, PasswordField {
-    -fx-padding: 10px;
-    -fx-pref-width: 300px;
+    -fx-alignment: center;
 }
 
 Button {
-    -fx-max-width: 99999px;
+    -fx-max-width: 99999px; /* Full width */
+}
+
+.progress {
+    -fx-alignment: center;
+    -fx-pref-height: 40px;
+}
+
+ProgressIndicator {
+    -fx-progress-color: k-button;
+}
+
+.separator .line {
+    -fx-pref-width: 3;
+    -fx-border-color: k-button;
+}
+
+.separator {
+    -fx-pref-height: 250px;
+}
+
+.sep {
+    -fx-alignment: center;
+}
+
+.login {
+    -fx-alignment: center-right;
+}
+
+.connect {
+    -fx-alignment: center-left;
 }
