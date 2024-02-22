@@ -25,4 +25,4 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: |
-          ./mvnw -pl server -am --batch-mode --update-snapshots verify
+          ./mvnw --projects server --also-make --batch-mode --update-snapshots verify
