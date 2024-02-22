@@ -17,8 +17,12 @@ public class NetworkServerInitializer {
 
     public void init() {
         if (nettyEnable) {
-            networkService.addServer(SessionType.NETTY, nettyServer);
-            nettyServer.start();
+            Thread.ofVirtual()
+                    .name("Netty-Start-Thread")
+                    .start(() -> {
+                        networkService.addServer(SessionType.NETTY, nettyServer);
+                        nettyServer.start();
+                    });
         }
     }
 

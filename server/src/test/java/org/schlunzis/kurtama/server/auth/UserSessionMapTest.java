@@ -29,14 +29,14 @@ class UserSessionMapTest {
     @Mock
     ISession secondSession;
 
-    // ################################################
-    // put(ServerUser, ISession)
-    // ################################################
-
     @BeforeEach
     void init() {
         userSessionMap = new UserSessionMap();
     }
+
+    // ################################################
+    // put(ServerUser, ISession)
+    // ################################################
 
     @Test
     void putDefaultTest() {

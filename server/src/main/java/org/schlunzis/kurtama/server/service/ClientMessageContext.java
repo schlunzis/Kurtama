@@ -8,7 +8,7 @@ import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterRequest;
-import org.schlunzis.kurtama.server.auth.AuthenticationService;
+import org.schlunzis.kurtama.server.auth.IAuthenticationService;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,7 +37,7 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
 
     private final T clientMessage;
 
-    public ClientMessageContext(T clientMessage, ISession session, ServerUser user, AuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
+    public ClientMessageContext(T clientMessage, ISession session, ServerUser user, IAuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
         super(new ResponseAssembler(clientMessage), authenticationService, eventBus, session, user);
         this.clientMessage = clientMessage;
     }
