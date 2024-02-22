@@ -1,3 +1,8 @@
+.root {
+    -fx-pref-height: 700;
+    -fx-pref-width: 1000;
+}
+
 GridPane {
     -fx-min-width: 750px;
     -fx-min-height: 500px;
