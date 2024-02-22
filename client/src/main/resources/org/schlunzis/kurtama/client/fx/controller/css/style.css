@@ -101,3 +101,7 @@ TextField:focused, PasswordField:focused {
     -fx-scale-y: 0;
     -fx-background-color: k-background;
 }
+
+.label {
+    -fx-text-fill: k-text-color;
+}
