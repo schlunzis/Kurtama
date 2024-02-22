@@ -1,0 +1,16 @@
+name: Release all targets
+
+on:
+  push:
+    tags:
+      - '**.**.**'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yaml
+    with:
+      tag: ${{github.ref_name}}
+      version: ${{github.ref_name}} #should be equal to the version of the maven project
+      github-release: true
+      prerelease: false
+    secrets: inherit
