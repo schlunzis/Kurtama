@@ -3,14 +3,22 @@ name: Release all targets
 on:
   push:
     tags:
-      - '**.**.**'
+      - 'v*'
 
 jobs:
+  create-version-string:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.step1.outputs.test }}
+    steps:
+      - id: step1
+        run: echo ${{ github.ref_name }} | cut -c 2- >> "$GITHUB_OUTPUT"
   build:
+    needs: create-version-string
     uses: ./.github/workflows/build.yaml
     with:
-      tag: ${{github.ref_name}}
-      version: ${{github.ref_name}} #should be equal to the version of the maven project
+      tag: ${{ github.ref_name }}
+      version: ${{ needs.create-version-string.outputs.version }}
       github-release: true
       prerelease: false
     secrets: inherit
