@@ -40,3 +40,9 @@ jobs:
       prerelease: ${{ inputs.prerelease }}
       jar-file-modifier: ${{ matrix.os.jar-file-modifier }}
     secrets: inherit
+
+  build-client:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./build-client.sh

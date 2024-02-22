@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - 121-issue-packaging
 
 jobs:
   build:
