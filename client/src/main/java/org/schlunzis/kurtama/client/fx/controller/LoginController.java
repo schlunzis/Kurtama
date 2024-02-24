@@ -13,8 +13,9 @@ import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
-import org.schlunzis.kurtama.client.net.NetworkSettings;
 import org.schlunzis.kurtama.client.service.ISessionService;
+import org.schlunzis.kurtama.client.settings.IUserSettings;
+import org.schlunzis.kurtama.client.settings.Setting;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -33,7 +34,7 @@ public class LoginController {
     private final ApplicationEventPublisher eventBus;
     private final Environment environment;
     private final ISessionService sessionService;
-    private final NetworkSettings networkSettings;
+    private final IUserSettings userSettings;
 
     @FXML
     private TextField emailField;
@@ -68,6 +69,8 @@ public class LoginController {
     private void handleServerConnect() {
         String host = serverField.getText();
         int port = Integer.parseInt(portField.getText());
+        userSettings.putString(Setting.HOST, host);
+        userSettings.putInt(Setting.PORT, port);
         // TODO handle invalid inputs
         eventBus.publishEvent(new NewServerConnectionEvent(host, port));
     }
@@ -86,8 +89,8 @@ public class LoginController {
                 Platform.runLater(() -> applyConnectionStatus(newValue))
         );
         applyConnectionStatus(sessionService.getConnectionStatus().getValue());
-        serverField.setText(networkSettings.getHost());
-        portField.setText(String.valueOf(networkSettings.getPort()));
+        serverField.setText(userSettings.getString(Setting.HOST));
+        portField.setText(String.valueOf(userSettings.getInt(Setting.PORT)));
     }
 
     private void devLogin() {
