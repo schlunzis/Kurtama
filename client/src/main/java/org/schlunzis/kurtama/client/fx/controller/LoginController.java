@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
+import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
@@ -63,7 +64,10 @@ public class LoginController {
 
     @FXML
     private void handleServerConnect() {
-
+        String host = serverField.getText();
+        int port = Integer.parseInt(portField.getText());
+        // TODO handle invalid inputs
+        eventBus.publishEvent(new NewServerConnectionEvent(host, port));
     }
 
     @EventListener

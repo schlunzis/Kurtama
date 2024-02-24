@@ -11,35 +11,29 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.events.ClientClosingEvent;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.net.INetworkClient;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
 public final class NettyClient implements INetworkClient {
 
     private final ApplicationEventPublisher eventBus;
     private final EventLoopGroup group;
     private final Bootstrap b;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    @Setter
-    @Value("${kurtama.server.port}")
-    private int port;
-    @Setter
-    @Value("${kurtama.server.host}")
-    private String host;
+    private final int port;
+    private final String host;
     private ChannelFuture f;
 
-    public NettyClient(ClientHandler clientHandler, ApplicationEventPublisher eventBus) {
+    public NettyClient(ClientHandler clientHandler, ApplicationEventPublisher eventBus, String host, int port) {
         this.eventBus = eventBus;
+        this.host = host;
+        this.port = port;
         group = new NioEventLoopGroup();
 
         b = new Bootstrap();
@@ -58,11 +52,6 @@ public final class NettyClient implements INetworkClient {
                         p.addLast(clientHandler);
                     }
                 });
-    }
-
-    @EventListener
-    public void onClientClosingEvent(ClientClosingEvent cce) {
-        close();
     }
 
     @Override
