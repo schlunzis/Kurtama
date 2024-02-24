@@ -21,7 +21,10 @@ public interface BiMap<K, V> extends Map<K, V> {
      */
     default K getByValue(V value) {
         return entrySet().stream()
-                .filter(e -> e.getValue().equals(value))
+                .filter(e -> {
+                    if (e.getValue() == null) return value == null;
+                    else return e.getValue().equals(value);
+                })
                 .map(Entry::getKey)
                 .findFirst().orElse(null);
     }
@@ -35,7 +38,7 @@ public interface BiMap<K, V> extends Map<K, V> {
     default K removeByValue(V value) {
         final AtomicReference<K> prev = new AtomicReference<>(null);
         entrySet().removeIf(e -> {
-            if (e.getValue().equals(value)) {
+            if ((e.getValue() == null && value == null) || (e.getValue() != null && e.getValue().equals(value))) {
                 prev.setPlain(e.getKey());
                 return true;
             }
