@@ -23,7 +23,7 @@
         <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleLogin"/>
         <Button text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
                 onAction="#handleLogin"/>
-        <Button text="Register" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"
+        <Button text="Register" styleClass="secondary_button" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"
                 onAction="#handleRegister"/>
     </GridPane>
 
@@ -39,7 +39,7 @@
         <Button onAction="#handleServerConnect" text="Connect" GridPane.columnIndex="0" GridPane.rowIndex="2"
                 GridPane.columnSpan="2"/>
         <HBox styleClass="progress" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
-            <ProgressIndicator fx:id="progressIndicator"/>
+            <Region fx:id="progressIndicator"/>
             <Label fx:id="progressLabel" text="Connecting..."/>
         </HBox>
     </GridPane>
