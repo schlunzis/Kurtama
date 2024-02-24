@@ -11,11 +11,14 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.events.ClientClosingEvent;
+import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.net.INetworkClient;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -23,16 +26,20 @@ import org.springframework.stereotype.Component;
 @Component
 public final class NettyClient implements INetworkClient {
 
+    private final ApplicationEventPublisher eventBus;
     private final EventLoopGroup group;
     private final Bootstrap b;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    @Setter
     @Value("${kurtama.server.port}")
     private int port;
+    @Setter
     @Value("${kurtama.server.host}")
     private String host;
     private ChannelFuture f;
 
-    public NettyClient(ClientHandler clientHandler) {
+    public NettyClient(ClientHandler clientHandler, ApplicationEventPublisher eventBus) {
+        this.eventBus = eventBus;
         group = new NioEventLoopGroup();
 
         b = new Bootstrap();
@@ -60,6 +67,11 @@ public final class NettyClient implements INetworkClient {
 
     @Override
     public void start() {
+        eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.CONNECTING));
+        try {
+            Thread.sleep(3000); // TODO remove; for testing only
+        } catch (InterruptedException e) {
+        }
         f = b.connect(host, port);
         f.awaitUninterruptibly();
 
@@ -72,12 +84,14 @@ public final class NettyClient implements INetworkClient {
             close();
         } else {
             log.info("Connected to server.");
+            eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.CONNECTED));
         }
     }
 
     @Override
     public void close() {
         log.debug("Closing network client");
+        eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.NOT_CONNECTED));
         f.channel().close();
         group.shutdownGracefully();
     }

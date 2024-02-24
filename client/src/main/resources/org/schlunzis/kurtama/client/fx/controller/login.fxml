@@ -36,10 +36,11 @@
         <TextField fx:id="serverField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
         <Label text="Port:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
         <TextField fx:id="portField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        <Button text="Connect" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"/>
+        <Button onAction="#handleServerConnect" text="Connect" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                GridPane.columnSpan="2"/>
         <HBox styleClass="progress" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
-            <ProgressIndicator/>
-            <Label text="Connecting..."/>
+            <ProgressIndicator fx:id="progressIndicator"/>
+            <Label fx:id="progressLabel" text="Connecting..."/>
         </HBox>
     </GridPane>
 
