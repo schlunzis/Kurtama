@@ -13,6 +13,7 @@ import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
+import org.schlunzis.kurtama.client.net.NetworkSettings;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
@@ -32,6 +33,7 @@ public class LoginController {
     private final ApplicationEventPublisher eventBus;
     private final Environment environment;
     private final ISessionService sessionService;
+    private final NetworkSettings networkSettings;
 
     @FXML
     private TextField emailField;
@@ -84,6 +86,8 @@ public class LoginController {
                 Platform.runLater(() -> applyConnectionStatus(newValue))
         );
         applyConnectionStatus(sessionService.getConnectionStatus().getValue());
+        serverField.setText(networkSettings.getHost());
+        portField.setText(String.valueOf(networkSettings.getPort()));
     }
 
     private void devLogin() {

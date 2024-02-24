@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.events.ClientClosingEvent;
 import org.schlunzis.kurtama.client.events.ClientReadyEvent;
+import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.springframework.context.event.EventListener;
@@ -25,12 +26,12 @@ public class NetworkService {
 
     @EventListener
     public void onClientClosingEvent(ClientClosingEvent ignored) {
-        networkClient.close();
+        networkClient.close(ConnectionStatusEvent.Status.NOT_CONNECTED);
     }
 
     @EventListener
     public void onNewServerConnectionEvent(NewServerConnectionEvent event) {
-        networkClient.close();
+        networkClient.close(ConnectionStatusEvent.Status.NOT_CONNECTED);
         networkClient = networkServerFactory.createNettyClient(event.host(), event.port());
         startServer();
     }

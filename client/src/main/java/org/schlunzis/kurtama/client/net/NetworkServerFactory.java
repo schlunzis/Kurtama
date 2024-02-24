@@ -3,7 +3,6 @@ package org.schlunzis.kurtama.client.net;
 import lombok.RequiredArgsConstructor;
 import org.schlunzis.kurtama.client.net.impl.ClientHandler;
 import org.schlunzis.kurtama.client.net.impl.NettyClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -12,20 +11,16 @@ import org.springframework.stereotype.Component;
 public class NetworkServerFactory {
 
     private final ApplicationEventPublisher eventBus;
-    private final ClientHandler nettyClientHandler;
-
-    @Value("${kurtama.server.port}")
-    private int port;
-    @Value("${kurtama.server.host}")
-    private String host;
+    private final NetworkSettings networkSettings;
+    private final ServerMessageDispatcher serverMessageDispatcher;
 
 
     public INetworkClient createNettyClient() {
-        return new NettyClient(nettyClientHandler, eventBus, host, port);
+        return new NettyClient(new ClientHandler(serverMessageDispatcher), eventBus, networkSettings.getHost(), networkSettings.getPort());
     }
 
     public INetworkClient createNettyClient(String host, int port) {
-        return new NettyClient(nettyClientHandler, eventBus, host, port);
+        return new NettyClient(new ClientHandler(serverMessageDispatcher), eventBus, host, port);
     }
 
 }

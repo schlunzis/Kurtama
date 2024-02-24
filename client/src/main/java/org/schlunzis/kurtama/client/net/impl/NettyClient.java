@@ -12,12 +12,10 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.kurtama.client.events.ClientClosingEvent;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.net.INetworkClient;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
 
 @Slf4j
 public final class NettyClient implements INetworkClient {
@@ -57,20 +55,16 @@ public final class NettyClient implements INetworkClient {
     @Override
     public void start() {
         eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.CONNECTING));
-        try {
-            Thread.sleep(3000); // TODO remove; for testing only
-        } catch (InterruptedException e) {
-        }
         f = b.connect(host, port);
         f.awaitUninterruptibly();
 
         if (f.isCancelled()) {
             log.info("Connection cancelled by user.");
-            close();
+            close(ConnectionStatusEvent.Status.NOT_CONNECTED);
         } else if (!f.isSuccess()) {
             log.error("Connection failed!");
             f.cause().printStackTrace();
-            close();
+            close(ConnectionStatusEvent.Status.FAILED);
         } else {
             log.info("Connected to server.");
             eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.CONNECTED));
@@ -78,9 +72,9 @@ public final class NettyClient implements INetworkClient {
     }
 
     @Override
-    public void close() {
+    public void close(ConnectionStatusEvent.Status status) {
         log.debug("Closing network client");
-        eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.NOT_CONNECTED));
+        eventBus.publishEvent(new ConnectionStatusEvent(status));
         f.channel().close();
         group.shutdownGracefully();
     }
