@@ -2,6 +2,9 @@
 
 set -e
 
+# windows does not allow text in versions
+# https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
+windowsVersion="0.0.1"
 version="0.0.1-SNAPSHOT"
 input="./client/target"
 mainJar="client-${version}.jar"
@@ -28,6 +31,7 @@ if  [ "$1" = linux ]; then
   --linux-package-name kurtama-client \
   --linux-menu-group Game \
   --linux-app-category Game \
+  --linux-app-release ${version} \
   --linux-shortcut
 elif  [ "$1" = windows ]; then
   echo "Building for Windows"
@@ -42,7 +46,7 @@ elif  [ "$1" = windows ]; then
   --main-jar ${mainJar} \
   --resource-dir ${resourceDir} \
   --name ${name} \
-  --app-version "0.0.1" \
+  --app-version ${windowsVersion} \
   --main-class ${mainClass} \
   --dest ${destination} \
   --win-upgrade-uuid "54e9b129-e6a4-4272-bd94-13079eb6ae6d" \
