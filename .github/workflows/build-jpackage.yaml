@@ -72,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./target/jpackage-out/kurtama-client.exe
+          file: ./target/jpackage-out/kurtama-client-${{ inputs.winVersion }}.exe
           asset_name: kurtama-client-${{ inputs.version }}-setup.exe
           overwrite: true
           tag: ${{ inputs.tag }}
