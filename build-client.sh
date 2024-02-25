@@ -31,7 +31,6 @@ if  [ "$1" = linux ]; then
   --linux-package-name kurtama-client \
   --linux-menu-group Game \
   --linux-app-category Game \
-  --linux-app-release ${version} \
   --linux-shortcut
 elif  [ "$1" = windows ]; then
   echo "Building for Windows"
