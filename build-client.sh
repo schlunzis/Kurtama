@@ -32,7 +32,7 @@ if  [ "$1" = linux ]; then
 elif  [ "$1" = windows ]; then
   echo "Building for Windows"
   echo "Building client jar"
-  cmd.exe ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
+  cmd.exe /c ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
   ls -al ./client
 
   echo "Running jpackage"
