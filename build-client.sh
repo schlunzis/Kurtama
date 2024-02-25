@@ -50,6 +50,8 @@ elif  [ "$1" = windows ]; then
   --dest ${destination} \
   --win-upgrade-uuid "54e9b129-e6a4-4272-bd94-13079eb6ae6d" \
   --win-menu
+
+  ls -al ./target/jpackage-out
 else
   echo "No OS given. Provide 'linux' or 'windows' as an argument."
 fi
