@@ -4,7 +4,7 @@ set -e
 
 version="0.0.1-SNAPSHOT"
 input="./client/target"
-mainJar="./client-${version}.jar"
+mainJar="client.jar"
 resourceDir="./client/jpackage"
 mainClass="ClientLauncher"
 destination="./target/jpackage-out"
@@ -14,6 +14,7 @@ if  [ "$1" = linux ]; then
   echo "Building for Linux"
   echo "Building client jar"
   ./mvnw --projects client --also-make --batch-mode --update-snapshots clean install package
+  mv "${input}/client-${version}.jar" "${input}/${mainJar}"
 
   echo "Running jpackage"
   jpackage --type deb \
@@ -35,6 +36,7 @@ elif  [ "$1" = windows ]; then
   echo "Building client jar"
   alias cmd='/mnt/c/Windows/System32/cmd.exe /c'
   cmd ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
+  mv "${input}/client-${version}.jar" "${input}/${mainJar}"
 
   echo "Running jpackage"
   jpackage --type exe \
