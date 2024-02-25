@@ -41,8 +41,12 @@ jobs:
       jar-file-modifier: ${{ matrix.os.jar-file-modifier }}
     secrets: inherit
 
-  build-client:
+  build-with-jpackage:
     needs: verify
-    runs-on: ubuntu-latest
-    steps:
-      - run: ./build-client.sh
+    uses: ./.github/workflows/build-jpackage.yaml
+    with:
+      tag: ${{ inputs.tag }}
+      version: ${{ inputs.version }}
+      github-release: ${{ inputs.github-release }}
+      prerelease: ${{ inputs.prerelease }}
+    secrets: inherit

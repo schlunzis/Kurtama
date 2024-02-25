@@ -1,0 +1,74 @@
+name: Build with JPackage
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      github-release:
+        required: true
+        type: boolean
+      prerelease:
+        required: true
+        type: boolean
+
+jobs:
+  build-on-ubuntu:
+    name: Build on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build and Package
+        run: ./build-client.sh
+
+      - name: Upload deb to release
+        if: ${{ inputs.github-release }}
+        uses: svenstaro/upload-release-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./target/jpackage-out/kurtama-client-${{ inputs.version }}.deb
+          asset_name: kurtama-client-${{ inputs.version }}.deb
+          overwrite: true
+          tag: ${{ inputs.tag }}
+          prerelease: ${{ inputs.prerelease }}
+          release_name: ${{ inputs.version }}
+
+  build-on-windows:
+    name: Build on Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build and Package
+        run: ./build-client.sh
+
+      - name: Upload deb to release
+        if: ${{ inputs.github-release }}
+        uses: svenstaro/upload-release-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./target/jpackage-out/kurtama-client-${{ inputs.version }}.exe
+          asset_name: kurtama-client-${{ inputs.version }}-setup.exe
+          overwrite: true
+          tag: ${{ inputs.tag }}
+          prerelease: ${{ inputs.prerelease }}
+          release_name: ${{ inputs.version }}
