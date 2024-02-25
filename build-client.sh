@@ -17,6 +17,7 @@ if  [ "$1" = linux ]; then
 
   echo "Running jpackage"
   jpackage --type deb \
+  --verbose \
   --input ${input} \
   --main-jar ${mainJar} \
   --resource-dir ${resourceDir} \
@@ -32,10 +33,12 @@ if  [ "$1" = linux ]; then
 elif  [ "$1" = windows ]; then
   echo "Building for Windows"
   echo "Building client jar"
-  ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
+  alias cmd='/mnt/c/Windows/System32/cmd.exe /c'
+  cmd ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
 
   echo "Running jpackage"
   jpackage --type exe \
+  --verbose \
   --input ${input} \
   --main-jar ${mainJar} \
   --resource-dir ${resourceDir} \
