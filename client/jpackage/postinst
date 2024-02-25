@@ -5,7 +5,7 @@ set -e
 echo "Running postinst for kurtama-client with $1"
 if  [ "$1" = configure ]; then
   # creating a desktop item
-  xdg-desktop-menu install /opt/kurtama-client/lib/kurtama-client-PublicDemoName.desktop
+  xdg-desktop-menu install /opt/kurtama-client/lib/kurtama-client.desktop
   # creating a link, so the application can be called from the command line
   ln -sf /opt/kurtama-client/bin/kurtama-client /bin/kurtama-client
 fi

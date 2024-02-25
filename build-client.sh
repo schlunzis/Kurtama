@@ -30,6 +30,8 @@ if  [ "$1" = linux ]; then
   --linux-menu-group Game \
   --linux-app-category Game \
   --linux-shortcut
+
+
 elif  [ "$1" = windows ]; then
   echo "Building for Windows"
   echo "Building client jar"
@@ -49,7 +51,7 @@ elif  [ "$1" = windows ]; then
   --win-upgrade-uuid "54e9b129-e6a4-4272-bd94-13079eb6ae6d" \
   --win-menu
 
-  ls -al ./target/jpackage-out
+
 else
   echo "No OS given. Provide 'linux' or 'windows' as an argument."
 fi
