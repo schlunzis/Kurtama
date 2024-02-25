@@ -7,7 +7,6 @@ windowsVersion="$3"
 input="./client/target"
 mainJar="client-${version}.jar"
 resourceDir="./client/jpackage"
-mainClass="org.schlunzis.kurtama.client.ClientLauncher"
 destination="./target/jpackage-out"
 name="kurtama-client"
 
@@ -24,7 +23,6 @@ if  [ "$1" = linux ]; then
   --resource-dir ${resourceDir} \
   --name ${name} \
   --app-version ${version} \
-  --main-class ${mainClass} \
   --dest ${destination} \
   --linux-package-name kurtama-client \
   --linux-menu-group Game \
@@ -46,7 +44,6 @@ elif  [ "$1" = windows ]; then
   --resource-dir ${resourceDir} \
   --name ${name} \
   --app-version ${windowsVersion} \
-  --main-class ${mainClass} \
   --dest ${destination} \
   --win-upgrade-uuid "54e9b129-e6a4-4272-bd94-13079eb6ae6d" \
   --win-menu
