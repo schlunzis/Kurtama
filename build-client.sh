@@ -7,7 +7,7 @@ windowsVersion="$3"
 input="./client/target"
 mainJar="client-${version}.jar"
 resourceDir="./client/jpackage"
-mainClass="ClientLauncher"
+mainClass="org.schlunzis.kurtama.client.ClientLauncher"
 destination="./target/jpackage-out"
 name="kurtama-client"
 
