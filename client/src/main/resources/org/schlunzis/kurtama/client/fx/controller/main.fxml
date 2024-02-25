@@ -16,18 +16,28 @@
         <ColumnConstraints percentWidth="48"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="30"/>
-        <RowConstraints percentHeight="10"/>
+        <RowConstraints percentHeight="35"/>
+        <RowConstraints percentHeight="5"/>
         <RowConstraints percentHeight="60"/>
     </rowConstraints>
 
     <fx:include source="chat.fxml" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
 
-    <VBox styleClass="menu-buttons" GridPane.columnIndex="0" GridPane.rowIndex="0">
-        <Button mnemonicParsing="false" onAction="#createLobby" text="CreateLobby"/>
-        <Button mnemonicParsing="false" onAction="#settings" text="Settings"/>
-        <Button mnemonicParsing="false" onAction="#logout" text="Logout"/>
-        <Button mnemonicParsing="false" onAction="#logout" text="Quit"/>
+    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <HBox VBox.vgrow="ALWAYS" styleClass="menu-buttons">
+            <Button mnemonicParsing="false" onAction="#settings" text="Settings"/>
+            <Button mnemonicParsing="false" onAction="#logout" text="Logout"/>
+            <Button mnemonicParsing="false" onAction="#logout" text="Quit"/>
+        </HBox>
+        <GridPane styleClass="lobbyDialog">
+            <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="lobbyNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <PasswordField fx:id="lobbyPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                           onAction="#createLobby"/>
+            <Button mnemonicParsing="false" onAction="#createLobby" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                    GridPane.columnSpan="2" text="CreateLobby"/>
+        </GridPane>
     </VBox>
 
     <VBox styleClass="lobbiesVBox" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="3">

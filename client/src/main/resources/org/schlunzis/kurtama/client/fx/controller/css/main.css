@@ -4,8 +4,6 @@
 }
 
 GridPane {
-    -fx-min-width: 750px;
-    -fx-min-height: 500px;
     -fx-hgap: 10px;
     -fx-vgap: 10px;
     -fx-padding: 10px;
@@ -43,4 +41,8 @@ GridPane {
 
 .join-button {
     -fx-max-width: 999999px;
+}
+
+.lobbyDialog {
+    -fx-alignment: center;
 }
