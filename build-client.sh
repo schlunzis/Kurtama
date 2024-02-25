@@ -32,8 +32,7 @@ if  [ "$1" = linux ]; then
 elif  [ "$1" = windows ]; then
   echo "Building for Windows"
   echo "Building client jar"
-  alias cmd='/mnt/c/Windows/System32/cmd.exe /c'
-  cmd ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
+  /mnt/c/Windows/System32/cmd.exe ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
 
   echo "Running jpackage"
   jpackage --type exe \
