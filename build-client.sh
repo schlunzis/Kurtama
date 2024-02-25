@@ -14,6 +14,7 @@ if  [ "$1" = linux ]; then
   echo "Building for Linux"
   echo "Building client jar"
   ./mvnw --projects client --also-make --batch-mode --update-snapshots clean install package
+  ls -al ${input}
   mv "${input}/client-${version}.jar" "${input}/${mainJar}"
 
   echo "Running jpackage"
@@ -36,6 +37,7 @@ elif  [ "$1" = windows ]; then
   echo "Building client jar"
   alias cmd='/mnt/c/Windows/System32/cmd.exe /c'
   cmd ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
+  ls -al ${input}
   mv "${input}/client-${version}.jar" "${input}/${mainJar}"
 
   echo "Running jpackage"
@@ -53,5 +55,7 @@ elif  [ "$1" = windows ]; then
 else
   echo "No OS given. Provide 'linux' or 'windows' as an argument."
 fi
+
+ls -al ${destination}
 
 exit 0
