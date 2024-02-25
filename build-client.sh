@@ -4,7 +4,7 @@ set -e
 
 version="0.0.1-SNAPSHOT"
 input="./client/target"
-mainJar="./client/target/client-${version}.jar"
+mainJar="./client-${version}.jar"
 resourceDir="./client/jpackage"
 mainClass="ClientLauncher"
 destination="./target/jpackage-out"

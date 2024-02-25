@@ -57,7 +57,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build and Package
-        run: ./build-client.sh windows
+        run: bash -c "./build-client.sh windows"
 
       - name: Upload deb to release
         if: ${{ inputs.github-release }}
