@@ -2,10 +2,8 @@
 
 set -e
 
-# windows does not allow text in versions
-# https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
-windowsVersion="0.0.1"
-version="0.0.1-SNAPSHOT"
+version="$2"
+windowsVersion="$3"
 input="./client/target"
 mainJar="client-${version}.jar"
 resourceDir="./client/jpackage"

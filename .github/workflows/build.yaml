@@ -9,6 +9,11 @@ on:
       version:
         required: true
         type: string
+      winVersion:
+        required: true
+        type: string
+        # Windows does not allow text in versions. See requirements:
+        # https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
       github-release:
         required: false
         type: boolean
@@ -47,6 +52,7 @@ jobs:
     with:
       tag: ${{ inputs.tag }}
       version: ${{ inputs.version }}
+      winVersion: ${{ inputs.winVersion }}
       github-release: ${{ inputs.github-release }}
       prerelease: ${{ inputs.prerelease }}
     secrets: inherit
