@@ -38,7 +38,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./target/jpackage-out/kurtama-client-${{ inputs.version }}.deb
+          file: ./target/jpackage-out/kurtama-client-${{ inputs.version }}_amd64.deb
           asset_name: kurtama-client-${{ inputs.version }}.deb
           overwrite: true
           tag: ${{ inputs.tag }}
