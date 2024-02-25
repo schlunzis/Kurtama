@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.client.net;
 
+import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 
 /**
@@ -29,5 +30,6 @@ public interface INetworkClient {
      *
      * @since 1.0
      */
-    void close();
+    void close(ConnectionStatusEvent.Status status);
+
 }
