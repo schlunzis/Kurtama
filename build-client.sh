@@ -15,7 +15,6 @@ if  [ "$1" = linux ]; then
   echo "Building client jar"
   ./mvnw --projects client --also-make --batch-mode --update-snapshots clean install package
   ls -al ${input}
-  mv "${input}/client-${version}.jar" "${input}/${mainJar}"
 
   echo "Running jpackage"
   jpackage --type deb \
@@ -30,7 +29,6 @@ if  [ "$1" = linux ]; then
   --linux-package-name kurtama-client \
   --linux-menu-group Game \
   --linux-app-category Game \
-  --linux-app-release ${version} \
   --linux-shortcut
 elif  [ "$1" = windows ]; then
   echo "Building for Windows"
@@ -38,7 +36,6 @@ elif  [ "$1" = windows ]; then
   alias cmd='/mnt/c/Windows/System32/cmd.exe /c'
   cmd ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
   ls -al ${input}
-  mv "${input}/client-${version}.jar" "${input}/${mainJar}"
 
   echo "Running jpackage"
   jpackage --type exe \
