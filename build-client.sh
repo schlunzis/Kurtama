@@ -4,9 +4,9 @@ set -e
 
 version="0.0.1-SNAPSHOT"
 input="./client/target"
-main-jar="./client/target/client-${version}.jar"
-resource-dir="./client/jpackage"
-main-class="ClientLauncher"
+mainJar="./client/target/client-${version}.jar"
+resourceDir="./client/jpackage"
+mainClass="ClientLauncher"
 destination="./target/jpackage-out"
 name="kurtama-client"
 
@@ -18,11 +18,11 @@ if  [ "$1" = linux ]; then
   echo "Running jpackage"
   jpackage --type deb \
   --input ${input} \
-  --main-jar ${main-jar} \
-  --resource-dir ${resource-dir} \
+  --main-jar ${mainJar} \
+  --resource-dir ${resourceDir} \
   --name ${name} \
   --app-version ${version} \
-  --main-class ${main-class} \
+  --main-class ${mainClass} \
   --dest ${destination} \
   --linux-package-name kurtama-client \
   --linux-menu-group Game \
@@ -37,11 +37,11 @@ elif  [ "$1" = windows ]; then
   echo "Running jpackage"
   jpackage --type exe \
   --input ${input} \
-  --main-jar ${main-jar} \
-  --resource-dir ${resource-dir} \
+  --main-jar ${mainJar} \
+  --resource-dir ${resourceDir} \
   --name ${name} \
   --app-version ${version} \
-  --main-class ${main-class} \
+  --main-class ${mainClass} \
   --dest ${destination} \
   --win-upgrade-uuid "54e9b129-e6a4-4272-bd94-13079eb6ae6d" \
   --win-menu
