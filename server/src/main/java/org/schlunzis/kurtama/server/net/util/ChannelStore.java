@@ -5,15 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.net.SessionType;
 import org.schlunzis.kurtama.server.net.UUIDSession;
+import org.schlunzis.kurtama.server.util.BiMap;
+import org.schlunzis.kurtama.server.util.ConcurrentBiHashMap;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 public class ChannelStore<C> {
 
-    private final Map<ISession, C> channelMap = new ConcurrentHashMap<>();
+    private final BiMap<ISession, C> channelMap = new ConcurrentBiHashMap<>();
     private final SessionType sessionType;
 
     public ISession create(C channel) {
@@ -28,10 +31,7 @@ public class ChannelStore<C> {
     }
 
     public Optional<ISession> get(C channel) {
-        return channelMap.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(channel))
-                .map(Map.Entry::getKey)
-                .findFirst();
+        return Optional.ofNullable(channelMap.getByValue(channel));
     }
 
     public void remove(ISession session) {
@@ -39,11 +39,7 @@ public class ChannelStore<C> {
     }
 
     public void remove(C channel) {
-        channelMap.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(channel))
-                .map(Map.Entry::getKey)
-                .findFirst()
-                .ifPresent(this::remove);
+        channelMap.removeByValue(channel);
     }
 
     public Collection<C> getAll() {
@@ -51,12 +47,7 @@ public class ChannelStore<C> {
     }
 
     public Collection<C> get(Collection<ISession> sessions) {
-        final List<C> result = new ArrayList<>();
-        for (ISession session : sessions) {
-            final Optional<C> channel = get(session);
-            channel.ifPresent(result::add);
-        }
-        return result;
+        return channelMap.getForKeys(sessions);
     }
 
 }

@@ -2,18 +2,18 @@ package org.schlunzis.kurtama.server.auth;
 
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
+import org.schlunzis.kurtama.server.util.BiMap;
+import org.schlunzis.kurtama.server.util.ConcurrentBiHashMap;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 class UserSessionMap {
 
-    private final ConcurrentHashMap<ServerUser, ISession> map = new ConcurrentHashMap<>();
+    private final BiMap<ServerUser, ISession> map = new ConcurrentBiHashMap<>();
 
     public void put(ServerUser user, ISession session) {
         Objects.requireNonNull(user);
@@ -28,18 +28,12 @@ class UserSessionMap {
 
     public Optional<ServerUser> get(ISession session) {
         Objects.requireNonNull(session);
-
-        Optional<Map.Entry<ServerUser, ISession>> optionalEntry = map.entrySet().stream().filter(e -> e.getValue().equals(session)).findFirst();
-        return optionalEntry.map(Map.Entry::getKey);
+        return Optional.ofNullable(map.getByValue(session));
     }
 
     public Collection<ISession> getFor(Collection<ServerUser> users) {
         Objects.requireNonNull(users);
-
-        return users.stream()
-                .map(map::get)
-                .filter(Objects::nonNull)
-                .toList();
+        return map.getForKeys(users);
     }
 
     public Collection<ISession> getAllSessions() {
@@ -58,7 +52,7 @@ class UserSessionMap {
 
     public void remove(ISession session) {
         Objects.requireNonNull(session);
-        map.entrySet().removeIf(e -> e.getValue().equals(session));
+        map.removeByValue(session);
     }
 
 }
