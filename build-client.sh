@@ -33,7 +33,7 @@ elif  [ "$1" = windows ]; then
   echo "Building for Windows"
   echo "Building client jar"
   cmd.exe ./mvn.cmd --projects client --also-make --batch-mode --update-snapshots clean install package
-  ls -al .\client\target
+  ls -al ./client/target
 
   echo "Running jpackage"
   jpackage --type exe \
