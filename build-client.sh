@@ -34,7 +34,6 @@ elif  [ "$1" = windows ]; then
   echo "Building client jar"
   # maven wrapper is a hassle here TODO
   mvn --projects client --also-make --batch-mode --update-snapshots clean install package
-  ls -al client/target
 
   echo "Running jpackage"
   jpackage --type exe \
@@ -43,7 +42,7 @@ elif  [ "$1" = windows ]; then
   --main-jar ${mainJar} \
   --resource-dir ${resourceDir} \
   --name ${name} \
-  --app-version ${version} \
+  --app-version "0.0.1" \
   --main-class ${mainClass} \
   --dest ${destination} \
   --win-upgrade-uuid "54e9b129-e6a4-4272-bd94-13079eb6ae6d" \
