@@ -46,8 +46,8 @@ public class SquareTerrainFactory implements TerrainFactory {
                 final int right = i + 1;
                 final int below = j + 1;
                 if (isInbound(above, rows)) tile.put(SquareDirection.TOP, tiles[i][above]);
-                if (isInbound(left, columns)) tile.put(SquareDirection.LEFT, tiles[i][left]);
-                if (isInbound(right, columns)) tile.put(SquareDirection.RIGHT, tiles[i][right]);
+                if (isInbound(left, columns)) tile.put(SquareDirection.LEFT, tiles[left][j]);
+                if (isInbound(right, columns)) tile.put(SquareDirection.RIGHT, tiles[right][j]);
                 if (isInbound(below, rows)) tile.put(SquareDirection.BOTTOM, tiles[i][below]);
             }
         }
