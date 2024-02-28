@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - develop
-      - 121-issue-packaging
+      - 121-issue-packaging # TODO remove
 
 jobs:
   build:
