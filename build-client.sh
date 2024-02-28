@@ -2,6 +2,7 @@
 
 set -e
 
+os="$1" #TODO auto detect
 version="$2"
 windowsVersion="$3"
 input="./client/target"
@@ -10,7 +11,7 @@ resourceDir="./client/jpackage"
 destination="./target/jpackage-out"
 name="kurtama-client"
 
-if  [ "$1" = linux ]; then
+if  [ "$os" = linux ]; then
   echo "Building for Linux"
   echo "Building client jar"
   ./mvnw --projects client --also-make --batch-mode --update-snapshots clean install package
@@ -19,10 +20,10 @@ if  [ "$1" = linux ]; then
   jpackage --type deb \
   --verbose \
   --input ${input} \
-  --main-jar ${mainJar} \
+  --main-jar "${mainJar}" \
   --resource-dir ${resourceDir} \
   --name ${name} \
-  --app-version ${version} \
+  --app-version "${version}" \
   --dest ${destination} \
   --linux-package-name kurtama-client \
   --linux-menu-group Game \
@@ -30,20 +31,20 @@ if  [ "$1" = linux ]; then
   --linux-shortcut
 
 
-elif  [ "$1" = windows ]; then
+elif  [ "$os" = windows ]; then
   echo "Building for Windows"
   echo "Building client jar"
   # maven wrapper is a hassle here TODO
-  mvn --projects client --also-make --batch-mode --update-snapshots clean install package
+  ./mvnw --projects client --also-make --batch-mode --update-snapshots clean install package
 
   echo "Running jpackage"
   jpackage --type exe \
   --verbose \
   --input ${input} \
-  --main-jar ${mainJar} \
+  --main-jar "${mainJar}" \
   --resource-dir ${resourceDir} \
   --name ${name} \
-  --app-version ${windowsVersion} \
+  --app-version "${windowsVersion}" \
   --dest ${destination} \
   --win-upgrade-uuid "54e9b129-e6a4-4272-bd94-13079eb6ae6d" \
   --win-menu
