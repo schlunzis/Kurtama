@@ -22,7 +22,6 @@ jobs:
     with:
       tag: ${{ github.ref_name }}
       version: ${{ needs.create-version-string.outputs.version }}
-      winVersion: 0.0.1 #requirements: https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
       github-release: true
       prerelease: false
     secrets: inherit

@@ -12,8 +12,6 @@ on:
       winVersion:
         required: true
         type: string
-        # Windows does not allow text in versions. See requirements:
-        # https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
       github-release:
         required: true
         type: boolean
@@ -65,7 +63,7 @@ jobs:
         shell: bash
         run: ./build-client.sh windows ${{ inputs.version }} ${{ inputs.winVersion }}
 
-      - name: Upload deb to release
+      - name: Upload exe to release
         if: ${{ inputs.github-release }}
         uses: svenstaro/upload-release-action@v2
         env:

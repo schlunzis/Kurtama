@@ -12,7 +12,6 @@ jobs:
     with:
       tag: dev
       version: 0.0.1-SNAPSHOT #should be equal to the version of the maven project
-      winVersion: 0.0.1 #requirements: https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
       github-release: true
       prerelease: true
     secrets: inherit

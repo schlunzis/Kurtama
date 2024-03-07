@@ -9,11 +9,6 @@ on:
       version:
         required: true
         type: string
-      winVersion:
-        required: true
-        type: string
-        # Windows does not allow text in versions. See requirements:
-        # https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
       github-release:
         required: false
         type: boolean
@@ -26,6 +21,19 @@ on:
 jobs:
   verify:
     uses: ./.github/workflows/verify.yaml
+
+  # Windows does not allow text in versions. See requirements:
+  # https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
+  win-version-string:
+    runs-on: ubuntu-latest
+    outputs:
+      winVersion: ${{ steps.step1.outputs.winVersion }}
+    steps:
+      - id: step1
+        run: |
+          winVersion=$(echo "${{ inputs.version }}" | grep -oP "\d+\.\d+\.\d+")
+          echo "${winVersion}"
+          echo "winVersion=${winVersion}" >> "$GITHUB_OUTPUT"
 
   build-to-jar:
     needs: verify
@@ -47,12 +55,12 @@ jobs:
     secrets: inherit
 
   build-with-jpackage:
-    needs: verify
+    needs: [ verify, win-version-string ]
     uses: ./.github/workflows/build-jpackage.yaml
     with:
       tag: ${{ inputs.tag }}
       version: ${{ inputs.version }}
-      winVersion: ${{ inputs.winVersion }}
+      winVersion: ${{ needs.win-version-string.outputs.winVersion }}
       github-release: ${{ inputs.github-release }}
       prerelease: ${{ inputs.prerelease }}
     secrets: inherit
