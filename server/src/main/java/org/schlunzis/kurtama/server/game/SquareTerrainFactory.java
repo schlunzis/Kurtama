@@ -2,10 +2,10 @@ package org.schlunzis.kurtama.server.game;
 
 import lombok.RequiredArgsConstructor;
 import org.schlunzis.kurtama.common.game.GameSettings;
-import org.schlunzis.kurtama.common.game.model.ITerrain;
-import org.schlunzis.kurtama.common.game.model.SquareDirection;
-import org.schlunzis.kurtama.common.game.model.SquareTerrain;
-import org.schlunzis.kurtama.common.game.model.SquareTile;
+import org.schlunzis.kurtama.server.game.model.ITerrain;
+import org.schlunzis.kurtama.server.game.model.SquareDirection;
+import org.schlunzis.kurtama.server.game.model.SquareTerrain;
+import org.schlunzis.kurtama.server.game.model.SquareTile;
 
 @RequiredArgsConstructor
 public class SquareTerrainFactory implements TerrainFactory {

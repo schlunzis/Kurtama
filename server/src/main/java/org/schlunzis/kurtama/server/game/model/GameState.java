@@ -1,9 +1,12 @@
-package org.schlunzis.kurtama.common.game.model;
+package org.schlunzis.kurtama.server.game.model;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+
+@Getter
 @RequiredArgsConstructor
 public class GameState {
 

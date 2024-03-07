@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.common.game.model;
+package org.schlunzis.kurtama.server.game.model;
 
 
 public class HexagonTile implements ITile {
