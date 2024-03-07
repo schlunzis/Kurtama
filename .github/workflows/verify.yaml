@@ -1,6 +1,9 @@
 name: Verify Project
 
 on:
+  push:
+    paths:
+      - '.github/workflows/verify.yaml'
   workflow_call:
 
 jobs:

@@ -1,15 +1,13 @@
 name: verify client changes
 
-# run this workflow, if a push changes a file outside the 'server' directory and some other files
 on:
   push:
-    paths-ignore:
-      - 'server'
-      - '.editorconfig'
-      - '.gitattributes'
-      - '.gitignore'
-      - '.mailmap'
-      - 'README.md'
+    paths:
+      #- '!server'
+      - 'client'
+      - 'common'
+      - 'pom.xml'
+      - '.github/workflows/verify-client.yaml'
 
 jobs:
   verify-client:

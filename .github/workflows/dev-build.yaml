@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - develop
-      - 121-issue-packaging # TODO remove
+    paths:
+      - '.github/workflows/dev-build.yaml'
+      - '.github/workflows/build.yaml'
+      - '.github/workflows/build-jar.yaml'
+      - '.github/workflows/build-jpackage.yaml'
 
 jobs:
   build:
