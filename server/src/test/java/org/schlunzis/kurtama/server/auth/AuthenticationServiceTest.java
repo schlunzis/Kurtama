@@ -26,6 +26,7 @@ import org.schlunzis.kurtama.server.user.DBUser;
 import org.schlunzis.kurtama.server.user.IUserStore;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -254,6 +255,9 @@ class AuthenticationServiceTest {
 
     @Test
     void onRegisterEventSuccessfulTest() {
+        PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        authenticationService = new AuthenticationService(eventBus, userSessionMap, userStore, lobbyStore, pe);
+
         when(cmcRegisterRequest.getClientMessage()).thenReturn(registerRequest);
         when(registerRequest.getEmail()).thenReturn(defaultEmail);
         when(registerRequest.getUsername()).thenReturn(defaultUsername);
@@ -265,7 +269,7 @@ class AuthenticationServiceTest {
         DBUser user = dbUserCaptor.getValue();
         assertEquals(defaultEmail, user.getEmail());
         assertEquals(defaultUsername, user.getUsername());
-        assertEquals(defaultPassword, user.getPasswordHash());
+        assertTrue(pe.matches(defaultPassword, user.getPasswordHash()));
         verify(cmcRegisterRequest).respond(any(RegisterSuccessfulResponse.class));
         verify(userSessionMap, never()).put(any(), any());
         verify(userSessionMap, never()).remove((ServerUser) any());
