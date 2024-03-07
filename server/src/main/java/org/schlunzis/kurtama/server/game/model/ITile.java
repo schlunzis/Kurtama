@@ -10,5 +10,11 @@ public interface ITile {
 
     List<Team> getFigures();
 
+    List<Team> getStreets(IDirection direction);
+
+    void addStreet(Team team, IDirection direction);
+
+    void clearStreets();
+
 }
 
