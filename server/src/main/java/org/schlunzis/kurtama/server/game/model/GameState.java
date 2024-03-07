@@ -8,9 +8,9 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class GameState {
+public class GameState<D extends IDirection> {
 
-    private final ITerrain terrain;
+    private final ITerrain<D> terrain;
     private final List<Team> teams;
 
 }
