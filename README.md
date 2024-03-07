@@ -14,11 +14,11 @@ devastating situations.
 
 ## Build
 
-This project is written in Java 21 and uses Maven as its build tool. To build the project, you need to have Maven and
+This project is written in Java 21 and uses Maven as its build tool. To build the project, you need to have
 Java 21 installed. Clone this repository and run the following command in the root directory of the project:
 
 ```bash
-mvn clean install package
+./mvnw clean install package
 ```
 
 This will build all modules of the project. To run the server, you can run the following command:
@@ -41,6 +41,19 @@ Again, if you changed the port on the server you need to change the port on the 
 setting
 the environment variable `KURTAMA_SERVER_PORT` to the same value as on the server. If you are on the same machine, then
 this might already be done with the server configuration.
+
+To build the client with jpackage, you can run the following command:
+
+```bash
+./build-client.sh <linux|windows> <version> [windows-version]
+```
+
+This will build the client for the specified operating system and version. The version should be equal to the maven
+version of the project. The windows version is optional and only needed if you want to build the client for windows. It
+is needed, because windows has specific versioning requirements for executables.
+See [here](https://learn.microsoft.com/en-gb/windows/win32/msi/productversion) for more information.
+
+This will create a .deb package and a .exe installer in the `target/jpackage-out` directory.
 
 ## Further information
 
