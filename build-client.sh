@@ -9,7 +9,7 @@ input="./client/target"
 mainJar="client-${version}.jar"
 resourceDir="./client/jpackage"
 destination="./target/jpackage-out"
-name="kurtama-client"
+name="Kurtama"
 
 if  [ "$os" = linux ]; then
   echo "Building for Linux"
@@ -22,9 +22,10 @@ if  [ "$os" = linux ]; then
   --input ${input} \
   --main-jar "${mainJar}" \
   --resource-dir ${resourceDir} \
+  --name ${name} \
   --app-version "${version}" \
   --dest ${destination} \
-  --linux-package-name kurtama-client \
+  --linux-package-name "kurtama-client" \
   --linux-menu-group Game \
   --linux-app-category Game \
   --linux-shortcut
