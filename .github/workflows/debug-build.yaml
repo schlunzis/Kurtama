@@ -2,14 +2,19 @@ name: dev-build all targets
 
 on:
   push:
-    branches:
-      - develop
+    paths:
+      - '.github/workflows/dev-build.yaml'
+      - '.github/workflows/build.yaml'
+      - '.github/workflows/build-jar.yaml'
+      - '.github/workflows/build-jpackage.yaml'
+      - 'build-client.sh'
+      - 'client/jpackage'
 
 jobs:
   build:
     uses: ./.github/workflows/build.yaml
     with:
-      tag: dev
+      tag: debug
       version: 0.0.1-SNAPSHOT #should be equal to the version of the maven project
       github-release: true
       prerelease: true
