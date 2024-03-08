@@ -53,7 +53,7 @@ jobs:
           overwrite: true
           tag: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}
-          release_name: ${{ inputs.version }}
+          release_name: ${{ inputs.tag }}
       - name: Upload server jar to release
         if: ${{ inputs.github-release }}
         uses: svenstaro/upload-release-action@v2

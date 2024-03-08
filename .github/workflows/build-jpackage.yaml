@@ -46,7 +46,7 @@ jobs:
           overwrite: true
           tag: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}
-          release_name: ${{ inputs.version }}
+          release_name: ${{ inputs.tag }}
 
   build-on-windows:
     name: Build on Windows
@@ -75,4 +75,4 @@ jobs:
           overwrite: true
           tag: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}
-          release_name: ${{ inputs.version }}
+          release_name: ${{ inputs.tag }}
