@@ -41,21 +41,21 @@ jobs:
         run: |
           ${{ inputs.mvn }} --batch-mode --update-snapshots clean install package
 
-      - name: Move jar files
-        shell: bash
-        run: |
-          mkdir out
-          mv client/target/client-${{ inputs.version }}.jar out/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
-          mv client/target/server-${{ inputs.version }}.jar out/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
-
-      - name: Upload jars to release
-        if: ${{ inputs.github-release }}
+      - name: Upload client jar to release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: out/*.jar
+          artifacts: client/target/client-${{ inputs.version }}.jar
           tag: ${{ inputs.tag }}
-          commit: ${{ github.sha }}
+          name: ${{ inputs.tag }}
+          prerelease: ${{ inputs.prerelease }}
+          allowUpdates: true
+      - name: Upload server jar to release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: client/target/server-${{ inputs.version }}.jar
+          tag: ${{ inputs.tag }}
           name: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}
           allowUpdates: true
