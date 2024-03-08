@@ -9,6 +9,8 @@ on:
       - '.github/workflows/build.yaml'
       - '.github/workflows/build-jar.yaml'
       - '.github/workflows/build-jpackage.yaml'
+      - 'build-client.sh'
+      - 'client/jpackage'
 
 jobs:
   build:
