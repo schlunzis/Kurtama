@@ -32,7 +32,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build and Package
-        run: ./build-client.sh ${{ inputs.version }} linux
+        run: ./build-client.sh linux ${{ inputs.version }}
 
       - name: Upload deb to release
         if: ${{ inputs.github-release }}
@@ -61,7 +61,7 @@ jobs:
           cache: maven
       - name: Build and Package
         shell: bash
-        run: ./build-client.sh ${{ inputs.version }} ${{ inputs.winVersion }} windows
+        run: ./build-client.sh windows ${{ inputs.version }} ${{ inputs.winVersion }}
 
       - name: Upload exe to release
         if: ${{ inputs.github-release }}

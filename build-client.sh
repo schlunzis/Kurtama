@@ -2,9 +2,9 @@
 
 set -e
 
-os="$3" #TODO auto detect
-version="$1"
-windowsVersion="$2"
+os="$1" #TODO auto detect
+version="$2"
+windowsVersion="$3"
 input="./client/target"
 mainJar="client-${version}.jar"
 resourceDir="./client/jpackage"
@@ -53,5 +53,7 @@ elif  [ "$os" = windows ]; then
 else
   echo "No OS given. Provide 'linux' or 'windows' as an argument."
 fi
+
+ls -al ${destination}
 
 exit 0
