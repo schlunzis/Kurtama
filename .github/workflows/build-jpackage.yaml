@@ -32,7 +32,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build and Package
-        run: ./build-client.sh linux ${{ inputs.version }}
+        run: ./build-client.sh ${{ inputs.version }} linux
 
       - name: Upload deb to release
         if: ${{ inputs.github-release }}
@@ -61,7 +61,7 @@ jobs:
           cache: maven
       - name: Build and Package
         shell: bash
-        run: ./build-client.sh windows ${{ inputs.version }} ${{ inputs.winVersion }}
+        run: ./build-client.sh ${{ inputs.version }} ${{ inputs.winVersion }} windows
 
       - name: Upload exe to release
         if: ${{ inputs.github-release }}
@@ -71,7 +71,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./target/jpackage-out/kurtama-client-${{ inputs.winVersion }}.exe
-          asset_name: kurtama-client-${{ inputs.version }}-setup.exe
+          asset_name: Kurtama-${{ inputs.version }}-setup.exe
           overwrite: true
           tag: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}

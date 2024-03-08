@@ -1,6 +1,7 @@
 name: dev-build all targets
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - '.github/workflows/dev-build.yaml'
