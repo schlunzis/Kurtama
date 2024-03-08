@@ -22,9 +22,9 @@ if  [ "$os" = linux ]; then
   --input ${input} \
   --main-jar "${mainJar}" \
   --resource-dir ${resourceDir} \
-  --name ${name} \
   --app-version "${version}" \
   --dest ${destination} \
+  --linux-package-name kurtama-client \
   --linux-menu-group Game \
   --linux-app-category Game \
   --linux-shortcut
