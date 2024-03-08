@@ -42,28 +42,20 @@ jobs:
           ${{ inputs.mvn }} --batch-mode --update-snapshots clean install package
 
       - name: Upload client jar to release
-        if: ${{ inputs.github-release }}
-        uses: svenstaro/upload-release-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: client/target/client-${{ inputs.version }}.jar
-          asset_name: kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
-          overwrite: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: client/target/client-${{ inputs.version }}.jar
           tag: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}
-          release_name: ${{ inputs.tag }}
+          allowUpdates: true
       - name: Upload server jar to release
-        if: ${{ inputs.github-release }}
-        uses: svenstaro/upload-release-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: server/target/server-${{ inputs.version }}.jar
-          asset_name: kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
-          overwrite: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: client/target/server-${{ inputs.version }}.jar
           tag: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
           prerelease: ${{ inputs.prerelease }}
-          release_name: ${{ inputs.tag }}
+          allowUpdates: true
