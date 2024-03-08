@@ -1,4 +1,4 @@
-name: dev-build all targets
+name: debug-build all targets
 
 on:
   workflow_dispatch:
