@@ -25,7 +25,6 @@ if  [ "$os" = linux ]; then
   --name ${name} \
   --app-version "${version}" \
   --dest ${destination} \
-  --linux-package-name kurtama-client \
   --linux-menu-group Game \
   --linux-app-category Game \
   --linux-shortcut
