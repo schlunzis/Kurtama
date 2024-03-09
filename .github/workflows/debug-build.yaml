@@ -16,7 +16,6 @@ jobs:
     uses: ./.github/workflows/build.yaml
     with:
       tag: debug
-      version: 0.0.1-SNAPSHOT #should be equal to the version of the maven project
       github-release: true
       prerelease: true
     secrets: inherit
