@@ -1,5 +1,7 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -25,6 +27,8 @@ public class ChatController {
     @FXML
     private TextField senderNameTextField;
 
+    private volatile boolean paused = false;
+
     @FXML
     public void initialize() {
         chatListView.setItems(chatService.getChatMessages());
@@ -43,6 +47,19 @@ public class ChatController {
                 this.setDisable(true);
             }
         });
+        chatListView.setOnScrollStarted(event -> {
+            paused = true;
+            log.debug("Paused scrolling");
+        });
+        chatListView.setOnScrollFinished(event -> {
+            paused = false;
+            log.debug("Resumed scrolling");
+        });
+        chatService.getChatMessages().addListener((ListChangeListener<String>) change -> {
+            Platform.runLater(this::onNewChatMessage);
+            onNewChatMessage();
+            log.debug("Chat messages changed");
+        });
     }
 
     @FXML
@@ -52,6 +69,12 @@ public class ChatController {
             return;
         chatService.sendMessage(senderNameTextField.getText(), text);
         chatTextField.setText("");
+    }
+
+    private void onNewChatMessage() {
+        if (paused) return;
+        log.debug("Scrolling to bottom");
+        chatListView.scrollTo(chatService.getChatMessages().size() - 1);
     }
 
 }
