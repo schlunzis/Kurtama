@@ -5,6 +5,8 @@ import org.schlunzis.kurtama.server.net.netty.NettyServer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.Semaphore;
+
 @Component
 @RequiredArgsConstructor
 public class NetworkServerInitializer {
@@ -17,9 +19,14 @@ public class NetworkServerInitializer {
 
     public void init() {
         if (nettyEnable) {
-            networkService.addServer(SessionType.NETTY, nettyServer);
-            nettyServer.start();
+            Thread.ofVirtual()
+                    .name("Netty-Start-Thread")
+                    .start(() -> {
+                        networkService.addServer(SessionType.NETTY, nettyServer);
+                        nettyServer.start();
+                    });
         }
+        new Semaphore(0).acquireUninterruptibly();
     }
 
 }

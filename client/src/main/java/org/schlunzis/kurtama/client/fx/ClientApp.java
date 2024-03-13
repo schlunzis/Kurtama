@@ -25,6 +25,7 @@ public class ClientApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        //CSSFX.start();
         context.publishEvent(new ClientReadyEvent(primaryStage));
     }
 

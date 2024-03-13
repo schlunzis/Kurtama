@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
-import org.schlunzis.kurtama.server.auth.AuthenticationService;
+import org.schlunzis.kurtama.server.auth.IAuthenticationService;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,7 +21,7 @@ abstract class AbstractMessageContext {
 
     protected final ResponseAssembler responseAssembler;
 
-    protected final AuthenticationService authenticationService;
+    protected final IAuthenticationService authenticationService;
     protected final ApplicationEventPublisher eventBus;
 
     @Getter

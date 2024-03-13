@@ -34,7 +34,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AuthenticationService implements IAuthenticationService {
+class AuthenticationService implements IAuthenticationService {
 
     private final ApplicationEventPublisher eventBus;
     private final UserSessionMap userSessionMap;
@@ -67,7 +67,10 @@ public class AuthenticationService implements IAuthenticationService {
                 log.info("User {} tried to log in with wrong password", user.getEmail());
                 cmc.respond(new LoginFailedResponse());
             }
-        }, () -> log.info("User {} not found", loginRequest.getEmail()));
+        }, () -> {
+            log.info("User {} not found", loginRequest.getEmail());
+            cmc.respond(new LoginFailedResponse());
+        });
         cmc.closeWithReRequest();
     }
 
@@ -83,9 +86,9 @@ public class AuthenticationService implements IAuthenticationService {
         String username = rr.getUsername();
         String password = rr.getPassword();
         try {
-            userStore.createUser(new DBUser(email, username, password));
+            userStore.createUser(new DBUser(email, username, passwordEncoder.encode(password)));
             cmc.respond(new RegisterSuccessfulResponse());
-        } catch (IllegalArgumentException iae) {
+        } catch (IllegalArgumentException e) {
             log.info("User with email {} already exists", email);
             cmc.respond(new RegisterFailedResponse());
         }
@@ -93,7 +96,7 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @EventListener
-    public void onLogoutRequest(ForcedLogoutEvent forcedLogoutEvent) {
+    public void onForcedLogoutEvent(ForcedLogoutEvent forcedLogoutEvent) {
         logout(forcedLogoutEvent.session());
     }
 

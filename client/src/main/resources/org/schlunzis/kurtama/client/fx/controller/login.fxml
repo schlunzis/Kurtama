@@ -3,20 +3,45 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+<GridPane xmlns:fx="http://javafx.com/fxml" styleClass="root" xmlns="http://javafx.com/javafx"
           fx:controller="org.schlunzis.kurtama.client.fx.controller.LoginController">
     <stylesheets>
         <URL value="@css/style.css"/>
         <URL value="@css/login.css"/>
     </stylesheets>
 
-    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-    <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1"
-                   onAction="#handleLogin"/>
-    <Button text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
-            onAction="#handleLogin"/>
-    <Button text="Register" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"
-            onAction="#handleRegister"/>
+    <columnConstraints>
+        <ColumnConstraints percentWidth="48"/>
+        <ColumnConstraints prefWidth="50"/>
+        <ColumnConstraints percentWidth="48"/>
+    </columnConstraints>
+
+    <GridPane styleClass="login" GridPane.columnIndex="0">
+        <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleLogin"/>
+        <Button text="Login" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
+                onAction="#handleLogin"/>
+        <Button text="Register" styleClass="secondary_button" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"
+                onAction="#handleRegister"/>
+    </GridPane>
+
+    <GridPane styleClass="sep" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <Separator orientation="VERTICAL"/>
+    </GridPane>
+
+    <GridPane styleClass="connect" GridPane.columnIndex="2">
+        <Label text="Server:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="serverField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label text="Port:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="portField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Button onAction="#handleServerConnect" text="Connect" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                GridPane.columnSpan="2"/>
+        <HBox styleClass="progress" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
+            <Region fx:id="progressIndicator"/>
+            <Label fx:id="progressLabel" text="Connecting..."/>
+        </HBox>
+    </GridPane>
+
 </GridPane>

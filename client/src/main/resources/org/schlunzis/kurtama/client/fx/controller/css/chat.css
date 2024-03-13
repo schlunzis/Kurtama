@@ -1,14 +1,23 @@
-VBox {
-    -fx-border-color: k-grey;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-}
-
-ListView {
-    -fx-padding: 1px;
-}
-
 TextField {
-    -fx-min-width: 0;
     -fx-pref-width: 100;
+}
+
+Button {
+    -fx-content-display: graphic-only;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 40px;
+}
+
+.send-button {
+    -fx-background-color: white;
+    -size: 15;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+    -fx-shape: "M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z";
+}
+
+VBox {
+    -fx-spacing: 5px;
 }
