@@ -86,7 +86,7 @@ class AuthenticationService implements IAuthenticationService {
         String username = rr.getUsername();
         String password = rr.getPassword();
         try {
-            userStore.createUser(new DBUser(email, username, password));
+            userStore.createUser(new DBUser(email, username, passwordEncoder.encode(password)));
             cmc.respond(new RegisterSuccessfulResponse());
         } catch (IllegalArgumentException e) {
             log.info("User with email {} already exists", email);
