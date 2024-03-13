@@ -16,12 +16,15 @@ jobs:
           version=$(echo "${{ github.ref_name }}" | cut -c 2-)
           echo "${version}"
           echo "version=${version}" >> "$GITHUB_OUTPUT"
+
   build:
-    needs: create-version-string
     uses: ./.github/workflows/build.yaml
+    secrets: inherit
+
+  release:
+    needs: build
+    uses: ./.github/workflows/release.yaml
     with:
       tag: ${{ github.ref_name }}
-      version: ${{ needs.create-version-string.outputs.version }}
-      github-release: true
       prerelease: false
     secrets: inherit

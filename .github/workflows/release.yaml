@@ -1,0 +1,49 @@
+name: Release artifacts
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+      prerelease:
+        required: true
+        type: boolean
+
+jobs:
+  release:
+    name: Release artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: client-deb
+      - uses: actions/download-artifact@v4
+        with:
+          name: client-exe
+      - uses: actions/download-artifact@v4
+        with:
+          name: client-jar-linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: client-jar-win
+      - uses: actions/download-artifact@v4
+        with:
+          name: server-jar-linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: server-jar-win
+
+      - name: List artifacts
+        run: ls -al
+
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: ${{ inputs.tag }}
+          prerelease: ${{ inputs.prerelease }}
+          title: ${{ inputs.tag }}
+          files: |
+            *.jar
+            *.deb
+            *.exe

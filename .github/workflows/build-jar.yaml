@@ -9,18 +9,9 @@ on:
       mvn:
         required: true
         type: string
-      tag:
-        required: true
-        type: string
       version:
         required: true
         type: string
-      github-release:
-        required: true
-        type: boolean
-      prerelease:
-        required: true
-        type: boolean
       jar-file-modifier:
         required: true
         type: string
@@ -40,30 +31,22 @@ jobs:
       - name: Build with Maven
         run: |
           ${{ inputs.mvn }} --batch-mode --update-snapshots clean install package
+          mv client/target/client-${{ inputs.version }}.jar client/target/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          mv server/target/server-${{ inputs.version }}.jar server/target/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
 
-      - name: Upload client jar to release
-        if: ${{ inputs.github-release }}
-        uses: svenstaro/upload-release-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload client jar
+        uses: actions/upload-artifact@v4
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: client/target/client-${{ inputs.version }}.jar
-          asset_name: kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          name: client-jar-${{ inputs.jar-file-modifier }}
+          path: client/target/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          retention-days: 1
           overwrite: true
-          tag: ${{ inputs.tag }}
-          prerelease: ${{ inputs.prerelease }}
-          release_name: ${{ inputs.tag }}
-      - name: Upload server jar to release
-        if: ${{ inputs.github-release }}
-        uses: svenstaro/upload-release-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if-no-files-found: error
+      - name: Upload server jar
+        uses: actions/upload-artifact@v4
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: server/target/server-${{ inputs.version }}.jar
-          asset_name: kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          name: server-jar-${{ inputs.jar-file-modifier }}
+          path: server/target/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          retention-days: 1
           overwrite: true
-          tag: ${{ inputs.tag }}
-          prerelease: ${{ inputs.prerelease }}
-          release_name: ${{ inputs.tag }}
+          if-no-files-found: error

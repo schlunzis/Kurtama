@@ -3,21 +3,10 @@ name: Build all targets
 on:
   workflow_call:
     inputs:
-      tag:
-        required: true
-        type: string
       version:
         required: false
         type: string
         default: 0.0.1-SNAPSHOT #should be equal to the version of the maven project
-      github-release:
-        required: false
-        type: boolean
-        default: false
-      prerelease:
-        required: false
-        type: boolean
-        default: true
 
 jobs:
   verify:
@@ -48,10 +37,7 @@ jobs:
     with:
       os: ${{ matrix.os.name }}
       mvn: ${{ matrix.os.mvn }}
-      tag: ${{ inputs.tag }}
       version: ${{ inputs.version }}
-      github-release: ${{ inputs.github-release }}
-      prerelease: ${{ inputs.prerelease }}
       jar-file-modifier: ${{ matrix.os.jar-file-modifier }}
     secrets: inherit
 
@@ -59,9 +45,6 @@ jobs:
     needs: [ verify, win-version-string ]
     uses: ./.github/workflows/build-jpackage.yaml
     with:
-      tag: ${{ inputs.tag }}
       version: ${{ inputs.version }}
       winVersion: ${{ needs.win-version-string.outputs.winVersion }}
-      github-release: ${{ inputs.github-release }}
-      prerelease: ${{ inputs.prerelease }}
     secrets: inherit

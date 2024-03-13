@@ -4,18 +4,24 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - '.github/workflows/debug-build.yaml'
       - '.github/workflows/dev-build.yaml'
       - '.github/workflows/build.yaml'
       - '.github/workflows/build-jar.yaml'
       - '.github/workflows/build-jpackage.yaml'
+      - '.github/workflows/release.yaml'
       - 'build-client.sh'
       - 'client/jpackage'
 
 jobs:
   build:
     uses: ./.github/workflows/build.yaml
+    secrets: inherit
+
+  release:
+    needs: build
+    uses: ./.github/workflows/release.yaml
     with:
       tag: debug
-      github-release: true
       prerelease: true
     secrets: inherit

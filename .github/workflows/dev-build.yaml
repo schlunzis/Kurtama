@@ -8,8 +8,12 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/build.yaml
+    secrets: inherit
+
+  release:
+    needs: build
+    uses: ./.github/workflows/release.yaml
     with:
       tag: dev
-      github-release: true
       prerelease: true
     secrets: inherit
