@@ -5,7 +5,7 @@ set -e
 os="$1" #TODO auto detect
 version="$2"
 windowsVersion="$3"
-input="./client/target"
+input="./client/target/jpackage-in"
 mainJar="client-${version}.jar"
 resourceDir="./client/jpackage"
 destination="./target/jpackage-out"
@@ -15,6 +15,8 @@ if  [ "$os" = linux ]; then
   echo "Building for Linux"
   echo "Building client jar"
   ./mvnw --projects client --also-make --batch-mode --update-snapshots clean install package
+  mkdir input
+  cp client/target/${mainJar} input
 
   echo "Running jpackage"
   jpackage --type deb \
@@ -36,6 +38,8 @@ elif  [ "$os" = windows ]; then
   echo "Building client jar"
   # maven wrapper is a hassle here maybe this works
   ./mvnw --projects client --also-make --batch-mode --update-snapshots clean install package
+  mkdir input
+  cp client/target/${mainJar} input
 
   echo "Running jpackage"
   jpackage --type exe \
