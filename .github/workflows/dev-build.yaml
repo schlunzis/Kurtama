@@ -25,7 +25,7 @@ jobs:
     secrets: inherit
 
   release:
-    needs: build
+    needs: [ build, create-version-string ]
     uses: ./.github/workflows/release.yaml
     with:
       tag: "v${{ needs.create-version-string.outputs.version }}"
