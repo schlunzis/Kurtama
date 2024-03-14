@@ -7,7 +7,7 @@ import java.util.prefs.Preferences;
 @Component
 public class UserSettings implements IUserSettings {
 
-    private final Preferences preferences = Preferences.userRoot().node(this.getClass().getName());
+    private final Preferences preferences = Preferences.userRoot().node("kurtama");
 
     @Override
     public void putString(Setting<String> key, String value) {
