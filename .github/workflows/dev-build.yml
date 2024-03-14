@@ -23,6 +23,7 @@ jobs:
           echo "version=${version}" >> "$GITHUB_OUTPUT"
 
   build:
+    needs: create-version-string
     uses: ./.github/workflows/build.yml
     with:
       version: ${{ needs.create-version-string.outputs.shortVersion }}
