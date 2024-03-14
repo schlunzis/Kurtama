@@ -1,12 +1,15 @@
 package org.schlunzis.kurtama.server.game.model;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public class GenericTerrain<D extends IDirection> implements ITerrain<D> {
 
     private final ITile<D>[] tiles;
-
-    public GenericTerrain(ITile<D>[] tiles) {
-        this.tiles = tiles;
-    }
+    private final int columns;
+    private final int rows;
 
     @Override
     public ITile<D> get(int index) {
