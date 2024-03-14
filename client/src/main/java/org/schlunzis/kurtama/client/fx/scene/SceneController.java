@@ -6,6 +6,7 @@ import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.register.RegisterSuccessfulResponse;
+import org.schlunzis.kurtama.common.messages.game.server.GameStartedMessage;
 import org.schlunzis.kurtama.common.messages.lobby.server.JoinLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LeaveLobbySuccessfullyResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LobbyCreatedSuccessfullyResponse;
@@ -48,6 +49,11 @@ public class SceneController {
     @EventListener
     public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse llsr) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.MAIN));
+    }
+
+    @EventListener
+    public void onGameStartedMessage(GameStartedMessage gsm) {
+        eventBus.publishEvent(new SceneChangeEvent(Scene.GAME));
     }
 
 }

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.schlunzis.kurtama.client.service.ILobbyService;
 import org.schlunzis.kurtama.common.ILobby;
+import org.schlunzis.kurtama.common.game.GameSettings;
+import org.schlunzis.kurtama.common.messages.game.client.StartGameRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.LeaveLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.server.*;
 import org.springframework.context.ApplicationEventPublisher;
@@ -54,6 +56,13 @@ public class LobbyService implements ILobbyService {
     public void leaveLobby() {
         currentLobby.ifPresent(lobby ->
                 eventBus.publishEvent(new LeaveLobbyRequest(lobby.getId()))
+        );
+    }
+
+    @Override
+    public void startGame() {
+        currentLobby.ifPresent(lobby ->
+                eventBus.publishEvent(new StartGameRequest(new GameSettings(6, 8)))
         );
     }
 

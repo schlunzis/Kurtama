@@ -25,10 +25,11 @@ public class SquareTerrainFactory implements TerrainFactory {
         columns = gameSettings.columns();
         rows = gameSettings.rows();
         tiles = new SquareTile[columns][rows];
+        int idCounter = 0;
 
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[i].length; j++) {
-                tiles[i][j] = new SquareTile();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                tiles[j][i] = new SquareTile(idCounter++);
             }
         }
 

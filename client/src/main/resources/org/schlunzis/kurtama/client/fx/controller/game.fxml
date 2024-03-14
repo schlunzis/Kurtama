@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml"
+          xmlns="http://javafx.com/javafx"
+          fx:controller="org.schlunzis.kurtama.client.fx.controller.GameController">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="10"/>
+        <ColumnConstraints percentWidth="80"/>
+        <ColumnConstraints percentWidth="10"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="10"/>
+        <RowConstraints percentHeight="80"/>
+        <RowConstraints percentHeight="10"/>
+    </rowConstraints>
+
+    <GridPane styleClass="terrain" fx:id="terrainGrid" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+</GridPane>

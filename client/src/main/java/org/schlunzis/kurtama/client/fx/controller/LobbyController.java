@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,8 @@ public class LobbyController {
         userListView.setItems(lobbyService.getLobbyUsersList());
     }
 
+    public void startGame(ActionEvent actionEvent) {
+        lobbyService.startGame();
+    }
 
 }

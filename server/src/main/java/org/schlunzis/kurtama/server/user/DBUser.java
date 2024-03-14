@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.schlunzis.kurtama.common.IUser;
+import org.schlunzis.kurtama.common.UserDTO;
 
 import java.util.UUID;
 
@@ -42,4 +43,10 @@ public class DBUser implements IUser {
     public ServerUser toServerUser() {
         return new ServerUser(id, email, username);
     }
+
+    @Override
+    public UserDTO toDTO() {
+        return new UserDTO(id, username);
+    }
+
 }
