@@ -37,13 +37,11 @@ jobs:
       - name: List artifacts
         run: ls -al
 
-      - uses: softprops/action-gh-release@v2
+      - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ inputs.tag }}
+          tag: ${{ inputs.tag }}
+          commit: ${{ github.sha }}
           prerelease: ${{ inputs.prerelease }}
-          name: ${{ inputs.tag }}
-          files: |
-            *.jar
-            *.deb
-            *.exe
+          name: "Alpha Release: ${{ inputs.tag }}"
+          artifacts: "*.jar,*.deb,*.exe"

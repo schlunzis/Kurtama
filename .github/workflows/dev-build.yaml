@@ -11,10 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.step1.outputs.version }}
+      shortVersion: ${{ steps.step1.outputs.shortVersion }}
     steps:
       - id: step1
         run: |
           project_version="0.0.1"
+          echo "shortVersion=${project_version}" >> "$GITHUB_OUTPUT"
           date=$(date +'%Y%m%d%H%M%S')
           version=${project_version}-alpha+${date}
           echo "${version}"
@@ -22,6 +24,8 @@ jobs:
 
   build:
     uses: ./.github/workflows/build.yaml
+    with:
+      version: ${{ needs.create-version-string.outputs.shortVersion }}
     secrets: inherit
 
   release:

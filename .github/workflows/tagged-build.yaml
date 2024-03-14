@@ -19,6 +19,8 @@ jobs:
 
   build:
     uses: ./.github/workflows/build.yaml
+    with:
+      version: ${{ needs.create-version-string.outputs.version }}
     secrets: inherit
 
   release:

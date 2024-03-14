@@ -4,9 +4,8 @@ on:
   workflow_call:
     inputs:
       version:
-        required: false
+        required: true
         type: string
-        default: 0.0.1-SNAPSHOT #should be equal to the version of the maven project
 
 jobs:
   verify:
