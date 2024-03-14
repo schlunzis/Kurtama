@@ -40,6 +40,13 @@ jobs:
       jar-file-modifier: ${{ matrix.os.jar-file-modifier }}
     secrets: inherit
 
+  build-docker:
+    needs: verify
+    uses: ./.github/workflows/build-docker.yml
+    with:
+      version: ${{ inputs.version }}
+    secrets: inherit
+
   build-with-jpackage:
     needs: [ verify, win-version-string ]
     uses: ./.github/workflows/build-jpackage.yml
