@@ -45,3 +45,8 @@ jobs:
           prerelease: ${{ inputs.prerelease }}
           name: "Alpha Release: ${{ inputs.tag }}"
           artifacts: "*.jar,*.deb,*.exe"
+          body: |
+            This is an alpha release.
+            It is not recommended for production use.
+            It is intended for testing and feedback.
+            Please report any issues on the issue tracker.
