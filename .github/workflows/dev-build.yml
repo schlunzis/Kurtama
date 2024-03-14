@@ -23,14 +23,14 @@ jobs:
           echo "version=${version}" >> "$GITHUB_OUTPUT"
 
   build:
-    uses: ./.github/workflows/build.yaml
+    uses: ./.github/workflows/build.yml
     with:
       version: ${{ needs.create-version-string.outputs.shortVersion }}
     secrets: inherit
 
   release:
     needs: [ build, create-version-string ]
-    uses: ./.github/workflows/release.yaml
+    uses: ./.github/workflows/release.yml
     with:
       tag: "v${{ needs.create-version-string.outputs.version }}"
       prerelease: true

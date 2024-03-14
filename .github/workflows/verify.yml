@@ -3,7 +3,7 @@ name: Verify Project
 on:
   push:
     paths:
-      - '.github/workflows/verify.yaml'
+      - '.github/workflows/verify.yml'
   workflow_call:
 
 jobs:

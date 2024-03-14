@@ -9,7 +9,7 @@ on:
 
 jobs:
   verify:
-    uses: ./.github/workflows/verify.yaml
+    uses: ./.github/workflows/verify.yml
 
   # Windows does not allow text in versions. See requirements:
   # https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
@@ -26,7 +26,7 @@ jobs:
 
   build-to-jar:
     needs: verify
-    uses: ./.github/workflows/build-jar.yaml
+    uses: ./.github/workflows/build-jar.yml
     strategy:
       matrix:
         os: [
@@ -42,7 +42,7 @@ jobs:
 
   build-with-jpackage:
     needs: [ verify, win-version-string ]
-    uses: ./.github/workflows/build-jpackage.yaml
+    uses: ./.github/workflows/build-jpackage.yml
     with:
       version: ${{ inputs.version }}
       winVersion: ${{ needs.win-version-string.outputs.winVersion }}
