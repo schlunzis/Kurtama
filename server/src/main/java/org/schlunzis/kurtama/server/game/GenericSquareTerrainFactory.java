@@ -1,12 +1,10 @@
 package org.schlunzis.kurtama.server.game;
 
-import lombok.RequiredArgsConstructor;
-import org.schlunzis.kurtama.common.game.GameSettings;
-import org.schlunzis.kurtama.server.game.model.*;
+class GenericSquareTerrainFactory {
 
-import java.lang.reflect.Array;
+}
 
-@RequiredArgsConstructor
+/*@RequiredArgsConstructor
 public class GenericSquareTerrainFactory implements TerrainFactory {
 
     private final GameSettings gameSettings;
@@ -65,4 +63,4 @@ public class GenericSquareTerrainFactory implements TerrainFactory {
         }
     }
 
-}
+}*/

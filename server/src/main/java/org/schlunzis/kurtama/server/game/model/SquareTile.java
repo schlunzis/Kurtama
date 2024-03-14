@@ -2,6 +2,7 @@ package org.schlunzis.kurtama.server.game.model;
 
 import lombok.Getter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,8 @@ public class SquareTile implements ITile {
     private final List<Team> cities = new ArrayList<>();
     @Getter
     private final List<Team> climateCities = new ArrayList<>();
-    private final List<Team>[] streets = new List[SquareDirection.values().length];
+    @SuppressWarnings("unchecked")
+    private final List<Team>[] streets = (List<Team>[]) Array.newInstance(List.class, SquareDirection.values().length);
 
     public SquareTile() {
         for (int i = 0; i < streets.length; i++) {

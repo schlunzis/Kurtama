@@ -1,12 +1,9 @@
 package org.schlunzis.kurtama.server.game.model;
 
-import lombok.Getter;
+class GenericTile {
+}
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-
-public class GenericTile<D extends IDirection> implements ITile<D> {
+/*public class GenericTile<D extends IDirection> implements ITile<D> {
 
     private final ITile<D>[] neighbours;
     @Getter
@@ -20,7 +17,7 @@ public class GenericTile<D extends IDirection> implements ITile<D> {
     /**
      * List of streets indexed by direction.
      */
-    private final List<Team>[] streets;
+  /*  private final List<Team>[] streets;
 
     public GenericTile(D instance) {
         //noinspection unchecked
@@ -60,4 +57,4 @@ public class GenericTile<D extends IDirection> implements ITile<D> {
             teamList.clear();
     }
 
-}
+}*/

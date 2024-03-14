@@ -1,7 +1,7 @@
 package org.schlunzis.kurtama.server.game.model;
 
-public interface ITerrain<D extends IDirection> {
+public interface ITerrain {
 
-    ITile<D> get(int index);
+    ITile get(int index);
 
 }

@@ -2,17 +2,17 @@ package org.schlunzis.kurtama.server.game.model;
 
 import java.util.List;
 
-public interface ITile<D extends IDirection> {
+public interface ITile {
 
-    ITile<D> get(D direction);
+    ITile get(IDirection direction);
 
-    void put(D direction, ITile<D> tile);
+    void put(IDirection direction, ITile tile);
 
     List<Team> getFigures();
 
-    List<Team> getStreets(D direction);
+    List<Team> getStreets(IDirection direction);
 
-    void addStreet(Team team, D direction);
+    void addStreet(Team team, IDirection direction);
 
     void clearStreets();
 

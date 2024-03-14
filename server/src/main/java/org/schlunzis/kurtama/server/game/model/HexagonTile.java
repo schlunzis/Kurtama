@@ -1,6 +1,8 @@
 package org.schlunzis.kurtama.server.game.model;
 
 
+import java.util.List;
+
 public class HexagonTile implements ITile {
 
     private final ITile[] neighbours = new ITile[HexagonDirection.values().length];
@@ -40,6 +42,26 @@ public class HexagonTile implements ITile {
         if (neighbours[direction.getIndex()] != null)
             throw new IllegalStateException("Tile is already set!");
         neighbours[direction.getIndex()] = tile;
+    }
+
+    @Override
+    public List<Team> getFigures() {
+        return null;
+    }
+
+    @Override
+    public List<Team> getStreets(IDirection direction) {
+        return null;
+    }
+
+    @Override
+    public void addStreet(Team team, IDirection direction) {
+
+    }
+
+    @Override
+    public void clearStreets() {
+
     }
 
 }
