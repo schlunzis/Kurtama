@@ -1,0 +1,17 @@
+name: dev-build all targets
+
+on:
+  push:
+    paths:
+      - '.github/workflows/**.yml'
+      - 'client/jpackage/**'
+      - 'build-client.sh'
+      - 'mvn'
+      - 'mvnw'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      version: "0.0.1"
+    secrets: inherit

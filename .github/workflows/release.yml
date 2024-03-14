@@ -1,0 +1,52 @@
+name: Release artifacts
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+      prerelease:
+        required: true
+        type: boolean
+
+jobs:
+  release:
+    name: Release artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: client-deb
+      - uses: actions/download-artifact@v4
+        with:
+          name: client-exe
+      - uses: actions/download-artifact@v4
+        with:
+          name: client-jar-linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: client-jar-win
+      - uses: actions/download-artifact@v4
+        with:
+          name: server-jar-linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: server-jar-win
+
+      - name: List artifacts
+        run: ls -al
+
+      - uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ inputs.tag }}
+          commit: ${{ github.sha }}
+          prerelease: ${{ inputs.prerelease }}
+          name: "Alpha Release: ${{ inputs.tag }}"
+          artifacts: "*.jar,*.deb,*.exe"
+          body: |
+            This is an alpha release.
+            It is not recommended for production use.
+            It is intended for testing and feedback.
+            Please report any issues on the issue tracker.

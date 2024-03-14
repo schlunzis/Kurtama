@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+echo "Running postrm for kurtama-client with $1"
+if [ "$1" = 'remove' ]; then
+  # remove the installation folder
+  rm -rf /opt/kurtama-client/
+  # remove the link in /bin
+  rm -f /bin/kurtama-client
+fi
+
+exit 0

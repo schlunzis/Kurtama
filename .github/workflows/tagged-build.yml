@@ -1,0 +1,33 @@
+name: Release all targets
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-version-string:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.step1.outputs.version }}
+    steps:
+      - id: step1
+        run: |
+          version=$(echo "${{ github.ref_name }}" | cut -c 2-)
+          echo "${version}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      version: ${{ needs.create-version-string.outputs.version }}
+    secrets: inherit
+
+  release:
+    needs: build
+    uses: ./.github/workflows/release.yml
+    with:
+      tag: ${{ github.ref_name }}
+      version: ${{ needs.create-version-string.outputs.version }}
+      prerelease: false
+    secrets: inherit

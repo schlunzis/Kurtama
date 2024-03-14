@@ -1,0 +1,25 @@
+name: verify client changes
+
+on:
+  push:
+    paths:
+      - 'client'
+      - 'common'
+      - 'pom.xml'
+      - '.github/workflows/verify-client.yml'
+
+jobs:
+  verify-client:
+    name: verify client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4.1.0
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: |
+          ./mvnw --projects client --also-make --batch-mode --update-snapshots test

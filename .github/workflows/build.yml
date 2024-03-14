@@ -1,20 +1,49 @@
-name: Build
+name: Build all targets
 
 on:
-  push:
-  pull_request:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
 
 jobs:
   verify:
-    name: verify
+    uses: ./.github/workflows/verify.yml
+
+  # Windows does not allow text in versions. See requirements:
+  # https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
+  win-version-string:
     runs-on: ubuntu-latest
+    outputs:
+      winVersion: ${{ steps.step1.outputs.winVersion }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4.0.0
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-      - name: Verify with Maven
-        run: ./mvnw --batch-mode --update-snapshots verify
+      - id: step1
+        run: |
+          winVersion=$(echo "${{ inputs.version }}" | grep -oP "\d+\.\d+\.\d+")
+          echo "${winVersion}"
+          echo "winVersion=${winVersion}" >> "$GITHUB_OUTPUT"
+
+  build-to-jar:
+    needs: verify
+    uses: ./.github/workflows/build-jar.yml
+    strategy:
+      matrix:
+        os: [
+          { name: ubuntu-latest, mvn: "./mvnw", jar-file-modifier: "linux" },
+          { name: windows-latest, mvn: "./mvnw.cmd", jar-file-modifier: "win" }
+        ]
+    with:
+      os: ${{ matrix.os.name }}
+      mvn: ${{ matrix.os.mvn }}
+      version: ${{ inputs.version }}
+      jar-file-modifier: ${{ matrix.os.jar-file-modifier }}
+    secrets: inherit
+
+  build-with-jpackage:
+    needs: [ verify, win-version-string ]
+    uses: ./.github/workflows/build-jpackage.yml
+    with:
+      version: ${{ inputs.version }}
+      winVersion: ${{ needs.win-version-string.outputs.winVersion }}
+    secrets: inherit

@@ -1,0 +1,35 @@
+name: dev-build all targets
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-version-string:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.step1.outputs.version }}
+      shortVersion: ${{ steps.step1.outputs.shortVersion }}
+    steps:
+      - id: step1
+        run: |
+          project_version="0.0.1"
+          echo "shortVersion=${project_version}" >> "$GITHUB_OUTPUT"
+          date=$(date +'%Y%m%d%H%M%S')
+          version=${project_version}-alpha+${date}
+          echo "${version}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: create-version-string
+    uses: ./.github/workflows/build.yml
+    with:
+      version: ${{ needs.create-version-string.outputs.shortVersion }}
+    secrets: inherit
+
+  release:
+    needs: [ build, create-version-string ]
+    uses: ./.github/workflows/release.yml
+    with:
+      tag: "v${{ needs.create-version-string.outputs.version }}"
+      prerelease: true
+    secrets: inherit

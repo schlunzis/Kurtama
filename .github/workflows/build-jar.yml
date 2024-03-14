@@ -1,0 +1,52 @@
+name: Build jar with dependencies
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      mvn:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      jar-file-modifier:
+        required: true
+        type: string
+
+jobs:
+  build-to-jar:
+    name: Build on ${{ inputs.os }} to jar
+    runs-on: ${{ inputs.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4.1.0
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: |
+          ${{ inputs.mvn }} --batch-mode --update-snapshots clean install package
+          mv client/target/client-${{ inputs.version }}.jar client/target/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          mv server/target/server-${{ inputs.version }}.jar server/target/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+
+      - name: Upload client jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-jar-${{ inputs.jar-file-modifier }}
+          path: client/target/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          retention-days: 1
+          overwrite: true
+          if-no-files-found: error
+      - name: Upload server jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-jar-${{ inputs.jar-file-modifier }}
+          path: server/target/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          retention-days: 1
+          overwrite: true
+          if-no-files-found: error
