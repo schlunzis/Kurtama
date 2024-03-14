@@ -1,11 +1,22 @@
 name: dev-build all targets
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_dispatch:
 
 jobs:
+  create-version-string:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.step1.outputs.version }}
+    steps:
+      - id: step1
+        run: |
+          project_version="0.0.1"
+          date=$(date +'%Y%m%d%H%M%S')
+          version=${project_version}-alpha+${date}
+          echo "${version}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
   build:
     uses: ./.github/workflows/build.yaml
     secrets: inherit
@@ -14,6 +25,6 @@ jobs:
     needs: build
     uses: ./.github/workflows/release.yaml
     with:
-      tag: dev
+      tag: "v${{ needs.create-version-string.outputs.version }}"
       prerelease: true
     secrets: inherit

@@ -26,5 +26,6 @@ jobs:
     uses: ./.github/workflows/release.yaml
     with:
       tag: ${{ github.ref_name }}
+      version: ${{ needs.create-version-string.outputs.version }}
       prerelease: false
     secrets: inherit
