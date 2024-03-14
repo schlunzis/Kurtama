@@ -7,7 +7,7 @@ if  [ "$1" = configure ]; then
   # creating a desktop item
   xdg-desktop-menu install /opt/kurtama-client/lib/kurtama-client-Kurtama.desktop
   # creating a link, so the application can be called from the command line
-  ln -sf /opt/kurtama-client/bin/kurtama-client /bin/kurtama-client
+  ln -sf /opt/kurtama-client/bin/Kurtama /bin/kurtama-client
 fi
 
 exit 0
