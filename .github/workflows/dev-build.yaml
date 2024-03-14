@@ -1,6 +1,9 @@
 name: dev-build all targets
 
 on:
+  push:
+    branches:
+      - 121-issue-packaging
   workflow_dispatch:
 
 jobs:
