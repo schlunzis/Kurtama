@@ -11,7 +11,7 @@ on:
       - '.github/workflows/build-jpackage.yaml'
       - '.github/workflows/release.yaml'
       - 'build-client.sh'
-      - 'client/jpackage'
+      - 'client/jpackage/**'
 
 jobs:
   build:
