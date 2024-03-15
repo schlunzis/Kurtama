@@ -3,7 +3,9 @@
 <?import javafx.scene.layout.*?>
 <GridPane xmlns:fx="http://javafx.com/fxml"
           xmlns="http://javafx.com/javafx"
-          fx:controller="org.schlunzis.kurtama.client.fx.controller.GameController">
+          fx:controller="org.schlunzis.kurtama.client.fx.controller.GameController"
+          prefWidth="800"
+          prefHeight="800">
     <columnConstraints>
         <ColumnConstraints percentWidth="10"/>
         <ColumnConstraints percentWidth="80"/>

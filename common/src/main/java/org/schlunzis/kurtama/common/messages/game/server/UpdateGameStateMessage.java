@@ -8,10 +8,15 @@ import java.util.UUID;
 @Getter
 public class UpdateGameStateMessage extends AbstractGameMessage {
 
-    private final IGameStateDTO gameState;
+    private IGameStateDTO gameState;
 
     public UpdateGameStateMessage(UUID gameID, IGameStateDTO gameState) {
         super(gameID);
         this.gameState = gameState;
     }
+
+    public UpdateGameStateMessage() {
+        super(null);
+    }
+
 }

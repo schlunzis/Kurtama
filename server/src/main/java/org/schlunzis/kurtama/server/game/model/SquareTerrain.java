@@ -41,7 +41,7 @@ public class SquareTerrain implements ITerrain {
                 }
             }
         }
-        return null;
+        return tiles[0][0];
     }
 
 }

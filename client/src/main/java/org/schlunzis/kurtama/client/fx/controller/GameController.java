@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -26,20 +27,22 @@ public class GameController {
     @FXML
     private void initialize() {
         log.info("Initializing GameController");
-        gameService.getGameState().addListener((observable, oldValue, newValue) -> updateTerrain(newValue));
+        gameService.getGameState().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> updateTerrain(newValue)));
         IGameStateDTO gameState = gameService.getGameState().get();
         if (gameState != null) {
             updateTerrain(gameState);
         }
-        terrainGrid.setGridLinesVisible(true);
     }
 
     private void updateTerrain(IGameStateDTO gameState) {
         log.info("Updating terrain");
         final int percentHeight = 100 / gameState.terrain().height();
         final int percentWidth = 100 / gameState.terrain().width();
+
+
         terrainGrid.getRowConstraints().clear();
         terrainGrid.getColumnConstraints().clear();
+        terrainGrid.getChildren().clear();
         for (int i = 0; i < gameState.terrain().width(); i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setPercentWidth(percentWidth);
@@ -50,11 +53,13 @@ public class GameController {
             rowConstraints.setPercentHeight(percentHeight);
             terrainGrid.getRowConstraints().add(rowConstraints);
         }
+
         for (int x = 0; x < gameState.terrain().width(); x++) {
             for (int y = 0; y < gameState.terrain().height(); y++) {
                 terrainGrid.add(new TilePane(gameState.terrain().tiles()[x][y], gameService), x, y);
             }
         }
+
     }
 
 }

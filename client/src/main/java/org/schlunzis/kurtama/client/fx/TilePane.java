@@ -19,8 +19,13 @@ public class TilePane extends AnchorPane {
         this.gameService = gameService;
         label.setText(String.valueOf(tileDTO.id()));
         getChildren().add(label);
-        if (!tileDTO.figures().isEmpty())
-            this.setStyle("-fx-background-color: red;");
+        StringBuilder styleBuilder = new StringBuilder();
+        if (!tileDTO.figures().isEmpty()) {
+            styleBuilder.append("-fx-background-color: red;");
+        }
+        styleBuilder.append("-fx-border-color: black;");
+        setStyle(styleBuilder.toString());
+
         this.setOnMouseClicked(event -> {
             log.info("Tile " + tileDTO.id() + " clicked");
             gameService.sendMoveRequest(tileDTO.id());
