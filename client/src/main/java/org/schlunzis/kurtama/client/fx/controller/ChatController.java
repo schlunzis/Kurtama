@@ -65,7 +65,7 @@ public class ChatController {
 
     private void onNewChatMessage() {
         if (paused) return;
-        scrollDown();
+        Platform.runLater(this::scrollDown);
     }
 
     private void scrollDown() {
