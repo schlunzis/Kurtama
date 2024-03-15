@@ -138,6 +138,5 @@
                 <finalName>server</finalName>
             </build>
         </profile>
-
     </profiles>
 </project>
