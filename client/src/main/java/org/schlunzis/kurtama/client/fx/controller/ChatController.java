@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
