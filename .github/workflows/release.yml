@@ -11,6 +11,11 @@ on:
         type: boolean
 
 jobs:
+  release-docker:
+    uses: ./.github/workflows/build-docker.yml
+    with:
+      version: ${{ inputs.tag }}
+    secrets: inherit
   release:
     name: Release artifacts
     runs-on: ubuntu-latest
