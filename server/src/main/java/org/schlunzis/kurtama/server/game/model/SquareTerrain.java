@@ -4,6 +4,7 @@ import org.schlunzis.kurtama.common.game.model.ITerrainDTO;
 import org.schlunzis.kurtama.common.game.model.ITileDTO;
 import org.schlunzis.kurtama.common.game.model.SquareTerrainDTO;
 import org.schlunzis.kurtama.common.game.model.SquareTileDTO;
+import org.schlunzis.kurtama.server.user.ServerUser;
 
 public class SquareTerrain implements ITerrain {
 
@@ -30,6 +31,17 @@ public class SquareTerrain implements ITerrain {
             }
         }
         return new SquareTerrainDTO(columns, rows, (SquareTileDTO[][]) tileDTOs);
+    }
+
+    public SquareTile findTileWithFigureOfUser(ServerUser user) {
+        for (int x = 0; x < columns; x++) {
+            for (int y = 0; y < rows; y++) {
+                if (tiles[x][y].hasFigureOfUser(user)) {
+                    return tiles[x][y];
+                }
+            }
+        }
+        return null;
     }
 
 }

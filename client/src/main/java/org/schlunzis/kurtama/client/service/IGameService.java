@@ -7,5 +7,6 @@ public interface IGameService {
 
     ObjectProperty<IGameStateDTO> getGameState();
 
+    void sendMoveRequest(int id);
 }
 

@@ -1,9 +1,12 @@
 package org.schlunzis.kurtama.common.game.model;
 
+import org.schlunzis.kurtama.common.IUser;
+
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-public record SquareTileDTO(int id, int[] neighbours) implements ITileDTO {
+public record SquareTileDTO(int id, int[] neighbours, List<IUser> figures) implements ITileDTO {
 
     @Override
     public String toString() {

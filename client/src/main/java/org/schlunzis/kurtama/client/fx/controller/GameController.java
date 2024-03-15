@@ -52,7 +52,7 @@ public class GameController {
         }
         for (int x = 0; x < gameState.terrain().width(); x++) {
             for (int y = 0; y < gameState.terrain().height(); y++) {
-                terrainGrid.add(new TilePane(gameState.terrain().tiles()[x][y]), x, y);
+                terrainGrid.add(new TilePane(gameState.terrain().tiles()[x][y], gameService), x, y);
             }
         }
     }

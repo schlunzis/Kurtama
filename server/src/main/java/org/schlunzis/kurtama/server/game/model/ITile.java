@@ -1,6 +1,7 @@
 package org.schlunzis.kurtama.server.game.model;
 
 import org.schlunzis.kurtama.common.game.model.ITileDTO;
+import org.schlunzis.kurtama.server.user.ServerUser;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface ITile {
 
     void put(IDirection direction, ITile tile);
 
-    List<Team> getFigures();
+    List<ServerUser> getFigures();
 
     List<Team> getStreets(IDirection direction);
 

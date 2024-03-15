@@ -1,8 +1,10 @@
 package org.schlunzis.kurtama.server.game.model;
 
 import lombok.Getter;
+import org.schlunzis.kurtama.common.IUser;
 import org.schlunzis.kurtama.common.game.model.ITileDTO;
 import org.schlunzis.kurtama.common.game.model.SquareTileDTO;
+import org.schlunzis.kurtama.server.user.ServerUser;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ public class SquareTile implements ITile {
 
     private final ITile[] neighbours = new ITile[SquareDirection.values().length];
     @Getter
-    private final List<Team> figures = new ArrayList<>();
+    private final List<ServerUser> figures = new ArrayList<>();
     @Getter
     private final List<Team> villages = new ArrayList<>();
     @Getter
@@ -66,7 +68,15 @@ public class SquareTile implements ITile {
         for (int i = 0; i < neighbours.length; i++) {
             neighbourIds[i] = neighbours[i] == null ? -1 : neighbours[i].getId();
         }
-        return new SquareTileDTO(id, neighbourIds);
+        List<IUser> figureDTOs = new ArrayList<>();
+        for (ServerUser figure : figures) {
+            figureDTOs.add(figure.toDTO());
+        }
+        return new SquareTileDTO(id, neighbourIds, figureDTOs);
+    }
+
+    public boolean hasFigureOfUser(ServerUser user) {
+        return figures.contains(user);
     }
 
 }
