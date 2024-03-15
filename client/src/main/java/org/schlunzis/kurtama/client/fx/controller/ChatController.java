@@ -3,10 +3,7 @@ package org.schlunzis.kurtama.client.fx.controller;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,13 +31,13 @@ public class ChatController {
     private Button scrollDownButton;
 
     private volatile boolean paused = false;
+    private ScrollBar verticalBar;
 
     @FXML
     public void initialize() {
         chatListView.setItems(chatService.getChatMessages());
         senderNameTextField.setText(chatService.getCurrentUsername());
         chatListView.setCellFactory(listView -> new CustomListCell());
-        chatListView.setOnScroll(event -> setPaused(true));
         chatService.getChatMessages().addListener((ListChangeListener<String>) change -> onNewChatMessage());
         root.widthProperty().addListener((observable, oldValue, newValue) -> updateScrollDownButtonPosition());
         scrollDownButton.widthProperty().addListener((observable, oldValue, newValue) -> updateScrollDownButtonPosition());
@@ -65,6 +62,12 @@ public class ChatController {
     }
 
     private void onNewChatMessage() {
+        if (verticalBar == null) {
+            verticalBar = (ScrollBar) chatListView.lookup(".scroll-bar:vertical");
+            verticalBar.valueProperty().addListener((obs, oldValue, newValue) ->
+                    setPaused(newValue.doubleValue() < verticalBar.getMax())
+            );
+        }
         if (paused) return;
         Platform.runLater(this::scrollDown);
     }
