@@ -1,4 +1,4 @@
-name: dev-build all targets
+name: Test Build Process without releasing
 
 on:
   push:
@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    name: Build to test
     uses: ./.github/workflows/build.yml
     with:
       version: "0.0.1"

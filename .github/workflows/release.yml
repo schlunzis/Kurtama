@@ -6,31 +6,39 @@ on:
       tag:
         required: true
         type: string
+        description: "The tag to use for the release."
       prerelease:
         required: true
         type: boolean
+        description: "Whether the release is a pre-release."
 
 jobs:
   release:
-    name: Release artifacts
+    name: Download and Release Artifacts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
+        name: Download Client deb-Package
         with:
           name: client-deb
       - uses: actions/download-artifact@v4
+        name: Download Client exe
         with:
           name: client-exe
       - uses: actions/download-artifact@v4
+        name: Download Client JAR for Linux
         with:
           name: client-jar-linux
       - uses: actions/download-artifact@v4
+        name: Download Client JAR for Windows
         with:
           name: client-jar-win
       - uses: actions/download-artifact@v4
+        name: Download Server JAR for Linux
         with:
           name: server-jar-linux
       - uses: actions/download-artifact@v4
+        name: Download Server JAR for Windows
         with:
           name: server-jar-win
 
@@ -38,6 +46,7 @@ jobs:
         run: ls -al
 
       - uses: ncipollo/release-action@v1
+        name: Create Release and Upload Artifacts
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ inputs.tag }}

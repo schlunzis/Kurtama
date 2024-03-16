@@ -6,7 +6,7 @@ on:
       - 'server'
       - 'common'
       - 'pom.xml'
-      - '.github/workflows/verify-server.yml'
+      - '.github/workflows/test-server.yml'
 
 jobs:
   verify-server:

@@ -1,10 +1,15 @@
-name: dev-build all targets
+name: Build and Release as Alpha
 
 on:
+  push:
+    branches:
+      - main
+      - develop
   workflow_dispatch:
 
 jobs:
-  create-version-string:
+  create-alpha-version-string:
+    name: "Create Alpha Version String in format: project_version-alpha+YYYYMMDDHHMMSS"
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.step1.outputs.version }}
@@ -20,14 +25,14 @@ jobs:
           echo "version=${version}" >> "$GITHUB_OUTPUT"
 
   build:
-    needs: create-version-string
+    needs: create-alpha-version-string
     uses: ./.github/workflows/build.yml
     with:
       version: ${{ needs.create-version-string.outputs.shortVersion }}
     secrets: inherit
 
   release:
-    needs: [ build, create-version-string ]
+    needs: [ build,  create-alpha-version-string ]
     uses: ./.github/workflows/release.yml
     with:
       tag: "v${{ needs.create-version-string.outputs.version }}"

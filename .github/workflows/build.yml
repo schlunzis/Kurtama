@@ -1,4 +1,4 @@
-name: Build all targets
+name: Build to JAR and with JPackage
 
 on:
   workflow_call:
@@ -6,14 +6,17 @@ on:
       version:
         required: true
         type: string
+        description: "The project version to build. It must be equal to the version in the pom.xml file."
 
 jobs:
   verify:
+    name: Verify Project before Build
     uses: ./.github/workflows/verify.yml
 
   # Windows does not allow text in versions. See requirements:
   # https://learn.microsoft.com/en-gb/windows/win32/msi/productversion
   win-version-string:
+    name: Create Version String for Windows
     runs-on: ubuntu-latest
     outputs:
       winVersion: ${{ steps.step1.outputs.winVersion }}
@@ -21,10 +24,11 @@ jobs:
       - id: step1
         run: |
           winVersion=$(echo "${{ inputs.version }}" | grep -oP "\d+\.\d+\.\d+")
-          echo "${winVersion}"
-          echo "winVersion=${winVersion}" >> "$GITHUB_OUTPUT"
+                       echo "${winVersion}"
+                       echo "winVersion=${winVersion}" >> "$GITHUB_OUTPUT"
 
   build-to-jar:
+    name: Build to JAR on Ubuntu and Windows
     needs: verify
     uses: ./.github/workflows/build-jar.yml
     strategy:
@@ -41,6 +45,7 @@ jobs:
     secrets: inherit
 
   build-with-jpackage:
+    name: Build with JPackage
     needs: [ verify, win-version-string ]
     uses: ./.github/workflows/build-jpackage.yml
     with:

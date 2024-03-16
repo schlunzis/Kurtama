@@ -1,4 +1,5 @@
-name: Build jar with dependencies
+name: Build JAR with Dependencies
+run-name: Build to JAR on ${{ inputs.os }}
 
 on:
   workflow_call:
@@ -6,19 +7,23 @@ on:
       os:
         required: true
         type: string
+        description: "The operating system to build on."
       mvn:
         required: true
         type: string
+        description: "The maven command to use. Either ./mvnw or ./mvnw.cmd. Windows requires the .cmd extension."
       version:
         required: true
         type: string
+        description: "The project version to build. It must be equal to the version in the pom.xml file."
       jar-file-modifier:
         required: true
         type: string
+        description: "The modifier to append to the jar file name. It is used to differentiate between the Linux and Windows jar files."
 
 jobs:
   build-to-jar:
-    name: Build on ${{ inputs.os }} to jar
+    name: Build JAR on ${{ inputs.os }}
     runs-on: ${{ inputs.os }}
     steps:
       - uses: actions/checkout@v4
@@ -28,13 +33,13 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-      - name: Build with Maven
+      - name: Build Server and Client with Maven
         run: |
           ${{ inputs.mvn }} --batch-mode --update-snapshots clean install package
           mv client/target/client-${{ inputs.version }}.jar client/target/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
           mv server/target/server-${{ inputs.version }}.jar server/target/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
 
-      - name: Upload client jar
+      - name: Upload Client JAR
         uses: actions/upload-artifact@v4
         with:
           name: client-jar-${{ inputs.jar-file-modifier }}
@@ -42,7 +47,7 @@ jobs:
           retention-days: 1
           overwrite: true
           if-no-files-found: error
-      - name: Upload server jar
+      - name: Upload Server JAR
         uses: actions/upload-artifact@v4
         with:
           name: server-jar-${{ inputs.jar-file-modifier }}

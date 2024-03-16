@@ -6,7 +6,7 @@ on:
       - 'client'
       - 'common'
       - 'pom.xml'
-      - '.github/workflows/verify-client.yml'
+      - '.github/workflows/test-client.yml'
 
 jobs:
   verify-client:
