@@ -1,4 +1,4 @@
-name: Build to JAR and with JPackage
+name: Build with JPackage and to jar
 
 on:
   workflow_call:
@@ -22,13 +22,14 @@ jobs:
       winVersion: ${{ steps.step1.outputs.winVersion }}
     steps:
       - id: step1
+        name: Create Version String for Windows and write it to Output
         run: |
           winVersion=$(echo "${{ inputs.version }}" | grep -oP "\d+\.\d+\.\d+")
                        echo "${winVersion}"
                        echo "winVersion=${winVersion}" >> "$GITHUB_OUTPUT"
 
   build-to-jar:
-    name: Build to JAR on Ubuntu and Windows
+    name: Build to jar on Ubuntu and Windows
     needs: verify
     uses: ./.github/workflows/build-jar.yml
     strategy:

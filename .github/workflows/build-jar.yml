@@ -1,5 +1,5 @@
-name: Build JAR with Dependencies
-run-name: Build to JAR on ${{ inputs.os }}
+name: Build jar with Dependencies
+run-name: Build to jar on ${{ inputs.os }}
 
 on:
   workflow_call:
@@ -39,7 +39,7 @@ jobs:
           mv client/target/client-${{ inputs.version }}.jar client/target/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
           mv server/target/server-${{ inputs.version }}.jar server/target/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
 
-      - name: Upload Client JAR
+      - name: Upload Client jar
         uses: actions/upload-artifact@v4
         with:
           name: client-jar-${{ inputs.jar-file-modifier }}
@@ -47,7 +47,7 @@ jobs:
           retention-days: 1
           overwrite: true
           if-no-files-found: error
-      - name: Upload Server JAR
+      - name: Upload Server jar
         uses: actions/upload-artifact@v4
         with:
           name: server-jar-${{ inputs.jar-file-modifier }}

@@ -1,4 +1,4 @@
-name: Release artifacts
+name: Release Artifacts
 
 on:
   workflow_call:
@@ -14,10 +14,12 @@ on:
 
 jobs:
   release-docker:
+    name: Build and Release Docker Image
     uses: ./.github/workflows/build-docker.yml
     with:
       version: ${{ inputs.tag }}
     secrets: inherit
+
   release:
     name: Download and Release Artifacts
     runs-on: ubuntu-latest
@@ -50,6 +52,19 @@ jobs:
       - name: List artifacts
         run: ls -al
 
+      - name: Create release body
+        run: |
+          if [ "${{ inputs.prerelease }}" = "true" ]; then
+            echo "This is an alpha release." > release-body.md
+            echo "It is not recommended for production use." >> release-body.md
+            echo "It is intended for testing and feedback." >> release-body.md
+            echo "Please report any issues on the issue tracker." >> release-body.md
+          else
+            echo "This is a stable release." > release-body.md
+            echo "It is recommended for production use." >> release-body.md
+            echo "Please report any issues on the issue tracker." >> release-body.md
+          fi
+
       - uses: ncipollo/release-action@v1
         name: Create Release and Upload Artifacts
         with:
@@ -59,8 +74,4 @@ jobs:
           prerelease: ${{ inputs.prerelease }}
           name: "Alpha Release: ${{ inputs.tag }}"
           artifacts: "*.jar,*.deb,*.exe"
-          body: |
-            This is an alpha release.
-            It is not recommended for production use.
-            It is intended for testing and feedback.
-            Please report any issues on the issue tracker.
+          bodyFile: "release-body.md"
