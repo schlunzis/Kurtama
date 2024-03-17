@@ -17,6 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: step1
+        name: "Read Version String and write to output"
         run: |
           project_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
           # fail, if version is not a valid version string (mvn outputs "null object or invalid expression")
@@ -35,7 +36,7 @@ jobs:
     needs: create-alpha-version-string
     uses: ./.github/workflows/build.yml
     with:
-      version: ${{ needs.create-version-string.outputs.shortVersion }}
+      version: ${{ needs.create-alpha-version-string.outputs.shortVersion }}
     secrets: inherit
 
   release:
