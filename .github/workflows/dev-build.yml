@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.step1.outputs.version }}
-      shortVersion: ${{ steps.step1.outputs.shortVersion }}
     steps:
       - uses: actions/checkout@v4
       - id: step1
@@ -26,7 +25,6 @@ jobs:
               echo "Aborting"
               exit 1
           fi
-          echo "shortVersion=${project_version}" >> "$GITHUB_OUTPUT"
           date=$(date +'%Y%m%d%H%M%S')
           version=${project_version}-alpha+${date}
           echo "${version}"
@@ -36,7 +34,7 @@ jobs:
     needs: create-alpha-version-string
     uses: ./.github/workflows/build.yml
     with:
-      version: ${{ needs.create-alpha-version-string.outputs.shortVersion }}
+      version: ${{ needs.create-alpha-version-string.outputs.version }}
     secrets: inherit
 
   release:
