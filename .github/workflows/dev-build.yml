@@ -38,7 +38,7 @@ jobs:
     secrets: inherit
 
   release:
-    needs: [ build,  create-alpha-version-string ]
+    needs: [ build, create-alpha-version-string ]
     uses: ./.github/workflows/release.yml
     with:
       tag: "v${{ needs.create-alpha-version-string.outputs.version }}"
