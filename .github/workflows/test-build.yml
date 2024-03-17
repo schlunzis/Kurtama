@@ -10,9 +10,21 @@ on:
       - 'mvnw'
 
 jobs:
+  read-version-string:
+    name: "Read Version String from Maven project.version"
+    runs-on: ubuntu-latest
+    outputs:
+      project_version: ${{ steps.step1.outputs.project_version }}
+    steps:
+      - id: step1
+        run: |
+          project_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "${project_version}"
+          echo "project_version=${project_version}" >> "$GITHUB_OUTPUT"
+
   build:
     name: Build to test
     uses: ./.github/workflows/build.yml
     with:
-      version: "0.0.1"
+      version: ${{ needs.read-version-string.outputs.project_version }}
     secrets: inherit

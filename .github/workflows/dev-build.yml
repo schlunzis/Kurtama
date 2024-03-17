@@ -17,7 +17,13 @@ jobs:
     steps:
       - id: step1
         run: |
-          project_version="0.0.1"
+          project_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
+          # fail, if version is not a valid version string (mvn outputs "null object or invalid expression")
+          if [[ "$project_version" = "null object or invalid expression" ]]; then
+              echo "Could not determine project version. Output was: $project_version"
+              echo "Aborting"
+              exit 1
+          fi
           echo "shortVersion=${project_version}" >> "$GITHUB_OUTPUT"
           date=$(date +'%Y%m%d%H%M%S')
           version=${project_version}-alpha+${date}

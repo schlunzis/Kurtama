@@ -24,7 +24,7 @@ Java 21 installed. Clone this repository and run the following command in the ro
 This will build all modules of the project. To run the server, you can run the following command:
 
 ```bash
-java -jar server/target/server-0.0.1-SNAPSHOT.jar
+java -jar server/target/server-0.0.1.jar
 ```
 
 Make sure to not have the port `8007` in use, as this is the default port the server will listen on. You can change the
@@ -34,7 +34,7 @@ update the port in the client.
 When the server is up and running, you can start as many clients as you want by running the following command:
 
 ```bash
-java -jar client/target/client-0.0.1-SNAPSHOT.jar
+java -jar client/target/client-0.0.1.jar
 ```
 
 Again, if you changed the port on the server you need to change the port on the client as well. You can do this by
@@ -48,9 +48,9 @@ To build the client with jpackage, you can run the following command:
 ./build-client.sh <linux|windows> <version> [windows-version]
 ```
 
-This will build the client for the specified operating system and version. The version should be equal to the maven
-version of the project. The windows version is optional and only needed if you want to build the client for windows. It
-is needed, because windows has specific versioning requirements for executables.
+This will build the client for the specified operating system and version. The given version is automatically set as
+the project version in Maven. The Windows version is optional and only needed if you want to build the client for
+windows. It is needed, because windows has specific versioning requirements for executables.
 See [here](https://learn.microsoft.com/en-gb/windows/win32/msi/productversion) for more information.
 
 This will create a .deb package and a .exe installer in the `target/jpackage-out` directory.
