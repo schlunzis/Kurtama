@@ -14,7 +14,9 @@ name="Kurtama"
 if  [ "$os" = linux ]; then
   echo "Building for Linux"
   echo "Building client jar"
-  ./mvnw versions:set -DnewVersion="${version}" versions:commit --projects client --also-make --batch-mode --update-snapshots clean install package
+  ./mvnw versions:set -DnewVersion="${version}"
+  ./mvnw versions:commit
+  ./mvnw --projects client --also-make --batch-mode --update-snapshots clean install package
   mkdir ${input}
   cp client/target/${mainJar} ${input}
 
@@ -37,7 +39,9 @@ elif  [ "$os" = windows ]; then
   echo "Building for Windows"
   echo "Building client jar"
   # maven wrapper is a hassle here maybe this works
-  ./mvnw versions:set -DnewVersion="${version}" versions:commit --projects client --also-make --batch-mode --update-snapshots clean install package
+  ./mvnw versions:set -DnewVersion="${version}"
+  ./mvnw versions:commit
+  ./mvnw --projects client --also-make --batch-mode --update-snapshots clean install package
   mkdir ${input}
   cp client/target/${mainJar} ${input}
 

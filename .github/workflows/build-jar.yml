@@ -35,7 +35,9 @@ jobs:
           cache: maven
       - name: Build Server and Client with Maven
         run: |
-          ${{ inputs.mvn }} versions:set -DnewVersion="${{ inputs.version }}" versions:commit --batch-mode --update-snapshots install package
+          ${{ inputs.mvn }} versions:set -DnewVersion="${{ inputs.version }}"
+          ${{ inputs.mvn }} versions:commit
+          ${{ inputs.mvn }} --batch-mode --update-snapshots install package
           mv client/target/client-${{ inputs.version }}.jar client/target/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
           mv server/target/server-${{ inputs.version }}.jar server/target/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
 
