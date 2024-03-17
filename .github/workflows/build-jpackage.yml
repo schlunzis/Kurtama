@@ -50,7 +50,7 @@ jobs:
         shell: bash
         run: |
           ./build-client.sh windows ${{ inputs.version }} ${{ inputs.winVersion }}
-          mv ./target/jpackage-out/Kurtama-${{ inputs.winVersion }}.exe ./target/jpackage-out/Kurtama-${{ inputs.winVersion }}-setup.exe
+          mv ./target/jpackage-out/Kurtama-${{ inputs.winVersion }}.exe ./target/jpackage-out/Kurtama-${{ inputs.version }}-setup.exe
       - name: Upload exe
         uses: actions/upload-artifact@v4
         with:

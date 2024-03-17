@@ -25,8 +25,8 @@ jobs:
         name: Create Version String for Windows and write it to Output
         run: |
           winVersion=$(echo "${{ inputs.version }}" | grep -oP "\d+\.\d+\.\d+")
-                       echo "${winVersion}"
-                       echo "winVersion=${winVersion}" >> "$GITHUB_OUTPUT"
+          echo "${winVersion}"
+          echo "winVersion=${winVersion}" >> "$GITHUB_OUTPUT"
 
   build-to-jar:
     name: Build to jar on Ubuntu and Windows
