@@ -130,4 +130,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>docker</id>
+            <build>
+                <finalName>server</finalName>
+            </build>
+        </profile>
+    </profiles>
 </project>
