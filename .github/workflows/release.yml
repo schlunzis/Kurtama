@@ -13,6 +13,11 @@ on:
         description: "Whether the release is a pre-release."
 
 jobs:
+  release-docker:
+    uses: ./.github/workflows/build-docker.yml
+    with:
+      version: ${{ inputs.tag }}
+    secrets: inherit
   release:
     name: Download and Release Artifacts
     runs-on: ubuntu-latest
