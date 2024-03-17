@@ -15,6 +15,7 @@ jobs:
       version: ${{ steps.step1.outputs.version }}
       shortVersion: ${{ steps.step1.outputs.shortVersion }}
     steps:
+      - uses: actions/checkout@v4
       - id: step1
         run: |
           project_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)

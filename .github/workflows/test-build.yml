@@ -16,6 +16,7 @@ jobs:
     outputs:
       project_version: ${{ steps.step1.outputs.project_version }}
     steps:
+      - uses: actions/checkout@v4
       - id: step1
         run: |
           project_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
