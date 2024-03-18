@@ -20,8 +20,8 @@ jobs:
       version: ${{ inputs.tag }}
     secrets: inherit
   
-  download-artifacts:
-    name: Download Artifacts
+  release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -52,11 +52,6 @@ jobs:
       - name: List artifacts
         run: ls -al
 
-  release:
-    needs: download-artifacts
-    runs-on: ubuntu-latest
-    name: Release Artifacts
-    steps:
       - name: Create release body
         run: |
           if [ "${{ inputs.prerelease }}" = "true" ]; then
@@ -81,19 +76,15 @@ jobs:
           artifacts: "*.jar,*.deb,*.exe"
           bodyFile: "release-body.md"
     
-  upload-ppa:
-    needs: download-artifacts
-    if: ${{ inputs.prerelease }} == 'false'
-    name: Release to PPA
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v4
+        if: ${{ inputs.prerelease }} == 'false'
         name: Access PPA
         with:
           repository: schlunzis/ppa
           path: ppa
           token: ${{ secrets.PAT }}
       - name: Upload to PPA
+        if: ${{ inputs.prerelease }} == 'false'
         run: |
           cp *.deb ppa/ubuntu/
           cd ppa
