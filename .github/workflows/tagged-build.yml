@@ -26,6 +26,7 @@ jobs:
     secrets: inherit
 
   release:
+    needs: build
     uses: ./.github/workflows/release.yml
     with:
       tag: ${{ github.ref_name }}
