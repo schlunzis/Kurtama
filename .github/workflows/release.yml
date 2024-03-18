@@ -75,3 +75,24 @@ jobs:
           name: "Alpha Release: ${{ inputs.tag }}"
           artifacts: "*.jar,*.deb,*.exe"
           bodyFile: "release-body.md"
+    
+  upload-ppa:
+    if: ${{ inputs.prerelease }} == 'false'
+    name: Release to PPA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: Access PPA
+        with:
+          repository: schlunzis/ppa
+          path: ppa
+          token: ${{ secrets.PAT }}
+      - name: Upload to PPA
+        run: |
+          cp *.deb ppa/ubuntu/
+          cd ppa
+          git config user.name "Package deployer (Bot)"
+          git config user.email "kurtama@schlunzis.org"
+          git add .
+          git commit -m "Kurtama Client $GITHUB_REF_NAME"
+          git push
