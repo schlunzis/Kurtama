@@ -1,35 +1,46 @@
-name: dev-build all targets
+name: Build and Release as Alpha
 
 on:
+  push:
+    branches:
+      - main
+      - develop
   workflow_dispatch:
 
 jobs:
-  create-version-string:
+  create-alpha-version-string:
+    name: "Create Alpha Version String in format: project_version-alpha+YYYYMMDDHHMMSS"
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.step1.outputs.version }}
-      shortVersion: ${{ steps.step1.outputs.shortVersion }}
     steps:
+      - uses: actions/checkout@v4
       - id: step1
+        name: "Read Version String and write to output"
         run: |
-          project_version="0.0.1"
-          echo "shortVersion=${project_version}" >> "$GITHUB_OUTPUT"
+          project_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
+          # fail, if version is not a valid version string (mvn outputs "null object or invalid expression")
+          if [[ "$project_version" = "null object or invalid expression" ]]; then
+              echo "Could not determine project version. Output was: $project_version"
+              echo "Aborting"
+              exit 1
+          fi
           date=$(date +'%Y%m%d%H%M%S')
           version=${project_version}-alpha+${date}
           echo "${version}"
           echo "version=${version}" >> "$GITHUB_OUTPUT"
 
   build:
-    needs: create-version-string
+    needs: create-alpha-version-string
     uses: ./.github/workflows/build.yml
     with:
-      version: ${{ needs.create-version-string.outputs.shortVersion }}
+      version: ${{ needs.create-alpha-version-string.outputs.version }}
     secrets: inherit
 
   release:
-    needs: [ build, create-version-string ]
+    needs: [ build, create-alpha-version-string ]
     uses: ./.github/workflows/release.yml
     with:
-      tag: "v${{ needs.create-version-string.outputs.version }}"
+      tag: "v${{ needs.create-alpha-version-string.outputs.version }}"
       prerelease: true
     secrets: inherit

@@ -1,16 +1,16 @@
-name: verify client changes
+name: Verify Changes in Server
 
 on:
   push:
     paths:
-      - 'client'
+      - 'server'
       - 'common'
       - 'pom.xml'
-      - '.github/workflows/verify-client.yml'
+      - '.github/workflows/test-server.yml'
 
 jobs:
-  verify-client:
-    name: verify client
+  verify-server:
+    name: Verify with Maven
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,4 +22,4 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: |
-          ./mvnw --projects client --also-make --batch-mode --update-snapshots test
+          ./mvnw --projects server --also-make --batch-mode --update-snapshots test

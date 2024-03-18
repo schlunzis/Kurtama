@@ -1,4 +1,4 @@
-name: Release all targets
+name: Build and Release on Tag
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
 
 jobs:
   create-version-string:
+    name: "Create Version String from Tag"
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.step1.outputs.version }}
