@@ -4,7 +4,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.service.IGameService;
+import org.schlunzis.kurtama.common.game.model.EdgeDTO;
 import org.schlunzis.kurtama.common.game.model.ITileDTO;
+
+import java.util.Arrays;
 
 @Slf4j
 public class TilePane extends AnchorPane {
@@ -13,11 +16,13 @@ public class TilePane extends AnchorPane {
 
     private final Label label = new Label();
     private ITileDTO tileDTO;
+    private EdgeDTO[] edges;
 
-    public TilePane(ITileDTO tileDTO, IGameService gameService) {
+    public TilePane(ITileDTO tileDTO, EdgeDTO[] edges, IGameService gameService) {
         this.tileDTO = tileDTO;
+        this.edges = edges;
         this.gameService = gameService;
-        label.setText(String.valueOf(tileDTO.id()));
+        label.setText(tileDTO.id() + " " + Arrays.stream(edges).reduce("", (acc, edge) -> acc + edge.secondTileIndex() + ", ", String::concat));
         getChildren().add(label);
         StringBuilder styleBuilder = new StringBuilder();
         if (!tileDTO.figures().isEmpty()) {
