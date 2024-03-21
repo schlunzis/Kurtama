@@ -45,9 +45,7 @@ public class SquareTerrainFactory implements TerrainFactory {
 
         linkTiles();
 
-        log.error("EdgeDataList: " + edgeDataList);
         List<EdgeData> edgeData = edgeDataList.stream().distinct().toList();
-        log.error("EdgeData: " + edgeData);
         return new SquareTerrain(tiles, edgeData);
     }
 
