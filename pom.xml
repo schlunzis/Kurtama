@@ -22,7 +22,7 @@
         <revision>0.0.1</revision>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.source>21</maven.compiler.source>
-        <spring.boot.version>3.2.3</spring.boot.version>
+        <spring.boot.version>3.2.4</spring.boot.version>
         <org.mockito.version>5.11.0</org.mockito.version>
         <lombok.version>1.18.30</lombok.version>
     </properties>
