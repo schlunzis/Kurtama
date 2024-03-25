@@ -1,14 +1,13 @@
-package org.schlunzis.kurtama.server.server.model;
+package org.schlunzis.kurtama.server.game.model.factory;
 
 import org.junit.jupiter.api.Test;
 import org.schlunzis.kurtama.common.game.GameSettings;
-import org.schlunzis.kurtama.server.game.SquareTerrainFactory;
 import org.schlunzis.kurtama.server.game.model.SquareTerrain;
+import org.schlunzis.kurtama.server.game.model.factory.SquareTerrainFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SquareTerrainFactoryTest {
-
 
     @Test
     void createTerrainIndexTest() {

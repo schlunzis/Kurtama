@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.fx.TilePane;
 import org.schlunzis.kurtama.client.service.IGameService;
+import org.schlunzis.kurtama.common.game.model.EdgeDTO;
 import org.schlunzis.kurtama.common.game.model.IGameStateDTO;
+import org.schlunzis.kurtama.common.game.model.ITileDTO;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -56,7 +58,9 @@ public class GameController {
 
         for (int x = 0; x < gameState.terrain().width(); x++) {
             for (int y = 0; y < gameState.terrain().height(); y++) {
-                terrainGrid.add(new TilePane(gameState.terrain().tiles()[x][y], gameService), x, y);
+                ITileDTO tile = gameState.terrain().tiles()[x][y];
+                EdgeDTO[] edges = gameState.terrain().edges().stream().filter(edge -> edge.firstTileIndex() == tile.id()).toArray(EdgeDTO[]::new);
+                terrainGrid.add(new TilePane(tile, edges, gameService), x, y);
             }
         }
 

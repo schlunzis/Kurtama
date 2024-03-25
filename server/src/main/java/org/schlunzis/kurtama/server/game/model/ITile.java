@@ -11,15 +11,9 @@ public interface ITile {
 
     ITile get(IDirection direction);
 
-    void put(IDirection direction, ITile tile);
+    void put(IDirection direction, Edge edge);
 
     List<ServerUser> getFigures();
-
-    List<Team> getStreets(IDirection direction);
-
-    void addStreet(Team team, IDirection direction);
-
-    void clearStreets();
 
     ITileDTO toDTO();
 
