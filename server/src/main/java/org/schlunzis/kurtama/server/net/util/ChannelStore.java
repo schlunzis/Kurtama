@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.net.SessionType;
 import org.schlunzis.kurtama.server.net.UUIDSession;
-import org.schlunzis.kurtama.server.util.BiMap;
-import org.schlunzis.kurtama.server.util.ConcurrentBiHashMap;
+import org.schlunzis.zis.commons.collections.BiMap;
+import org.schlunzis.zis.commons.collections.ConcurrentBiHashMap;
 
 import java.util.Collection;
 import java.util.Optional;

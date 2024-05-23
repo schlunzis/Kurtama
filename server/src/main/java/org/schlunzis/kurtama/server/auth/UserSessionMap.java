@@ -2,8 +2,8 @@ package org.schlunzis.kurtama.server.auth;
 
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
-import org.schlunzis.kurtama.server.util.BiMap;
-import org.schlunzis.kurtama.server.util.ConcurrentBiHashMap;
+import org.schlunzis.zis.commons.collections.BiMap;
+import org.schlunzis.zis.commons.collections.ConcurrentBiHashMap;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
