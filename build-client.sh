@@ -10,6 +10,7 @@ mainJar="client-${version}.jar"
 resourceDir="./client/jpackage"
 destination="./target/jpackage-out"
 name="Kurtama"
+icon="./client/src/main/resources/icons/icon-512.png"
 
 if  [ "$os" = linux ]; then
   echo "Building for Linux"
@@ -32,7 +33,8 @@ if  [ "$os" = linux ]; then
   --linux-package-name "kurtama-client" \
   --linux-menu-group Game \
   --linux-app-category Game \
-  --linux-shortcut
+  --linux-shortcut \
+  --icon ${icon}
 
 
 elif  [ "$os" = windows ]; then
@@ -55,7 +57,8 @@ elif  [ "$os" = windows ]; then
   --app-version "${windowsVersion}" \
   --dest ${destination} \
   --win-upgrade-uuid "54e9b129-e6a4-4272-bd94-13079eb6ae6d" \
-  --win-menu
+  --win-menu \
+  --icon ${icon}
 
 
 else
