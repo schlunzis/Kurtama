@@ -57,8 +57,7 @@ elif  [ "$os" = windows ]; then
   --app-version "${windowsVersion}" \
   --dest ${destination} \
   --win-upgrade-uuid "54e9b129-e6a4-4272-bd94-13079eb6ae6d" \
-  --win-menu \
-  --icon ${icon}
+  --win-menu
 
 
 else
