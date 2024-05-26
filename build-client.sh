@@ -33,7 +33,8 @@ if  [ "$os" = linux ]; then
   --linux-package-name "kurtama-client" \
   --linux-menu-group Game \
   --linux-app-category Game \
-  --linux-shortcut
+  --linux-shortcut \
+  --icon ${icon}
 
 
 elif  [ "$os" = windows ]; then
