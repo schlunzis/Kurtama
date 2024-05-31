@@ -30,8 +30,8 @@ if  [ "$os" = linux ]; then
   --app-version "${version}" \
   --dest ${destination} \
   --linux-package-name "kurtama-client" \
-  --linux-menu-group Game \
-  --linux-app-category Game \
+  --linux-menu-group Games \
+  --linux-app-category Games \
   --linux-shortcut
 
 
