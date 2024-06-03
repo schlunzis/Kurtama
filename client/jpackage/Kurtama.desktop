@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Kurtama
+Comment=Kurtama
+Exec=/opt/kurtama-client/bin/Kurtama
+Icon=/opt/kurtama-client/lib/Kurtama.png
+Terminal=false
+Type=Application
+Categories=Game
+MimeType=
+StartupWMClass=org.schlunzis.kurtama.client.fx.ClientApp
