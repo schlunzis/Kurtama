@@ -12,7 +12,7 @@
 
     <name>client</name>
     <properties>
-        <javafx.version>22</javafx.version>
+        <javafx.version>22.0.1</javafx.version>
     </properties>
 
 
