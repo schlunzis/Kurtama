@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.schlunzis.kurtama.server.user.ServerUser;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ChatManagementTest {
@@ -160,6 +161,54 @@ class ChatManagementTest {
         when(chatStore.get(null)).thenThrow(NullPointerException.class);
         assertThrows(NullPointerException.class,
                 () -> chatManagement.getChat(null));
+    }
+
+    // ################################################
+    // addChatter(UUID, ServerUser)
+    // ################################################
+
+    @Test
+    void addChatterDefaultTest(@Mock ServerUser user) {
+        when(chatStore.get(chatID)).thenReturn(Optional.ofNullable(defaultChat));
+        chatManagement.addChatter(chatID, user);
+        verify(defaultChat).addChatter(user);
+    }
+
+    @Test
+    void addChatterNonExistingChatTest(@Mock ServerUser user) {
+        when(chatStore.get(chatID)).thenReturn(Optional.empty());
+        assertDoesNotThrow(() -> chatManagement.addChatter(chatID, user));
+        verify(defaultChat, never()).addChatter(user);
+    }
+
+    @Test
+    void addChatterNullTest(@Mock ServerUser user) {
+        assertThrows(NullPointerException.class, () -> chatManagement.addChatter(null, user));
+        assertThrows(NullPointerException.class, () -> chatManagement.addChatter(chatID, null));
+    }
+
+    // ################################################
+    // removeChatter(UUID, ServerUser)
+    // ################################################
+
+    @Test
+    void removeChatterDefaultTest(@Mock ServerUser user) {
+        when(chatStore.get(chatID)).thenReturn(Optional.ofNullable(defaultChat));
+        chatManagement.removeChatter(chatID, user);
+        verify(defaultChat).removeChatter(user);
+    }
+
+    @Test
+    void removeChatterNonExistingChatTest(@Mock ServerUser user) {
+        when(chatStore.get(chatID)).thenReturn(Optional.empty());
+        assertDoesNotThrow(() -> chatManagement.removeChatter(chatID, user));
+        verify(defaultChat, never()).removeChatter(user);
+    }
+
+    @Test
+    void removeChatterNullTest(@Mock ServerUser user) {
+        assertThrows(NullPointerException.class, () -> chatManagement.removeChatter(null, user));
+        assertThrows(NullPointerException.class, () -> chatManagement.removeChatter(chatID, null));
     }
 
 }

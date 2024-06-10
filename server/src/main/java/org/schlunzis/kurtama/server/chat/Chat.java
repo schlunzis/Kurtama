@@ -18,14 +18,14 @@ public class Chat {
     private final UUID id;
     private final Collection<ServerUser> chatters = new ArrayList<>();
 
-    public void addChatter(ServerUser user) {
+    void addChatter(ServerUser user) {
         Objects.requireNonNull(user);
         if (!chatters.contains(user)) {
             chatters.add(user);
         }
     }
 
-    public void removeChatter(ServerUser user) {
+    void removeChatter(ServerUser user) {
         Objects.requireNonNull(user);
         chatters.remove(user);
     }

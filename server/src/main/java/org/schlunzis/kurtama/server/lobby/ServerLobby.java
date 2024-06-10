@@ -27,11 +27,11 @@ public class ServerLobby implements ILobby {
         return new LobbyDTO(id, name, users.stream().map(ServerUser::toDTO).toList(), chatID);
     }
 
-    public void joinUser(ServerUser user) {
+    void joinUser(ServerUser user) {
         users.add(user);
     }
 
-    public void leaveUser(ServerUser user) {
+    void leaveUser(ServerUser user) {
         users.removeIf(u -> u.getId().equals(user.getId()));
     }
 
