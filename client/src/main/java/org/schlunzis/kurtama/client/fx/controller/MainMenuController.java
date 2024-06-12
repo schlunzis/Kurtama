@@ -68,6 +68,15 @@ public class MainMenuController {
         );
     }
 
+    @FXML
+    private void searchLobbies() {
+        log.info("Searching for lobbies");
+        String search = lobbiesSearchField.getText();
+        if (search.isBlank())
+            lobbiesListView.setItems(sessionService.getLobbyList());
+        else
+            lobbiesListView.setItems(sessionService.getLobbyList().filtered(li -> li.lobbyName().contains(search)));
+    }
 
     @FXML
     private void logout() {
