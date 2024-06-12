@@ -1,11 +1,13 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.controlsfx.control.textfield.TextFields;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
@@ -25,6 +27,9 @@ public class MainMenuController {
 
     @FXML
     private ListView<LobbyInfo> lobbiesListView;
+
+    @FXML
+    private TextField lobbiesSearchField;
 
     @FXML
     private Button joinLobbyButton;
@@ -56,7 +61,13 @@ public class MainMenuController {
                 joinLobby();
         });
         joinLobbyButton.setDisable(true);
+
+        // whenever there is a change in the lobby list, update the auto-completion
+        sessionService.getLobbyList().addListener((ListChangeListener<? super LobbyInfo>) l ->
+                TextFields.bindAutoCompletion(lobbiesSearchField, sessionService.getLobbyList().stream().map(LobbyInfo::lobbyName).toList())
+        );
     }
+
 
     @FXML
     private void logout() {
