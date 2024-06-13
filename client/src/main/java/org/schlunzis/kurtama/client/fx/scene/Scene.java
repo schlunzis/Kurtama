@@ -17,10 +17,10 @@ import org.schlunzis.kurtama.client.fx.controller.RegisterController;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Scene {
 
-    LOGIN("Login", LoginController.class),
-    MAIN("Main Menu", MainMenuController.class),
-    REGISTER("Register", RegisterController.class),
-    LOBBY("Lobby", LobbyController.class);
+    LOGIN("Login", LoginController.class, "login.fxml"),
+    MAIN("Main Menu", MainMenuController.class, "main.fxml"),
+    REGISTER("Register", RegisterController.class, "register.fxml"),
+    LOBBY("Lobby", LobbyController.class, "lobby.fxml");
 
     /**
      * Contains the lookup key for the title of the scene.
@@ -30,5 +30,7 @@ public enum Scene {
      * Contains the controller class for the scene.
      */
     private final Class<?> controllerClass;
+
+    private final String fxml;
 
 }

@@ -7,12 +7,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.service.IChatService;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@FxmlView("chat.fxml")
 @Component
 @RequiredArgsConstructor
 public class ChatController {

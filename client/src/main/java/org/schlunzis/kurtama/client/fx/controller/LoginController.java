@@ -14,7 +14,6 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
@@ -32,7 +31,6 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 @Slf4j
-@FxmlView("login.fxml")
 @Component
 @RequiredArgsConstructor
 public class LoginController {
