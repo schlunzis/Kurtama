@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.rgielen.fxweaver.core.FxmlView;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.schlunzis.kurtama.client.service.ISessionService;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
-@FxmlView("main.fxml")
 @Component
 @RequiredArgsConstructor
 public class MainMenuController {
