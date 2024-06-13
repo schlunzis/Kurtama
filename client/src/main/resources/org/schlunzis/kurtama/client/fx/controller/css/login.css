@@ -1,4 +1,4 @@
-.root {
+.main-content {
     -fx-alignment: center;
     -fx-pref-height: 400;
     -fx-pref-width: 1000;
@@ -67,4 +67,9 @@ Button {
 
 .connect {
     -fx-alignment: center-left;
+}
+
+.version-label {
+    -fx-text-fill: k-textfield-focused;
+    -fx-padding: 5px;
 }

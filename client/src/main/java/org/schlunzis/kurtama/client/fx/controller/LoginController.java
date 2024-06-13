@@ -61,6 +61,8 @@ public class LoginController {
     private Region progressIndicator;
     @FXML
     private Label progressLabel;
+    @FXML
+    private Label versionLabel;
 
     private Rotate progressRotate;
     private Timeline progressTimeline;
@@ -115,6 +117,7 @@ public class LoginController {
         applyConnectionStatus(sessionService.getConnectionStatus().getValue());
         serverField.setText(userSettings.getString(Setting.HOST));
         portField.setText(String.valueOf(userSettings.getInt(Setting.PORT)));
+        setVersion();
     }
 
     private void devLogin() {
@@ -149,6 +152,15 @@ public class LoginController {
         progressIndicator.getStyleClass().clear();
         progressIndicator.getStyleClass().addAll("progress-indicator", indicatorClass);
         progressLabel.setText(text);
+    }
+
+    private void setVersion() {
+        String version = getClass().getPackage().getImplementationVersion();
+        if (version != null && !version.isEmpty())
+            version = "v" + version;
+        else
+            version = "unknown version";
+        versionLabel.setText(version);
     }
 
 }
