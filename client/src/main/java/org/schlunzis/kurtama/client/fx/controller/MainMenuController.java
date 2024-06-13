@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.LobbyInfo;
@@ -15,6 +16,8 @@ import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @FxmlView("main.fxml")
@@ -63,9 +66,16 @@ public class MainMenuController {
         joinLobbyButton.setDisable(true);
 
         // whenever there is a change in the lobby list, update the auto-completion
-        sessionService.getLobbyList().addListener((ListChangeListener<? super LobbyInfo>) l ->
-                TextFields.bindAutoCompletion(lobbiesSearchField, sessionService.getLobbyList().stream().map(LobbyInfo::lobbyName).toList())
-        );
+        AtomicReference<AutoCompletionBinding<String>> bindingRef = new AtomicReference<>();
+        sessionService.getLobbyList().addListener((ListChangeListener<? super LobbyInfo>) l -> {
+            // simultaneously receiving might cause issues, thus synchronize (maybe a lock would be better?)
+            synchronized (bindingRef) {
+                AutoCompletionBinding<String> binding = bindingRef.get();
+                if (binding != null)
+                    binding.dispose();
+                bindingRef.set(TextFields.bindAutoCompletion(lobbiesSearchField, sessionService.getLobbyList().stream().map(LobbyInfo::lobbyName).toList()));
+            }
+        });
     }
 
     @FXML
