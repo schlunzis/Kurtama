@@ -73,7 +73,9 @@ public class MainMenuController {
                 AutoCompletionBinding<String> binding = bindingRef.get();
                 if (binding != null)
                     binding.dispose();
-                bindingRef.set(TextFields.bindAutoCompletion(lobbiesSearchField, sessionService.getLobbyList().stream().map(LobbyInfo::lobbyName).toList()));
+                binding = TextFields.bindAutoCompletion(lobbiesSearchField, sessionService.getLobbyList().stream().map(LobbyInfo::lobbyName).toList());
+                binding.setOnAutoCompleted(e -> searchLobbies());
+                bindingRef.set(binding);
             }
         });
     }

@@ -42,8 +42,8 @@
 
     <VBox styleClass="lobbiesVBox" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="3">
         <HBox styleClass="lobby-search">
-            <TextField fx:id="lobbiesSearchField" onAction="#searchLobbies" promptText="Search Lobbies"
-                       HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="lobbiesSearchField" onKeyReleased="#searchLobbies" onAction="#searchLobbies"
+                       promptText="Search Lobbies" HBox.hgrow="ALWAYS"/>
             <Button mnemonicParsing="false" onAction="#searchLobbies">
                 <graphic>
                     <Region styleClass="search-button-shape"/>
