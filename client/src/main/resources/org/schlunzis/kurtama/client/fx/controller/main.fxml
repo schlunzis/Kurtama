@@ -25,24 +25,24 @@
 
     <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
         <HBox VBox.vgrow="ALWAYS" styleClass="menu-buttons">
-            <Button mnemonicParsing="false" onAction="#settings" text="Settings"/>
-            <Button mnemonicParsing="false" onAction="#logout" text="Logout"/>
-            <Button mnemonicParsing="false" onAction="#logout" text="Quit"/>
+            <Button mnemonicParsing="false" onAction="#settings" text="%main.menu.button.settings"/>
+            <Button mnemonicParsing="false" onAction="#logout" text="%main.menu.button.logout"/>
+            <Button mnemonicParsing="false" onAction="#logout" text="%main.menu.button.quit"/>
         </HBox>
         <GridPane styleClass="lobbyDialog">
-            <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="%main.lobby.label.name" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <TextField fx:id="lobbyNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="%main.lobby.label.password" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <PasswordField fx:id="lobbyPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="1"
                            onAction="#createLobby"/>
             <Button mnemonicParsing="false" onAction="#createLobby" GridPane.columnIndex="0" GridPane.rowIndex="2"
-                    GridPane.columnSpan="2" text="CreateLobby"/>
+                    GridPane.columnSpan="2" text="%main.lobby.button.create"/>
         </GridPane>
     </VBox>
 
     <VBox styleClass="lobbiesVBox" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="3">
         <HBox styleClass="lobby-search">
-            <TextField fx:id="lobbiesSearchFiled" promptText="Search Lobbies" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="lobbiesSearchFiled" promptText="%main.lobby.prompt.searchField" HBox.hgrow="ALWAYS"/>
             <Button fx:id="joinLobbyButton" mnemonicParsing="false">
                 <graphic>
                     <Region styleClass="search-button-shape"/>
@@ -50,8 +50,8 @@
             </Button>
         </HBox>
         <ListView fx:id="lobbiesListView" VBox.vgrow="ALWAYS"/>
-        <Button styleClass="join-button" mnemonicParsing="false" onAction="#joinLobby" text="Join Lobby"
-                HBox.hgrow="ALWAYS"/>
+        <Button styleClass="join-button" mnemonicParsing="false" onAction="#joinLobby" text="%main.lobby.button.join"/>
+        HBox.hgrow="ALWAYS"/>
     </VBox>
 
 </GridPane>
