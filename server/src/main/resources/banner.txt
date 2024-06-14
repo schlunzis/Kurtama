@@ -6,5 +6,5 @@
 |  ( \ \ | |   | || (\ (      | |   | (   ) || |   | || (   ) |
 |  /  \ \| (___) || ) \ \__   | |   | )   ( || )   ( || )   ( |
 |_/    \/(_______)|/   \__/   )_(   |/     \||/     \||/     \|
-${application.title} ${application.formatted-version}
+${application.title}${application.formatted-version}
 Powered by Spring Boot ${spring-boot.version}
