@@ -66,15 +66,11 @@ public class MainMenuController {
         // whenever there is a change in the lobby list, update the auto-completion
         AtomicReference<AutoCompletionBinding<String>> bindingRef = new AtomicReference<>();
         sessionService.getLobbyList().addListener((ListChangeListener<? super LobbyInfo>) l -> {
-            // simultaneously receiving might cause issues, thus synchronize (maybe a lock would be better?)
-            synchronized (bindingRef) {
-                AutoCompletionBinding<String> binding = bindingRef.get();
-                if (binding != null)
-                    binding.dispose();
-                binding = TextFields.bindAutoCompletion(lobbiesSearchField, sessionService.getLobbyList().stream().map(LobbyInfo::lobbyName).toList());
-                binding.setOnAutoCompleted(e -> searchLobbies());
-                bindingRef.set(binding);
-            }
+            AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(lobbiesSearchField, sessionService.getLobbyList().stream().map(LobbyInfo::lobbyName).toList());
+            binding.setOnAutoCompleted(e -> searchLobbies());
+            binding = bindingRef.getAndSet(binding);
+            if (binding != null)
+                binding.dispose();
         });
     }
 
