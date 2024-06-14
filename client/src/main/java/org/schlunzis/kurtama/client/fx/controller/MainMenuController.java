@@ -25,6 +25,9 @@ public class MainMenuController {
     private ListView<LobbyInfo> lobbiesListView;
 
     @FXML
+    private TextField lobbiesSearchField;
+
+    @FXML
     private Button joinLobbyButton;
     @FXML
     private TextField lobbyNameField;
@@ -54,6 +57,17 @@ public class MainMenuController {
                 joinLobby();
         });
         joinLobbyButton.setDisable(true);
+
+    }
+
+    @FXML
+    private void searchLobbies() {
+        log.debug("Searching for lobbies");
+        String search = lobbiesSearchField.getText();
+        if (search.isBlank())
+            lobbiesListView.setItems(sessionService.getLobbyList());
+        else
+            lobbiesListView.setItems(sessionService.getLobbyList().filtered(li -> li.lobbyName().contains(search)));
     }
 
     @FXML

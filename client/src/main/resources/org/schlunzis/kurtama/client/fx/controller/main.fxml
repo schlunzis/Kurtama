@@ -42,16 +42,17 @@
 
     <VBox styleClass="lobbiesVBox" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="3">
         <HBox styleClass="lobby-search">
-            <TextField fx:id="lobbiesSearchFiled" promptText="%main.lobby.prompt.searchField" HBox.hgrow="ALWAYS"/>
-            <Button fx:id="joinLobbyButton" mnemonicParsing="false">
+            <TextField fx:id="lobbiesSearchField" onKeyReleased="#searchLobbies" onAction="#searchLobbies"
+                       promptText="%main.lobby.prompt.searchField" HBox.hgrow="ALWAYS"/>
+            <Button mnemonicParsing="false" onAction="#searchLobbies">
                 <graphic>
                     <Region styleClass="search-button-shape"/>
                 </graphic>
             </Button>
         </HBox>
         <ListView fx:id="lobbiesListView" VBox.vgrow="ALWAYS"/>
-        <Button styleClass="join-button" mnemonicParsing="false" onAction="#joinLobby" text="%main.lobby.button.join"
-                HBox.hgrow="ALWAYS"/>
+        <Button fx:id="joinLobbyButton" styleClass="join-button" mnemonicParsing="false" onAction="#joinLobby"
+                text="%main.lobby.button.join" HBox.hgrow="ALWAYS"/>
     </VBox>
 
 </GridPane>
