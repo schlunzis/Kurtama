@@ -22,7 +22,7 @@
     </rowConstraints>
 
     <ListView fx:id="userListView" focusTraversable="false" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-    <Button mnemonicParsing="false" onAction="#leaveLobby" text="Leave Lobby" GridPane.columnIndex="0"
+    <Button mnemonicParsing="false" onAction="#leaveLobby" text="%lobby.room.button.leave" GridPane.columnIndex="0"
             GridPane.rowIndex="1"/>
     <fx:include source="chat.fxml" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
 

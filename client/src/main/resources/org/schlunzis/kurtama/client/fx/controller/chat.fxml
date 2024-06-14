@@ -23,6 +23,6 @@
         </HBox>
     </VBox>
 
-    <Button fx:id="scrollDownButton" text="Scroll Down" styleClass="secondary_button" mnemonicParsing="false"
+    <Button fx:id="scrollDownButton" text="%chat.button.scroll" styleClass="secondary_button" mnemonicParsing="false"
             onAction="#onScrollDownButton"/>
 </AnchorPane>
