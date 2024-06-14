@@ -44,8 +44,7 @@ public class StageManager {
                 log.error("Error loading {}", event.scene().getFxml(), e);
             }
 
-            // TODO: read the correct title string for each the current locale
-            stage.setTitle("Kurtama-" + event.scene().getTitleKey());
+            stage.setTitle("Kurtama - " + I18nUtils.i18n("title." + event.scene().getTitleKey()));
             Scene scene = new Scene(parent);
             stage.setScene(scene);
             stage.show();

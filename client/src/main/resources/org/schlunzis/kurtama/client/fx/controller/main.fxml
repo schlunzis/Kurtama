@@ -50,8 +50,8 @@
             </Button>
         </HBox>
         <ListView fx:id="lobbiesListView" VBox.vgrow="ALWAYS"/>
-        <Button styleClass="join-button" mnemonicParsing="false" onAction="#joinLobby" text="%main.lobby.button.join"/>
-        HBox.hgrow="ALWAYS"/>
+        <Button styleClass="join-button" mnemonicParsing="false" onAction="#joinLobby" text="%main.lobby.button.join"
+                HBox.hgrow="ALWAYS"/>
     </VBox>
 
 </GridPane>
