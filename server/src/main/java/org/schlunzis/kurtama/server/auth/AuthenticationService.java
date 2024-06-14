@@ -3,6 +3,8 @@ package org.schlunzis.kurtama.server.auth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.LobbyInfo;
+import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionRequest;
+import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
@@ -98,6 +100,20 @@ class AuthenticationService implements IAuthenticationService {
     @EventListener
     public void onForcedLogoutEvent(ForcedLogoutEvent forcedLogoutEvent) {
         logout(forcedLogoutEvent.session());
+    }
+
+    @EventListener
+    public void onDeletionRequest(ClientMessageContext<DeletionRequest> cmc) {
+        log.debug("Received DeletionRequest");
+        if (userStore.deleteUser(cmc.getUser())) {
+            log.info("User {} deleted", cmc.getUser().getEmail());
+            userSessionMap.remove(cmc.getSession());
+            cmc.respond(new DeletionSuccessfulResponse());
+        } else {
+            log.info("User {} could not be deleted", cmc.getUser().getEmail());
+            cmc.respond(new DeletionSuccessfulResponse());
+        }
+        cmc.close();
     }
 
     // ################################################

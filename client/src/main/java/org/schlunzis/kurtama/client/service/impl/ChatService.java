@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.schlunzis.kurtama.client.service.IChatService;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.IUser;
+import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.chat.ClientChatMessage;
 import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
@@ -60,6 +61,12 @@ public class ChatService implements IChatService {
         if (message.getChatID().equals(currentChatID)) {
             Platform.runLater(() -> chatMessages.add(message.getNickname() + ": " + message.getMessage()));
         }
+    }
+
+    @EventListener
+    public void onDeletionSuccessfulResponse(DeletionSuccessfulResponse ignored) {
+        currentChatID = GLOBAL_CHAT_ID;
+        Platform.runLater(chatMessages::clear);
     }
 
     public void sendMessage(String nickname, String message) {
