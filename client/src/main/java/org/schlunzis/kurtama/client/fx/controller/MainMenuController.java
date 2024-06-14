@@ -1,10 +1,11 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.kurtama.client.fx.scene.Scene;
+import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
@@ -77,8 +78,8 @@ public class MainMenuController {
     }
 
     @FXML
-    private void settings(ActionEvent actionEvent) {
-        // TODO implement
+    private void settings() {
+        eventBus.publishEvent(new SceneChangeEvent(Scene.SETTINGS));
     }
 
     @FXML
