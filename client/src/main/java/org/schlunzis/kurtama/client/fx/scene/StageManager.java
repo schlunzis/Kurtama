@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.events.ClientReadyEvent;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
+import org.schlunzis.kurtama.client.util.I18nUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ public class StageManager {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(event.scene().getControllerClass().getResource(event.scene().getFxml()));
             loader.setControllerFactory(context::getBean);
+            loader.setResources(I18nUtils.getBundle());
             Parent parent = null;
             try {
                 parent = loader.load();

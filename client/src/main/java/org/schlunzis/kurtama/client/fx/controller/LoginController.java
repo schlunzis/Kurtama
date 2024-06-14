@@ -5,10 +5,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -21,6 +20,7 @@ import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
 import org.schlunzis.kurtama.client.settings.Setting;
+import org.schlunzis.kurtama.client.util.I18nUtils;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,6 +29,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Locale;
+
+import static org.schlunzis.kurtama.client.util.I18nUtils.createBinding;
 
 @Slf4j
 @Component
@@ -46,15 +49,35 @@ public class LoginController {
     private final ISessionService sessionService;
     private final IUserSettings userSettings;
 
+    // LOGIN FIELDS
+    @FXML
+    private Label emailLabel;
     @FXML
     private TextField emailField;
     @FXML
+    private Label passwordLabel;
+    @FXML
     private PasswordField passwordField;
+    @FXML
+    private Button registerButton;
+    @FXML
+    private Button loginButton;
 
+    @FXML
+    private ComboBox<Locale> languageSelector;
+
+
+    // SERVER CONNECTION FIELDS
+    @FXML
+    private Label serverLabel;
     @FXML
     private TextField serverField;
     @FXML
+    private Label portLabel;
+    @FXML
     private TextField portField;
+    @FXML
+    private Button connectButton;
     @FXML
     private Region progressIndicator;
     @FXML
@@ -113,6 +136,40 @@ public class LoginController {
         applyConnectionStatus(sessionService.getConnectionStatus().getValue());
         serverField.setText(userSettings.getString(Setting.HOST));
         portField.setText(String.valueOf(userSettings.getInt(Setting.PORT)));
+
+        languageSelector.setItems(FXCollections.observableList(I18nUtils.getSUPPORTED_LOCALES()));
+        languageSelector.setCellFactory(l -> createLocaleCell());
+        languageSelector.setButtonCell(createLocaleCell());
+        languageSelector.setOnAction(event ->
+                I18nUtils.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
+        languageSelector.getSelectionModel().select(I18nUtils.getLocale());
+        createBindings();
+    }
+
+    private void createBindings() {
+        emailLabel.textProperty().bind(createBinding("login.label.email"));
+        passwordLabel.textProperty().bind(createBinding("login.label.password"));
+        registerButton.textProperty().bind(createBinding("login.button.register"));
+        loginButton.textProperty().bind(createBinding("login.button.login"));
+
+        serverLabel.textProperty().bind(createBinding("login.label.server"));
+        portLabel.textProperty().bind(createBinding("login.label.port"));
+        connectButton.textProperty().bind(createBinding("login.button.connect"));
+
+    }
+
+    private ListCell<Locale> createLocaleCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(Locale item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getDisplayName());
+                }
+            }
+        };
     }
 
     private void devLogin() {
