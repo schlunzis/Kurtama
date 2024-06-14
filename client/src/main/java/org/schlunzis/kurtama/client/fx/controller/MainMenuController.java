@@ -1,13 +1,10 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
-import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
@@ -15,8 +12,6 @@ import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Component
@@ -63,20 +58,11 @@ public class MainMenuController {
         });
         joinLobbyButton.setDisable(true);
 
-        // whenever there is a change in the lobby list, update the auto-completion
-        AtomicReference<AutoCompletionBinding<String>> bindingRef = new AtomicReference<>();
-        sessionService.getLobbyList().addListener((ListChangeListener<? super LobbyInfo>) l -> {
-            AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(lobbiesSearchField, sessionService.getLobbyList().stream().map(LobbyInfo::lobbyName).toList());
-            binding.setOnAutoCompleted(e -> searchLobbies());
-            binding = bindingRef.getAndSet(binding);
-            if (binding != null)
-                binding.dispose();
-        });
     }
 
     @FXML
     private void searchLobbies() {
-        log.info("Searching for lobbies");
+        log.debug("Searching for lobbies");
         String search = lobbiesSearchField.getText();
         if (search.isBlank())
             lobbiesListView.setItems(sessionService.getLobbyList());
