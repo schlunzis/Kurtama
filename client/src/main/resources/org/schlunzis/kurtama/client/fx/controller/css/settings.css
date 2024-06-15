@@ -1,0 +1,15 @@
+.main-content {
+    -fx-alignment: center;
+    -fx-pref-height: 200;
+    -fx-pref-width: 500;
+}
+
+GridPane {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+    -fx-alignment: center;
+}
+
+Button {
+    -fx-max-width: 99999px; /* Full width */
+}
