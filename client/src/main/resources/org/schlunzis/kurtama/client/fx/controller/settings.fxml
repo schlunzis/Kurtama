@@ -11,7 +11,8 @@
     </stylesheets>
 
     <Button text="Delete Account" GridPane.columnIndex="0" GridPane.rowIndex="0"
-            GridPane.columnSpan="2" onAction="#deleteAccount"/>
+            GridPane.columnSpan="2" onAction="#deleteAccount"
+            tooltip="Delete the account and all the data that is associated with it"/>
     <Button text="Back" GridPane.columnIndex="0" GridPane.rowIndex="1"
-            GridPane.columnSpan="2" onAction="#back"/>
+            GridPane.columnSpan="2" onAction="#back" tooltip="Get back to the main menu"/>
 </GridPane>
