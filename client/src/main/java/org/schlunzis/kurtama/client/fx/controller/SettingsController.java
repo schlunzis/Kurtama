@@ -1,6 +1,7 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.TextInputDialog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
@@ -25,10 +26,16 @@ public class SettingsController {
 
     @FXML
     private void deleteAccount() {
-        // TODO: require confirmation / password
-        log.info("Delete account");
-        eventBus.publishEvent(new DeletionRequest());
+        TextInputDialog confirmDialog = new TextInputDialog();
+        confirmDialog.setTitle("Delete account");
+        confirmDialog.setHeaderText("Are you sure you want to delete your account?");
+        confirmDialog.setContentText("Please enter your password to confirm:");
+        confirmDialog.showAndWait().ifPresent(password -> {
+            log.info("Account deletion confirmed");
+            eventBus.publishEvent(new DeletionRequest(password));
+        });
     }
+
 
     @FXML
     private void back() {
