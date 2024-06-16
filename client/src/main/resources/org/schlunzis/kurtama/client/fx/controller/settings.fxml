@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+          fx:controller="org.schlunzis.kurtama.client.fx.controller.SettingsController" styleClass="main-content">
+    <stylesheets>
+        <URL value="@css/style.css"/>
+        <URL value="@css/settings.css"/>
+    </stylesheets>
+
+    <Button text="%settings.button.delete" GridPane.columnIndex="0" GridPane.rowIndex="0"
+            GridPane.columnSpan="2" onAction="#deleteAccount"/>
+    <Button text="%settings.button.back" GridPane.columnIndex="0" GridPane.rowIndex="1"
+            GridPane.columnSpan="2" onAction="#back"/>
+</GridPane>

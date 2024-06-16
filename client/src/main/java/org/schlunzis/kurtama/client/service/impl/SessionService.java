@@ -10,6 +10,7 @@ import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.IUser;
 import org.schlunzis.kurtama.common.LobbyInfo;
+import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LobbyListInfoMessage;
@@ -51,6 +52,11 @@ public class SessionService implements ISessionService {
     @EventListener
     void onConnectionStatus(ConnectionStatusEvent event) {
         Platform.runLater(() -> connectionStatus.setValue(event.status()));
+    }
+
+    @EventListener
+    public void onDeletionSuccessfulResponse(DeletionSuccessfulResponse ignored) {
+        currentUser = Optional.empty();
     }
 
 }

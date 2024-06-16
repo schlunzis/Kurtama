@@ -3,6 +3,9 @@ package org.schlunzis.kurtama.server.auth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.LobbyInfo;
+import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionFailedResponse;
+import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionRequest;
+import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
@@ -98,6 +101,33 @@ class AuthenticationService implements IAuthenticationService {
     @EventListener
     public void onForcedLogoutEvent(ForcedLogoutEvent forcedLogoutEvent) {
         logout(forcedLogoutEvent.session());
+    }
+
+    @EventListener
+    public void onDeletionRequest(ClientMessageContext<DeletionRequest> cmc) {
+        log.debug("Received DeletionRequest");
+        DeletionRequest deletionRequest = cmc.getClientMessage();
+        userStore.getUser(cmc.getUser().getEmail()).ifPresentOrElse(user -> {
+            if (passwordEncoder.matches(deletionRequest.getPassword(), user.getPasswordHash())) {
+                if (userStore.deleteUser(cmc.getUser())) {
+                    log.info("User {} deleted", cmc.getUser().getEmail());
+                    userSessionMap.remove(cmc.getSession());
+                    cmc.respond(new DeletionSuccessfulResponse());
+                } else {
+                    log.info("Failed to delete user {} due to a database error", cmc.getUser().getEmail());
+                    cmc.respond(new DeletionFailedResponse());
+                }
+            } else {
+                log.info("User {} tried to delete account with wrong password", cmc.getUser().getEmail());
+                cmc.respond(new DeletionFailedResponse());
+            }
+            cmc.close();
+        }, () -> {
+            // user not found
+            log.info("Failed to find user '{}' for deletion", cmc.getUser().getEmail());
+            cmc.respond(new DeletionFailedResponse());
+            cmc.close();
+        });
     }
 
     // ################################################

@@ -170,7 +170,7 @@ public class LoginController {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item.getDisplayName());
+                    setText(item.getDisplayName(item));
                 }
             }
         };
