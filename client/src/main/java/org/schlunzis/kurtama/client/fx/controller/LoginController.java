@@ -20,7 +20,7 @@ import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
 import org.schlunzis.kurtama.client.settings.Setting;
-import org.schlunzis.kurtama.client.util.I18nUtils;
+import org.schlunzis.kurtama.client.util.I18n;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -31,12 +31,13 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static org.schlunzis.kurtama.client.util.I18nUtils.createBinding;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class LoginController {
+
+    private final I18n i18n;
 
     public static final String NOT_CONNECTED_STYLE = "not_connected";
     public static final String CONNECTED_STYLE = "connected";
@@ -141,24 +142,23 @@ public class LoginController {
 
         setVersion();
 
-        languageSelector.setItems(FXCollections.observableList(I18nUtils.getSUPPORTED_LOCALES()));
+        languageSelector.setItems(FXCollections.observableList(i18n.getSUPPORTED_LOCALES()));
         languageSelector.setCellFactory(l -> createLocaleCell());
         languageSelector.setButtonCell(createLocaleCell());
-        languageSelector.setOnAction(event ->
-                I18nUtils.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
-        languageSelector.getSelectionModel().select(I18nUtils.getLocale());
+        languageSelector.setOnAction(event -> i18n.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
+        languageSelector.getSelectionModel().select(i18n.getLocale());
         createBindings();
     }
 
     private void createBindings() {
-        emailLabel.textProperty().bind(createBinding("login.label.email"));
-        passwordLabel.textProperty().bind(createBinding("login.label.password"));
-        registerButton.textProperty().bind(createBinding("login.button.register"));
-        loginButton.textProperty().bind(createBinding("login.button.login"));
+        emailLabel.textProperty().bind(i18n.createBinding("login.label.email"));
+        passwordLabel.textProperty().bind(i18n.createBinding("login.label.password"));
+        registerButton.textProperty().bind(i18n.createBinding("login.button.register"));
+        loginButton.textProperty().bind(i18n.createBinding("login.button.login"));
 
-        serverLabel.textProperty().bind(createBinding("login.label.server"));
-        portLabel.textProperty().bind(createBinding("login.label.port"));
-        connectButton.textProperty().bind(createBinding("login.button.connect"));
+        serverLabel.textProperty().bind(i18n.createBinding("login.label.server"));
+        portLabel.textProperty().bind(i18n.createBinding("login.label.port"));
+        connectButton.textProperty().bind(i18n.createBinding("login.button.connect"));
 
     }
 
