@@ -22,9 +22,11 @@ public class ServerLobby implements ILobby {
     private String name;
     @Setter
     private UUID chatID;
+    @Setter
+    private ServerUser owner;
 
     public LobbyDTO toDTO() {
-        return new LobbyDTO(id, name, users.stream().map(ServerUser::toDTO).toList(), chatID);
+        return new LobbyDTO(id, name, users.stream().map(ServerUser::toDTO).toList(), chatID, owner.toDTO());
     }
 
     void joinUser(ServerUser user) {
@@ -33,6 +35,9 @@ public class ServerLobby implements ILobby {
 
     void leaveUser(ServerUser user) {
         users.removeIf(u -> u.getId().equals(user.getId()));
+        if (owner.equals(user)) {
+            owner = users.stream().findFirst().orElse(null); // can only be null if no users are left
+        }
     }
 
     public LobbyInfo getInfo() {

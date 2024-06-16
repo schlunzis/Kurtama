@@ -16,6 +16,7 @@ public class LobbyDTO implements ILobby {
     private String name;
     private Collection<UserDTO> users;
     private UUID chatID;
+    private UserDTO owner;
 
 }
 

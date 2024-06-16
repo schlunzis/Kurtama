@@ -67,7 +67,8 @@ public class LobbyService {
         try {
             lobbyManagement.leaveLobby(request.lobbyID(), cmc.getUser());
             cmc.respond(new LeaveLobbySuccessfullyResponse());
-            var userLeftLobbyMessage = new UserLeftLobbyMessage(cmc.getUser().toDTO());
+            ServerLobby lobby = lobbyManagement.getLobby(request.lobbyID());
+            var userLeftLobbyMessage = new UserLeftLobbyMessage(lobby.toDTO());
             informUsersInLobby(userLeftLobbyMessage, request.lobbyID(), cmc);
             updateLobbyListInfo(cmc);
         } catch (LobbyNotFoundException e) {

@@ -31,7 +31,7 @@ public class LobbyService implements ILobbyService {
         currentLobby = Optional.of(csr.lobby());
         Platform.runLater(() -> {
                     lobbyUsersList.clear();
-                    csr.lobby().getUsers().forEach(u -> lobbyUsersList.add(u.getUsername()));
+                    csr.lobby().getUsers().forEach(u -> lobbyUsersList.add(u.getUsername() + (u.equals(csr.lobby().getOwner()) ? " (Owner)" : "")));
                 }
         );
     }
@@ -41,7 +41,7 @@ public class LobbyService implements ILobbyService {
         currentLobby = Optional.of(jsr.lobby());
         Platform.runLater(() -> {
                     lobbyUsersList.clear();
-                    jsr.lobby().getUsers().forEach(u -> lobbyUsersList.add(u.getUsername()));
+                    jsr.lobby().getUsers().forEach(u -> lobbyUsersList.add(u.getUsername() + (u.equals(jsr.lobby().getOwner()) ? " (Owner)" : "")));
                 }
         );
     }
@@ -59,7 +59,11 @@ public class LobbyService implements ILobbyService {
 
     @EventListener
     void onUserLeftLobbyMessage(UserLeftLobbyMessage ullm) {
-        Platform.runLater(() -> lobbyUsersList.remove(ullm.leavingLobbyMember().getUsername()));
+        Platform.runLater(() -> {
+            lobbyUsersList.clear();
+            ullm.lobby().getUsers().forEach(u ->
+                    lobbyUsersList.add(u.getUsername() + (u.equals(ullm.lobby().getOwner()) ? " (Owner)" : "")));
+        });
     }
 
     @EventListener

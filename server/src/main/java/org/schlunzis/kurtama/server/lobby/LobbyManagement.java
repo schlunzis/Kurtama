@@ -27,6 +27,7 @@ public class LobbyManagement {
 
         Chat chat = chatManagement.createLobbyChat(lobby.getId());
         lobby.setChatID(chat.getId());
+        lobby.setOwner(creator);
         joinLobby(lobby, creator);
         return lobby;
     }
