@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.schlunzis.kurtama.client.service.ILobbyService;
 import org.schlunzis.kurtama.common.ILobby;
+import org.schlunzis.kurtama.common.IUser;
 import org.schlunzis.kurtama.common.messages.lobby.client.LeaveLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.server.*;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,27 +24,19 @@ public class LobbyService implements ILobbyService {
 
     private final ApplicationEventPublisher eventBus;
 
-    private final ObservableList<String> lobbyUsersList = FXCollections.observableList(new ArrayList<>());
+    private final ObservableList<IUser> lobbyUsersList = FXCollections.observableList(new ArrayList<>());
     private Optional<ILobby> currentLobby = Optional.empty();
 
     @EventListener
     public void onLobbyCreatedSuccessfullyResponse(LobbyCreatedSuccessfullyResponse csr) {
         currentLobby = Optional.of(csr.lobby());
-        Platform.runLater(() -> {
-                    lobbyUsersList.clear();
-                    csr.lobby().getUsers().forEach(u -> lobbyUsersList.add(u.getUsername() + (u.equals(csr.lobby().getOwner()) ? " (Owner)" : "")));
-                }
-        );
+        Platform.runLater(() -> lobbyUsersList.setAll(csr.lobby().getUsers()));
     }
 
     @EventListener
     public void onJoinLobbySuccessfullyResponse(JoinLobbySuccessfullyResponse jsr) {
         currentLobby = Optional.of(jsr.lobby());
-        Platform.runLater(() -> {
-                    lobbyUsersList.clear();
-                    jsr.lobby().getUsers().forEach(u -> lobbyUsersList.add(u.getUsername() + (u.equals(jsr.lobby().getOwner()) ? " (Owner)" : "")));
-                }
-        );
+        Platform.runLater(() -> lobbyUsersList.setAll(jsr.lobby().getUsers()));
     }
 
     @EventListener
@@ -59,16 +52,13 @@ public class LobbyService implements ILobbyService {
 
     @EventListener
     void onUserLeftLobbyMessage(UserLeftLobbyMessage ullm) {
-        Platform.runLater(() -> {
-            lobbyUsersList.clear();
-            ullm.lobby().getUsers().forEach(u ->
-                    lobbyUsersList.add(u.getUsername() + (u.equals(ullm.lobby().getOwner()) ? " (Owner)" : "")));
-        });
+        currentLobby = Optional.of(ullm.lobby());
+        Platform.runLater(() -> lobbyUsersList.setAll(ullm.lobby().getUsers()));
     }
 
     @EventListener
     void onUserJoinedLobbyMessage(UserJoinedLobbyMessage ujlm) {
-        Platform.runLater(() -> lobbyUsersList.add(ujlm.joiningLobbyMember().getUsername()));
+        Platform.runLater(() -> lobbyUsersList.add(ujlm.joiningLobbyMember()));
     }
 
 
