@@ -40,7 +40,7 @@ public class I18n {
      */
     private final ObjectProperty<ResourceBundle> bundle = new SimpleObjectProperty<>();
 
-    /*
+    /**
      * The supported locales.
      */
     @Getter
@@ -50,7 +50,7 @@ public class I18n {
      * The current locale.
      */
     @Getter
-    private Locale locale = Locale.GERMANY;
+    private Locale locale;
 
     @PostConstruct
     private void init() {
@@ -156,6 +156,7 @@ public class I18n {
             Locale fallback = SUPPORTED_LOCALES.getFirst();
             log.error("Falling back to default: {}", fallback.toLanguageTag());
             setLocale(fallback);
+            return;
         }
         this.locale = locale;
         userSettings.putString(Setting.LANGUAGE, locale.toLanguageTag());
