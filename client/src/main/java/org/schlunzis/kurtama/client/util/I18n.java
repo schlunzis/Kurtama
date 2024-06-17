@@ -13,12 +13,12 @@ import org.schlunzis.kurtama.client.settings.Setting;
 import org.schlunzis.kurtama.client.settings.UserSettings;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceResourceBundle;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Utility-Class to support internationalization.
@@ -42,10 +42,9 @@ public class I18n {
 
     /*
      * The supported locales.
-     * TODO: determine the supported locales from the language files at runtime.
      */
     @Getter
-    private final List<Locale> SUPPORTED_LOCALES = Arrays.asList(Locale.GERMANY, Locale.US);
+    private List<Locale> SUPPORTED_LOCALES = Collections.emptyList();
 
     /**
      * The current locale.
@@ -56,16 +55,50 @@ public class I18n {
     @PostConstruct
     private void init() {
         log.info("Initializing I18n");
+
+        // Extract all language files from the resources
+        List<Locale> supportedLocales = new ArrayList<>();
+        try {
+            ClassLoader cl = this.getClass().getClassLoader();
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
+            // note the underscore (_) in the pattern. This way we skip the default messages.properties file which is
+            // not language specific and causes trouble when trying to extract the locale from the filename
+            Resource[] resources = resolver.getResources("classpath*:/lang/messages_*.properties");
+            for (Resource resource : resources) {
+                String filename = resource.getFilename();
+                if (filename == null)
+                    continue;
+                Locale locale = extractLocaleFromFilename(filename);
+                supportedLocales.add(locale);
+            }
+        } catch (Exception e) {
+            log.error("Failed to load language files");
+        }
+        SUPPORTED_LOCALES = Collections.unmodifiableList(supportedLocales);
+        if (SUPPORTED_LOCALES.isEmpty()) {
+            log.error("Critical error: No language files found. Exiting");
+            System.exit(1);
+        }
+
         setLocale(Locale.forLanguageTag(userSettings.getString(Setting.LANGUAGE)));
     }
 
     /**
-     * ObjectProperty to allow bindings
+     * Extracts the locale from the filename of a language file.
+     * <p>
+     * The filename is expected to be in the format "messages_{languageTag}.properties".
+     * Example: "messages_de_DE.properties" -> {@link Locale.GERMANY}
      *
-     * @return The ObjectProperty
+     * @param filename the filename of the language file
+     * @return the locale extracted from the filename
      */
-    public ObjectProperty<ResourceBundle> bundleProperty() {
-        return bundle;
+    private Locale extractLocaleFromFilename(String filename) {
+        // Extract the part of the filename between "messages_" and ".properties"
+        String languageTag = filename.substring("messages_".length(), filename.indexOf(".properties"));
+        // Replace any underscores with hyphens to match the format expected by Locale.forLanguageTag
+        languageTag = languageTag.replace('_', '-');
+        // Convert the language tag to a Locale
+        return Locale.forLanguageTag(languageTag);
     }
 
     /**
@@ -73,7 +106,7 @@ public class I18n {
      *
      * @return the current ResourceBundle
      */
-    public ResourceBundle getBundle() {
+    public ResourceBundle getResourceBundle() {
         return bundle.get();
     }
 
@@ -96,7 +129,7 @@ public class I18n {
      * @return a binding for the provided key
      */
     public StringBinding createBinding(String key, final Object... args) {
-        return Bindings.createStringBinding(() -> i18n(key, args), bundleProperty());
+        return Bindings.createStringBinding(() -> i18n(key, args), bundle);
     }
 
     /**
@@ -118,9 +151,15 @@ public class I18n {
      * @param locale the new locale for the resourceBundle
      */
     public void setLocale(Locale locale) {
+        if (!SUPPORTED_LOCALES.contains(locale)) {
+            log.error("Unsupported locale: {}", locale.toLanguageTag());
+            Locale fallback = SUPPORTED_LOCALES.getFirst();
+            log.error("Falling back to default: {}", fallback.toLanguageTag());
+            setLocale(fallback);
+        }
         this.locale = locale;
         userSettings.putString(Setting.LANGUAGE, locale.toLanguageTag());
-        bundleProperty().set(new MessageSourceResourceBundle(messageSource, locale));
+        bundle.set(new MessageSourceResourceBundle(messageSource, locale));
         // NOTE: the following call to `bundle.get()' is necessary to trigger the update of the bindings
         // see https://github.com/schlunzis/Kurtama/pull/204#issuecomment-2173895002 for more information
         // TODO: find alternative for this whole dilemma

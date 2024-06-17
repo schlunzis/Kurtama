@@ -37,7 +37,7 @@ public class StageManager {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(event.scene().getControllerClass().getResource(event.scene().getFxml()));
             loader.setControllerFactory(context::getBean);
-            loader.setResources(i18n.getBundle());
+            loader.setResources(i18n.getResourceBundle());
             Parent parent = null;
             try {
                 parent = loader.load();
