@@ -120,8 +120,10 @@ public class I18n {
     public void setLocale(Locale locale) {
         this.locale = locale;
         userSettings.putString(Setting.LANGUAGE, locale.toLanguageTag());
-        // why do I need the following line in order to make the binding work?
-        log.info("old {}, new {}", bundle.get(), new MessageSourceResourceBundle(messageSource, locale));
         bundleProperty().set(new MessageSourceResourceBundle(messageSource, locale));
+        // NOTE: the following call to `bundle.get()' is necessary to trigger the update of the bindings
+        // see https://github.com/schlunzis/Kurtama/pull/204#issuecomment-2173895002 for more information
+        // TODO: find alternative for this whole dilemma
+        log.debug("Updated bundle to {}", bundle.get());
     }
 }
