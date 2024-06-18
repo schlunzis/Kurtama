@@ -65,11 +65,13 @@ public class LobbyService {
     public void onLeaveLobbyRequest(ClientMessageContext<LeaveLobbyRequest> cmc) {
         LeaveLobbyRequest request = cmc.getClientMessage();
         try {
-            lobbyManagement.leaveLobby(request.lobbyID(), cmc.getUser());
+            boolean lobbyEmpty = lobbyManagement.leaveLobby(request.lobbyID(), cmc.getUser());
             cmc.respond(new LeaveLobbySuccessfullyResponse());
-            ServerLobby lobby = lobbyManagement.getLobby(request.lobbyID());
-            var userLeftLobbyMessage = new UserLeftLobbyMessage(lobby.toDTO());
-            informUsersInLobby(userLeftLobbyMessage, request.lobbyID(), cmc);
+            if (!lobbyEmpty) {
+                ServerLobby lobby = lobbyManagement.getLobby(request.lobbyID());
+                var userLeftLobbyMessage = new UserLeftLobbyMessage(lobby.toDTO());
+                informUsersInLobby(userLeftLobbyMessage, request.lobbyID(), cmc);
+            }
             updateLobbyListInfo(cmc);
         } catch (LobbyNotFoundException e) {
             log.info("Could not leave lobby. Lobby not found.");

@@ -16,8 +16,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -116,7 +115,7 @@ class LobbyManagementTest {
         when(defaultLobby.getChatID()).thenReturn(defaultChatID);
         when(defaultLobby.getUsers()).thenReturn(Collections.singletonList(defaultUser));
 
-        lobbyManagement.leaveLobby(defaultLobbyID, defaultUser);
+        assertFalse(lobbyManagement.leaveLobby(defaultLobbyID, defaultUser));
 
         verify(defaultLobby).leaveUser(defaultUser);
         verify(chatManagement).removeChatter(defaultChatID, defaultUser);
@@ -131,7 +130,7 @@ class LobbyManagementTest {
         when(defaultLobby.getChatID()).thenReturn(defaultChatID);
         when(defaultLobby.getUsers()).thenReturn(Collections.emptyList());
 
-        lobbyManagement.leaveLobby(defaultLobbyID, defaultUser);
+        assertTrue(lobbyManagement.leaveLobby(defaultLobbyID, defaultUser));
 
         verify(defaultLobby).leaveUser(defaultUser);
         verify(chatManagement).removeChatter(defaultChatID, defaultUser);

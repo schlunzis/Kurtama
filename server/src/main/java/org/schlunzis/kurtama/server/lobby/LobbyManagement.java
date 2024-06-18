@@ -42,7 +42,15 @@ public class LobbyManagement {
         }
     }
 
-    public void leaveLobby(@NonNull UUID lobbyID, @NonNull ServerUser user) throws LobbyNotFoundException {
+    /**
+     * Leave a lobby. If the lobby is empty, it will be removed.
+     *
+     * @param lobbyID the id of the lobby
+     * @param user    the user that wants to leave the lobby
+     * @return true if the lobby was empty and was removed, false otherwise
+     * @throws LobbyNotFoundException if the lobby was not found
+     */
+    public boolean leaveLobby(@NonNull UUID lobbyID, @NonNull ServerUser user) throws LobbyNotFoundException {
         Optional<ServerLobby> lobby = lobbyStore.get(lobbyID);
         if (lobby.isPresent()) {
             lobby.get().leaveUser(user);
@@ -52,10 +60,12 @@ public class LobbyManagement {
                 lobbyStore.remove(lobbyID);
                 chatManagement.removeLobbyChat(lobbyID);
                 log.info("Lobby {} was empty and was removed.", lobbyID);
+                return true;
             }
         } else {
             throw new LobbyNotFoundException();
         }
+        return false;
     }
 
     public ServerLobby getLobby(UUID lobbyID) throws LobbyNotFoundException {
