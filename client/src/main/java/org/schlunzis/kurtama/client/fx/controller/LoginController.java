@@ -23,6 +23,7 @@ import org.schlunzis.kurtama.client.settings.Setting;
 import org.schlunzis.kurtama.client.util.I18n;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
+import org.schlunzis.zis.fx.bindings.I18nBinding;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
@@ -37,14 +38,13 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final I18n i18n;
-
     public static final String NOT_CONNECTED_STYLE = "not_connected";
     public static final String CONNECTED_STYLE = "connected";
     public static final String CONNECTING_STYLE = "connecting";
     public static final String FAILED_STYLE = "failed";
     private static final int PROGRESS_ICON_SIZE = 30;
 
+    private final I18n i18n;
     private final ApplicationEventPublisher eventBus;
     private final Environment environment;
     private final ISessionService sessionService;
@@ -52,7 +52,8 @@ public class LoginController {
 
     // LOGIN FIELDS
     @FXML
-    private Label emailLabel;
+    @I18nBinding("login.label.mail")
+    Label emailLabel;
     @FXML
     private TextField emailField;
     @FXML
@@ -148,10 +149,10 @@ public class LoginController {
         languageSelector.setOnAction(event -> i18n.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
         languageSelector.getSelectionModel().select(i18n.getLocale());
         createBindings();
+        LoginControllerI18n.i18n(i18n, this);
     }
 
     private void createBindings() {
-        emailLabel.textProperty().bind(i18n.createBinding("login.label.email"));
         passwordLabel.textProperty().bind(i18n.createBinding("login.label.password"));
         registerButton.textProperty().bind(i18n.createBinding("login.button.register"));
         loginButton.textProperty().bind(i18n.createBinding("login.button.login"));

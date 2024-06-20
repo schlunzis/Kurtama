@@ -12,6 +12,7 @@
     <url>https://github.com/schlunzis</url>
 
     <modules>
+        <module>zis-fx</module>
         <module>common</module>
         <module>client</module>
         <module>server</module>
@@ -127,6 +128,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -148,6 +150,10 @@
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.schlunzis.kurtama</groupId>
+                            <artifactId>bindings</artifactId>
                         </exclude>
                     </excludes>
                 </configuration>
