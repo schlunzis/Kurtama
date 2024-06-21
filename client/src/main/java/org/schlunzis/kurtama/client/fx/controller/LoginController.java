@@ -52,18 +52,21 @@ public class LoginController {
 
     // LOGIN FIELDS
     @FXML
-    @I18nBinding("login.label.mail")
+    @I18nBinding("login.label.email")
     Label emailLabel;
     @FXML
     private TextField emailField;
     @FXML
-    private Label passwordLabel;
+    @I18nBinding("login.label.password")
+    Label passwordLabel;
     @FXML
     private PasswordField passwordField;
     @FXML
-    private Button registerButton;
+    @I18nBinding("login.button.register")
+    Button registerButton;
     @FXML
-    private Button loginButton;
+    @I18nBinding("login.button.login")
+    Button loginButton;
 
     @FXML
     private ComboBox<Locale> languageSelector;
@@ -71,15 +74,18 @@ public class LoginController {
 
     // SERVER CONNECTION FIELDS
     @FXML
-    private Label serverLabel;
+    @I18nBinding("login.label.server")
+    Label serverLabel;
     @FXML
     private TextField serverField;
     @FXML
-    private Label portLabel;
+    @I18nBinding("login.label.port")
+    Label portLabel;
     @FXML
     private TextField portField;
     @FXML
-    private Button connectButton;
+    @I18nBinding("login.button.connect")
+    Button connectButton;
     @FXML
     private Region progressIndicator;
     @FXML
@@ -148,19 +154,7 @@ public class LoginController {
         languageSelector.setButtonCell(createLocaleCell());
         languageSelector.setOnAction(event -> i18n.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
         languageSelector.getSelectionModel().select(i18n.getLocale());
-        createBindings();
         LoginControllerI18n.i18n(i18n, this);
-    }
-
-    private void createBindings() {
-        passwordLabel.textProperty().bind(i18n.createBinding("login.label.password"));
-        registerButton.textProperty().bind(i18n.createBinding("login.button.register"));
-        loginButton.textProperty().bind(i18n.createBinding("login.button.login"));
-
-        serverLabel.textProperty().bind(i18n.createBinding("login.label.server"));
-        portLabel.textProperty().bind(i18n.createBinding("login.label.port"));
-        connectButton.textProperty().bind(i18n.createBinding("login.button.connect"));
-
     }
 
     private ListCell<Locale> createLocaleCell() {
