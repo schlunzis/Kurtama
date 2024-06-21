@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.settings.Setting;
 import org.schlunzis.kurtama.client.settings.UserSettings;
+import org.schlunzis.zis.fx.bindings.BindingsFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceResourceBundle;
 import org.springframework.core.io.Resource;
@@ -29,7 +30,7 @@ import java.util.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class I18n {
+public class I18n implements BindingsFactory {
 
     private final UserSettings userSettings;
     private final MessageSource messageSource;

@@ -25,12 +25,12 @@ public class I18nBindingsProcessor extends AbstractProcessor {
                 writer.append("""
                         package org.schlunzis.kurtama.client.fx.controller;
                                                \s
-                        import org.schlunzis.kurtama.client.util.I18n;
+                        import org.schlunzis.zis.fx.bindings.BindingsFactory;
                                                \s
                         public class LoginControllerI18n {
                                                \s
-                           public static void i18n(I18n i18n, LoginController lc) {
-                               lc.emailLabel.textProperty().bind(i18n.createBinding("login.label.email"));
+                           public static void i18n(BindingsFactory bf, LoginController lc) {
+                               lc.emailLabel.textProperty().bind(bf.createBinding("login.label.email"));
                            }
                                                \s
                         }

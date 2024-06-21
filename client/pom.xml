@@ -23,10 +23,15 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>org.schlunzis.kurtama</groupId>
-            <artifactId>bindings</artifactId>
-            <version>${revision}</version>
+            <groupId>org.schlunzis.zis</groupId>
+            <artifactId>zis-fx-bindings-processor</artifactId>
+            <version>0.0.1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.schlunzis.zis</groupId>
+            <artifactId>zis-fx-bindings-runtime</artifactId>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -91,9 +96,9 @@
                             <version>${lombok.version}</version>
                         </path>
                         <path>
-                            <groupId>org.schlunzis.kurtama</groupId>
-                            <artifactId>bindings</artifactId>
-                            <version>${revision}</version>
+                            <groupId>org.schlunzis.zis</groupId>
+                            <artifactId>zis-fx-bindings-processor</artifactId>
+                            <version>0.0.1</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
