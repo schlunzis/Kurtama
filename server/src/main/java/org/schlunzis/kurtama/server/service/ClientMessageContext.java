@@ -60,6 +60,11 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
                             responseAssembler, authenticationService, eventBus);
             log.info("sending secondary request {}", secondaryRequestContext);
             eventBus.publishEvent(secondaryRequestContext);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         close();
     }
