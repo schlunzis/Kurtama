@@ -8,7 +8,7 @@ public class I18nLabel extends I18nField {
 
     @Override
     public String createBinding() {
-        return controllerName + "." + name + ".textProperty().bind(" + bindingFactoryName + ".createBinding(\"" + key + "\"));";
+        return "((Label) fieldMap.get(\"" + name + "\").get(c)).textProperty().bind(" + bindingFactoryName + ".createBinding(\"" + key + "\"));";
     }
 
 }

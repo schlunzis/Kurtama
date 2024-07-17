@@ -1,5 +1,6 @@
 package org.schlunzis.zis.fx.bindings;
 
+import org.schlunzis.zis.fx.bindings.internal.I18nButton;
 import org.schlunzis.zis.fx.bindings.internal.I18nField;
 import org.schlunzis.zis.fx.bindings.internal.I18nLabel;
 
@@ -36,7 +37,19 @@ public class I18nBindingsProcessor extends AbstractProcessor {
             final String key = annotation.value();
             final String name = annotatedElement.getSimpleName().toString();
 
-            classFieldMap.computeIfAbsent(qualifiedClassName, k -> new ArrayList<>()).add(new I18nLabel(name, key, CONTROLLER_NAME, BINDINGS_FACTORY_NAME));
+            classFieldMap.computeIfAbsent(qualifiedClassName, k -> new ArrayList<>());
+            Collection<I18nField> fields = classFieldMap.get(qualifiedClassName);
+            switch (annotatedElement.asType().toString()) {
+                case "javafx.scene.control.Label":
+                    fields.add(new I18nLabel(name, key, CONTROLLER_NAME, BINDINGS_FACTORY_NAME));
+                    break;
+                case "javafx.scene.control.Button":
+                    fields.add(new I18nButton(name, key, CONTROLLER_NAME, BINDINGS_FACTORY_NAME));
+                    break;
+                default:
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Only fields of type Label or Button can be annotated with " + I18nBinding.class.getSimpleName());
+                    return true;
+            }
         }
 
         generateAndWriteSources();
@@ -72,11 +85,41 @@ public class I18nBindingsProcessor extends AbstractProcessor {
 
         final StringBuilder source = new StringBuilder();
         source.append("package ").append(packageName).append(";\n\n");
-        source.append("import org.schlunzis.zis.fx.bindings.BindingsFactory;\n\n");
+        source.append("""
+                import javafx.fxml.FXML;
+                import javafx.scene.control.Button;
+                import javafx.scene.control.Label;
+                import org.schlunzis.zis.fx.bindings.BindingsFactory;
+                \s
+                import java.lang.reflect.Field;
+                import java.util.Arrays;
+                import java.util.HashMap;
+                import java.util.List;
+                import java.util.Map;
+                \s
+                """);
         source.append("public class ").append(className).append("I18n").append(" {\n\n");
+        source.append("    private static Map<String, Field> fieldMap = null;\n\n");
         source.append("    public static void i18n(BindingsFactory ").append(BINDINGS_FACTORY_NAME).append(", ").append(className).append(" ").append(CONTROLLER_NAME).append(") {\n");
+        source.append("        findFXMLAnnotatedFields(").append(CONTROLLER_NAME).append(");\n");
+        source.append("        try {\n");
         fields.forEach(field -> source.append("        ").append(field.createBinding()).append("\n"));
+        source.append("        } catch (IllegalAccessException e) {\n");
+        source.append("            e.printStackTrace();\n");
+        source.append("        }\n");
         source.append("    }\n\n");
+        source.append("""
+                    private static void findFXMLAnnotatedFields(LoginController c) {
+                        if (fieldMap == null) {
+                            List<Field> controllerFields = Arrays.stream(c.getClass().getDeclaredFields())
+                                    .filter(f -> f.isAnnotationPresent(FXML.class))
+                                    .toList();
+                            controllerFields.forEach(f -> f.setAccessible(true));
+                            fieldMap = new HashMap<>();
+                            controllerFields.forEach(f -> fieldMap.put(f.getName(), f));
+                        }
+                    }
+                """);
         source.append("}\n");
 
         final String sourceString = source.toString();

@@ -53,20 +53,20 @@ public class LoginController {
     // LOGIN FIELDS
     @FXML
     @I18nBinding("login.label.email")
-    Label emailLabel;
+    private Label emailLabel;
     @FXML
     private TextField emailField;
     @FXML
     @I18nBinding("login.label.password")
-    Label passwordLabel;
+    private Label passwordLabel;
     @FXML
     private PasswordField passwordField;
     @FXML
     @I18nBinding("login.button.register")
-    Button registerButton;
+    private Button registerButton;
     @FXML
     @I18nBinding("login.button.login")
-    Button loginButton;
+    private Button loginButton;
 
     @FXML
     private ComboBox<Locale> languageSelector;
@@ -75,17 +75,17 @@ public class LoginController {
     // SERVER CONNECTION FIELDS
     @FXML
     @I18nBinding("login.label.server")
-    Label serverLabel;
+    private Label serverLabel;
     @FXML
     private TextField serverField;
     @FXML
     @I18nBinding("login.label.port")
-    Label portLabel;
+    private Label portLabel;
     @FXML
     private TextField portField;
     @FXML
     @I18nBinding("login.button.connect")
-    Button connectButton;
+    private Button connectButton;
     @FXML
     private Region progressIndicator;
     @FXML
