@@ -22,10 +22,10 @@ import org.schlunzis.kurtama.server.lobby.LobbyStore;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.schlunzis.kurtama.server.service.ServerMessageWrapper;
+import org.schlunzis.kurtama.server.service.ServerMessageWrappers;
 import org.schlunzis.kurtama.server.user.DBUser;
 import org.schlunzis.kurtama.server.user.IUserStore;
 import org.schlunzis.kurtama.server.user.ServerUser;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -40,8 +40,6 @@ class AuthenticationServiceTest {
     AuthenticationService authenticationService;
 
     // common dependencies
-    @Mock
-    ApplicationEventPublisher eventBus;
     @Mock
     UserSessionMap userSessionMap;
     @Mock
@@ -88,7 +86,7 @@ class AuthenticationServiceTest {
 
     @BeforeEach
     void init() {
-        authenticationService = new AuthenticationService(eventBus, userSessionMap, userStore, lobbyStore, passwordEncoder);
+        authenticationService = new AuthenticationService(userSessionMap, userStore, lobbyStore, passwordEncoder);
     }
 
     // ################################################
@@ -191,11 +189,6 @@ class AuthenticationServiceTest {
         verify(lobbyStore, times(2)).getAll();
         verify(cmcLoginRequest, times(2)).closeWithReRequest();
         verify(cmcLoginRequest, never()).close();
-        verify(eventBus).publishEvent(messageWrapperCaptor.capture());
-        ServerMessageWrapper wrapper = messageWrapperCaptor.getValue();
-        assertInstanceOf(LogoutSuccessfulResponse.class, wrapper.getServerMessage());
-        assertEquals(1, wrapper.getRecipients().size());
-        assertTrue(wrapper.getRecipients().contains(defaultSession));
     }
 
     @Test
@@ -235,13 +228,13 @@ class AuthenticationServiceTest {
     void onLogoutRequestTest() {
         when(cmcLogoutRequest.getSession()).thenReturn(defaultSession);
 
-        authenticationService.onLogoutRequest(cmcLogoutRequest);
+        ServerMessageWrappers wrappers = authenticationService.onLogoutRequest(cmcLogoutRequest);
 
         verify(userSessionMap, never()).put(any(), any());
         verify(userSessionMap, never()).remove((ServerUser) any());
         verify(userSessionMap).remove(defaultSession);
-        verify(eventBus).publishEvent(messageWrapperCaptor.capture());
-        ServerMessageWrapper wrapper = messageWrapperCaptor.getValue();
+        assertEquals(1, wrappers.wrappers().size());
+        ServerMessageWrapper wrapper = wrappers.wrappers().getFirst();
         assertInstanceOf(LogoutSuccessfulResponse.class, wrapper.getServerMessage());
         assertEquals(1, wrapper.getRecipients().size());
         assertTrue(wrapper.getRecipients().contains(defaultSession));
@@ -256,7 +249,7 @@ class AuthenticationServiceTest {
     @Test
     void onRegisterEventSuccessfulTest() {
         PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        authenticationService = new AuthenticationService(eventBus, userSessionMap, userStore, lobbyStore, pe);
+        authenticationService = new AuthenticationService(userSessionMap, userStore, lobbyStore, pe);
 
         when(cmcRegisterRequest.getClientMessage()).thenReturn(registerRequest);
         when(registerRequest.getEmail()).thenReturn(defaultEmail);
@@ -305,13 +298,13 @@ class AuthenticationServiceTest {
         ForcedLogoutEvent forcedLogoutEvent = mock(ForcedLogoutEvent.class);
         when(forcedLogoutEvent.session()).thenReturn(defaultSession);
 
-        authenticationService.onForcedLogoutEvent(forcedLogoutEvent);
+        ServerMessageWrappers wrappers = authenticationService.onForcedLogoutEvent(forcedLogoutEvent);
 
         verify(userSessionMap, never()).put(any(), any());
         verify(userSessionMap, never()).remove((ServerUser) any());
         verify(userSessionMap).remove(defaultSession);
-        verify(eventBus).publishEvent(messageWrapperCaptor.capture());
-        ServerMessageWrapper wrapper = messageWrapperCaptor.getValue();
+        assertEquals(1, wrappers.wrappers().size());
+        ServerMessageWrapper wrapper = wrappers.wrappers().getFirst();
         assertInstanceOf(LogoutSuccessfulResponse.class, wrapper.getServerMessage());
         assertEquals(1, wrapper.getRecipients().size());
         assertTrue(wrapper.getRecipients().contains(defaultSession));

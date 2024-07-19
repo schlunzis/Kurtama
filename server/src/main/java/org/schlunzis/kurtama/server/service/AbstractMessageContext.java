@@ -9,7 +9,6 @@ import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.auth.IAuthenticationService;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Collection;
 
@@ -22,7 +21,6 @@ abstract class AbstractMessageContext {
     protected final ResponseAssembler responseAssembler;
 
     protected final IAuthenticationService authenticationService;
-    protected final ApplicationEventPublisher eventBus;
 
     @Getter
     protected final ISession session;
@@ -67,6 +65,15 @@ abstract class AbstractMessageContext {
      */
     public void sendToAll(IServerMessage message) {
         responseAssembler.addAdditionalMessage(new ServerMessageWrapper(message, authenticationService.getAllLoggedInSessions()));
+    }
+
+    /**
+     * Returns the messages to be sent to the client. These should be put on the event bus.
+     *
+     * @return the messages to be sent to the client
+     */
+    public ServerMessageWrappers close() {
+        return new ServerMessageWrappers(responseAssembler.assemble());
     }
 
 }

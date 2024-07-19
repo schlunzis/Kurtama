@@ -11,6 +11,7 @@ import org.schlunzis.kurtama.common.messages.lobby.client.LeaveLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.server.*;
 import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
+import org.schlunzis.kurtama.server.service.ServerMessageWrappers;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class LobbyService {
     private final LobbyManagement lobbyManagement;
 
     @EventListener
-    public void onCreateLobbyRequest(ClientMessageContext<CreateLobbyRequest> cmc) {
+    public ServerMessageWrappers onCreateLobbyRequest(ClientMessageContext<CreateLobbyRequest> cmc) {
         CreateLobbyRequest request = cmc.getClientMessage();
         try {
             ServerLobby lobby = lobbyManagement.createLobby(request.name(), cmc.getUser());
@@ -37,11 +38,11 @@ public class LobbyService {
             log.info("Could not create lobby. No user found for session.");
             cmc.respond(new LobbyCreationFailedResponse());
         }
-        cmc.close();
+        return cmc.close();
     }
 
     @EventListener
-    public void onJoinLobbyRequest(ClientMessageContext<JoinLobbyRequest> cmc) {
+    public ServerMessageWrappers onJoinLobbyRequest(ClientMessageContext<JoinLobbyRequest> cmc) {
         JoinLobbyRequest request = cmc.getClientMessage();
 
         try {
@@ -58,11 +59,11 @@ public class LobbyService {
             log.error("Could not join lobby.", e);
             cmc.respond(new JoinLobbyFailedResponse());
         }
-        cmc.close();
+        return cmc.close();
     }
 
     @EventListener
-    public void onLeaveLobbyRequest(ClientMessageContext<LeaveLobbyRequest> cmc) {
+    public ServerMessageWrappers onLeaveLobbyRequest(ClientMessageContext<LeaveLobbyRequest> cmc) {
         LeaveLobbyRequest request = cmc.getClientMessage();
         try {
             boolean lobbyEmpty = lobbyManagement.leaveLobby(request.lobbyID(), cmc.getUser());
@@ -80,7 +81,7 @@ public class LobbyService {
             log.error("Could not leave lobby.", e);
             cmc.respond(new LobbyLeaveFailedResponse());
         }
-        cmc.close();
+        return cmc.close();
     }
 
     /**

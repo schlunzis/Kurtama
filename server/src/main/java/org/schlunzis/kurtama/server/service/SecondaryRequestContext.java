@@ -7,7 +7,6 @@ import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.server.auth.IAuthenticationService;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
 
@@ -19,8 +18,8 @@ public class SecondaryRequestContext<S extends IServerMessage> extends AbstractM
     private final S mainResponse;
 
     SecondaryRequestContext(S mainResponse, ISession session, ServerUser user, ResponseAssembler responseAssembler,
-                            IAuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
-        super(responseAssembler, authenticationService, eventBus, session, user);
+                            IAuthenticationService authenticationService) {
+        super(responseAssembler, authenticationService, session, user);
         this.mainResponse = mainResponse;
     }
 

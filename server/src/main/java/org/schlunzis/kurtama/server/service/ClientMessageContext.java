@@ -15,7 +15,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,7 +37,7 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
     private final T clientMessage;
 
     public ClientMessageContext(T clientMessage, ISession session, ServerUser user, IAuthenticationService authenticationService, ApplicationEventPublisher eventBus) {
-        super(new ResponseAssembler(clientMessage), authenticationService, eventBus, session, user);
+        super(new ResponseAssembler(clientMessage), authenticationService, session, user);
         this.clientMessage = clientMessage;
     }
 
@@ -46,22 +45,23 @@ public class ClientMessageContext<T extends IClientMessage> extends AbstractMess
         responseAssembler.setMainResponse(new ServerMessageWrapper(message, session));
     }
 
-    public void close() {
-        List<ServerMessageWrapper> wrappers = responseAssembler.assemble();
-        if (!wrappers.isEmpty())
-            eventBus.publishEvent(new ServerMessageWrappers(wrappers));
-    }
-
-    public void closeWithReRequest() {
+    /**
+     * This method returns a secondary internal request context to be put on the event bus. If no main response is set, an
+     * {@link IllegalStateException} is thrown. The main response is needed to identify the kind of request.
+     *
+     * @return the secondary context
+     * @throws IllegalStateException if the main response is not set
+     */
+    public SecondaryRequestContext<IServerMessage> closeWithReRequest() {
         Optional<ServerMessageWrapper> mainResponse = responseAssembler.getMainResponse();
         if (mainResponse.isPresent()) {
             SecondaryRequestContext<IServerMessage> secondaryRequestContext =
                     new SecondaryRequestContext<>(mainResponse.get().getServerMessage(), session, user,
-                            responseAssembler, authenticationService, eventBus);
+                            responseAssembler, authenticationService);
             log.info("sending secondary request {}", secondaryRequestContext);
-            eventBus.publishEvent(secondaryRequestContext);
+            return secondaryRequestContext;
         }
-        close();
+        throw new IllegalStateException("No main response set");
     }
 
     @Override

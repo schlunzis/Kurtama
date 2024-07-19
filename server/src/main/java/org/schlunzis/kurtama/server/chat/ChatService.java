@@ -7,8 +7,8 @@ import org.schlunzis.kurtama.common.messages.chat.ChatMessageExceptionMessage;
 import org.schlunzis.kurtama.common.messages.chat.ClientChatMessage;
 import org.schlunzis.kurtama.common.messages.chat.ServerChatMessage;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
+import org.schlunzis.kurtama.server.service.ServerMessageWrappers;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -22,15 +22,13 @@ public class ChatService {
 
     private final ChatManagement chatManagement;
 
-    @Async
     @EventListener
-    public void onClientChatMessage(final ClientMessageContext<ClientChatMessage> cmc) {
+    public ServerMessageWrappers onClientChatMessage(final ClientMessageContext<ClientChatMessage> cmc) {
         final ClientChatMessage ccm = cmc.getClientMessage();
         log.debug("Processing chat message {}", ccm);
 
         if (!validateArguments(cmc)) {
-            cmc.close();
-            return;
+            return cmc.close();
         }
 
         final IServerMessage message = new ServerChatMessage(ccm.getChatID(), ccm.getNickname(), cmc.getUser().toDTO(), ccm.getMessage());
@@ -49,7 +47,7 @@ public class ChatService {
                     }
             );
         }
-        cmc.close();
+        return cmc.close();
     }
 
     private boolean validateArguments(ClientMessageContext<ClientChatMessage> cmc) {
