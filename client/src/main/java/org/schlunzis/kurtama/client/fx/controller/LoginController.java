@@ -52,17 +52,9 @@ public class LoginController {
 
     // LOGIN FIELDS
     @FXML
-    private Label emailLabel;
-    @FXML
     private TextField emailField;
     @FXML
-    private Label passwordLabel;
-    @FXML
     private PasswordField passwordField;
-    @FXML
-    private Button registerButton;
-    @FXML
-    private Button loginButton;
 
     @FXML
     private ComboBox<Locale> languageSelector;
@@ -70,15 +62,9 @@ public class LoginController {
 
     // SERVER CONNECTION FIELDS
     @FXML
-    private Label serverLabel;
-    @FXML
     private TextField serverField;
     @FXML
-    private Label portLabel;
-    @FXML
     private TextField portField;
-    @FXML
-    private Button connectButton;
     @FXML
     private Region progressIndicator;
     @FXML
@@ -147,19 +133,6 @@ public class LoginController {
         languageSelector.setButtonCell(createLocaleCell());
         languageSelector.setOnAction(event -> i18n.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
         languageSelector.getSelectionModel().select(i18n.getLocale());
-        createBindings();
-    }
-
-    private void createBindings() {
-        emailLabel.textProperty().bind(i18n.createBinding("login.label.email"));
-        passwordLabel.textProperty().bind(i18n.createBinding("login.label.password"));
-        registerButton.textProperty().bind(i18n.createBinding("login.button.register"));
-        loginButton.textProperty().bind(i18n.createBinding("login.button.login"));
-
-        serverLabel.textProperty().bind(i18n.createBinding("login.label.server"));
-        portLabel.textProperty().bind(i18n.createBinding("login.label.port"));
-        connectButton.textProperty().bind(i18n.createBinding("login.button.connect"));
-
     }
 
     private ListCell<Locale> createLocaleCell() {

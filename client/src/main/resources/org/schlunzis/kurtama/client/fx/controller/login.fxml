@@ -19,15 +19,15 @@
         </columnConstraints>
 
         <GridPane styleClass="login" GridPane.columnIndex="0">
-            <Label fx:id="emailLabel" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="i{login.label.email}" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label fx:id="passwordLabel" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="i{login.label.password}" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1"
                            onAction="#handleLogin"/>
-            <Button fx:id="loginButton" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
+            <Button text="i{login.button.login}" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
                     onAction="#handleLogin"/>
-            <Button fx:id="registerButton" styleClass="secondary_button" GridPane.columnIndex="0" GridPane.rowIndex="3"
-                    GridPane.columnSpan="2" onAction="#handleRegister"/>
+            <Button text="i{login.button.register}" styleClass="secondary_button" GridPane.columnIndex="0"
+                    GridPane.rowIndex="3" GridPane.columnSpan="2" onAction="#handleRegister"/>
             <ComboBox fx:id="languageSelector" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
         </GridPane>
 
@@ -36,11 +36,11 @@
         </GridPane>
 
         <GridPane styleClass="connect" GridPane.columnIndex="2">
-            <Label fx:id="serverLabel" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="i{login.label.server}" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <TextField fx:id="serverField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label fx:id="portLabel" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="i{login.label.port}" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="portField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <Button fx:id="connectButton" onAction="#handleServerConnect" text="Connect" GridPane.columnIndex="0"
+            <Button text="i{login.button.connect}" onAction="#handleServerConnect" GridPane.columnIndex="0"
                     GridPane.rowIndex="2" GridPane.columnSpan="2"/>
             <HBox styleClass="progress" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
                 <Region fx:id="progressIndicator"/>
