@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.server.chat.Chat;
 import org.schlunzis.kurtama.server.chat.ChatManagement;
 import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
+import org.schlunzis.kurtama.server.lobby.exception.WrongLobbyPasswordException;
 import org.schlunzis.kurtama.server.user.ServerUser;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -20,9 +22,13 @@ public class LobbyManagement {
 
     private final LobbyStore lobbyStore;
     private final ChatManagement chatManagement;
+    private final PasswordEncoder passwordEncoder;
 
-    public ServerLobby createLobby(@NonNull String lobbyName, @NonNull ServerUser creator) {
-        ServerLobby lobby = lobbyStore.create(lobbyName);
+
+    public ServerLobby createLobby(@NonNull String lobbyName, @NonNull String lobbyPassword, @NonNull ServerUser creator) {
+        String passwordHash = lobbyPassword.isBlank() ? "" : passwordEncoder.encode(lobbyPassword);
+
+        ServerLobby lobby = lobbyStore.create(lobbyName, passwordHash);
         log.info("Created lobby with name: {} and id: {}", lobby.getName(), lobby.getId());
 
         Chat chat = chatManagement.createLobbyChat(lobby.getId());
@@ -32,11 +38,14 @@ public class LobbyManagement {
         return lobby;
     }
 
-    public ServerLobby joinLobby(@NonNull UUID lobbyID, @NonNull ServerUser user) throws LobbyNotFoundException {
+    public ServerLobby joinLobby(@NonNull UUID lobbyID, @NonNull String password, @NonNull ServerUser user) throws LobbyNotFoundException, WrongLobbyPasswordException {
         Optional<ServerLobby> lobby = lobbyStore.get(lobbyID);
         if (lobby.isPresent()) {
-            joinLobby(lobby.get(), user);
-            return lobby.get();
+            ServerLobby l = lobby.get();
+            if (!l.isPasswordProtected() || passwordEncoder.matches(password, l.getPasswordHash())) {
+                joinLobby(lobby.get(), user);
+                return lobby.get();
+            } else throw new WrongLobbyPasswordException();
         } else {
             throw new LobbyNotFoundException();
         }

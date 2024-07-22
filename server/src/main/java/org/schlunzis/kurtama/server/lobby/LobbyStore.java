@@ -11,13 +11,13 @@ public class LobbyStore {
 
     private final Map<UUID, ServerLobby> lobbyMap = new HashMap<>();
 
-    public ServerLobby create(String name) {
+    public ServerLobby create(String name, String password) {
         UUID uuid;
         do {
             uuid = UUID.randomUUID();
         } while (lobbyMap.containsKey(uuid));
 
-        ServerLobby lobby = new ServerLobby(uuid, name, null, null); // chatID and owner are set by LobbyManagement
+        ServerLobby lobby = new ServerLobby(uuid, name, password, null, null); // chatID and owner are set by LobbyManagement
         lobbyMap.put(uuid, lobby);
         return lobby;
     }

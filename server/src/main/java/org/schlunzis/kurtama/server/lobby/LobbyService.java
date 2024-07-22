@@ -10,6 +10,7 @@ import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.LeaveLobbyRequest;
 import org.schlunzis.kurtama.common.messages.lobby.server.*;
 import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
+import org.schlunzis.kurtama.server.lobby.exception.WrongLobbyPasswordException;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.schlunzis.kurtama.server.service.ServerMessageWrappers;
 import org.schlunzis.kurtama.server.user.ServerUser;
@@ -31,7 +32,7 @@ public class LobbyService {
     public ServerMessageWrappers onCreateLobbyRequest(ClientMessageContext<CreateLobbyRequest> cmc) {
         CreateLobbyRequest request = cmc.getClientMessage();
         try {
-            ServerLobby lobby = lobbyManagement.createLobby(request.name(), cmc.getUser());
+            ServerLobby lobby = lobbyManagement.createLobby(request.name(), request.password(), cmc.getUser());
             cmc.respond(new LobbyCreatedSuccessfullyResponse(lobby.toDTO()));
             updateLobbyListInfo(cmc);
         } catch (Exception e) {
@@ -46,7 +47,7 @@ public class LobbyService {
         JoinLobbyRequest request = cmc.getClientMessage();
 
         try {
-            ServerLobby lobby = lobbyManagement.joinLobby(request.lobbyID(), cmc.getUser());
+            ServerLobby lobby = lobbyManagement.joinLobby(request.lobbyID(), request.password(), cmc.getUser());
             cmc.respond(new JoinLobbySuccessfullyResponse(lobby.toDTO()));
 
             var userJoinedLobbyMessage = new UserJoinedLobbyMessage(cmc.getUser().toDTO());
@@ -54,6 +55,9 @@ public class LobbyService {
             updateLobbyListInfo(cmc);
         } catch (LobbyNotFoundException e) {
             log.info("Could not join lobby. Lobby not found.");
+            cmc.respond(new JoinLobbyFailedResponse());
+        } catch (WrongLobbyPasswordException e) {
+            log.info("Could not join lobby. Wrong password.");
             cmc.respond(new JoinLobbyFailedResponse());
         } catch (Exception e) {
             log.error("Could not join lobby.", e);

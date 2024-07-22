@@ -46,7 +46,7 @@ public class MainMenuController {
                 if (empty || lobbyInfo == null) {
                     setText(null);
                 } else {
-                    setText(lobbyInfo.lobbyName() + " (" + lobbyInfo.users() + ")");
+                    setText(lobbyInfo.lobbyName() + " (" + lobbyInfo.users() + ")" + (lobbyInfo.passwordProtected() ? " 🔒" : ""));
                 }
             }
         });
@@ -87,14 +87,15 @@ public class MainMenuController {
         LobbyInfo li = lobbiesListView.getSelectionModel().getSelectedItem();
         if (li == null)
             return;
-        eventBus.publishEvent(new JoinLobbyRequest(li.lobbyID()));
+        eventBus.publishEvent(new JoinLobbyRequest(li.lobbyID(), lobbyPasswordField.getText()));
     }
 
     @FXML
     private void createLobby() {
         String lobbyName = lobbyNameField.getText();
+        String lobbyPassword = lobbyPasswordField.getText();
         if (!lobbyName.isBlank())
-            eventBus.publishEvent(new CreateLobbyRequest(lobbyName));
+            eventBus.publishEvent(new CreateLobbyRequest(lobbyName, lobbyPassword));
     }
 
 }

@@ -21,6 +21,8 @@ public class ServerLobby implements ILobby {
     @Setter
     private String name;
     @Setter
+    private String passwordHash;
+    @Setter
     private UUID chatID;
     @Setter
     private ServerUser owner;
@@ -41,6 +43,10 @@ public class ServerLobby implements ILobby {
     }
 
     public LobbyInfo getInfo() {
-        return new LobbyInfo(id, name, users.size());
+        return new LobbyInfo(id, name, isPasswordProtected(), users.size());
+    }
+
+    public boolean isPasswordProtected() {
+        return !passwordHash.isBlank();
     }
 }
