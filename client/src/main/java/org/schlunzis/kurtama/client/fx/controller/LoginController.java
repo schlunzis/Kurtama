@@ -17,6 +17,7 @@ import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
+import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeMessage;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
 import org.schlunzis.kurtama.client.settings.Setting;
@@ -29,22 +30,21 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LoginController {
-
-    private final I18n i18n;
+public class LoginController implements MessageShowingController {
 
     public static final String NOT_CONNECTED_STYLE = "not_connected";
     public static final String CONNECTED_STYLE = "connected";
     public static final String CONNECTING_STYLE = "connecting";
     public static final String FAILED_STYLE = "failed";
     private static final int PROGRESS_ICON_SIZE = 30;
-
+    private final I18n i18n;
     private final ApplicationEventPublisher eventBus;
     private final Environment environment;
     private final ISessionService sessionService;
@@ -190,6 +190,11 @@ public class LoginController {
         else
             version = "unknown version";
         versionLabel.setText(version);
+    }
+
+    @Override
+    public void showMessages(List<SceneChangeMessage> messages) {
+        log.info("Showing messages {}", messages);
     }
 
 }

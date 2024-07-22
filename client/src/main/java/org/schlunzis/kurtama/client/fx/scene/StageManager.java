@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.events.ClientReadyEvent;
+import org.schlunzis.kurtama.client.fx.controller.MessageShowingController;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.util.I18n;
 import org.schlunzis.kurtama.client.util.I18nBinder;
@@ -50,6 +51,13 @@ public class StageManager {
                 throw new IllegalStateException("Could not load " + event.scene().getFxml()); // should never happen
             }
 
+            if (event.messages() != null && !event.messages().isEmpty()) {
+                Object controller = loader.getController();
+                if (controller instanceof MessageShowingController msc)
+                    msc.showMessages(event.messages());
+                else
+                    log.warn("{} does not implement MessageShowingController but there is a message to show", controller.getClass().getName());
+            }
             i18nBinder.createBindings(parent);
             stage.setTitle("Kurtama - " + i18n.i18n("title." + event.scene().getTitleKey()));
             Scene scene = new Scene(parent);
