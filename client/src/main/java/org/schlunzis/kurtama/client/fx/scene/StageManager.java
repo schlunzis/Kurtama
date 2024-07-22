@@ -51,6 +51,12 @@ public class StageManager {
                 throw new IllegalStateException("Could not load " + event.scene().getFxml()); // should never happen
             }
 
+            i18nBinder.createBindings(parent);
+            stage.setTitle("Kurtama - " + i18n.i18n("title." + event.scene().getTitleKey()));
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.show();
+
             if (event.messages() != null && !event.messages().isEmpty()) {
                 Object controller = loader.getController();
                 if (controller instanceof MessageShowingController msc)
@@ -58,11 +64,6 @@ public class StageManager {
                 else
                     log.warn("{} does not implement MessageShowingController but there is a message to show", controller.getClass().getName());
             }
-            i18nBinder.createBindings(parent);
-            stage.setTitle("Kurtama - " + i18n.i18n("title." + event.scene().getTitleKey()));
-            Scene scene = new Scene(parent);
-            stage.setScene(scene);
-            stage.show();
         });
     }
 

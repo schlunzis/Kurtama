@@ -13,6 +13,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.controlsfx.control.NotificationPane;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
@@ -49,6 +50,9 @@ public class LoginController implements MessageShowingController {
     private final Environment environment;
     private final ISessionService sessionService;
     private final IUserSettings userSettings;
+
+    @FXML
+    private NotificationPane notificationPane;
 
     // LOGIN FIELDS
     @FXML
@@ -195,6 +199,8 @@ public class LoginController implements MessageShowingController {
     @Override
     public void showMessages(List<SceneChangeMessage> messages) {
         log.info("Showing messages {}", messages);
+        notificationPane.setText(i18n.i18n(messages.getFirst().getMessageKey()));
+        notificationPane.show();
     }
 
 }

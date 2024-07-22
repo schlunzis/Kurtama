@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import lombok.RequiredArgsConstructor;
+import org.controlsfx.control.NotificationPane;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -19,6 +20,8 @@ public class I18nBinder {
     private final I18n i18n;
 
     public void createBindings(Parent parent) {
+        if (parent instanceof NotificationPane notificationPane)
+            handleNode(notificationPane.getContent());
         Collection<Node> children = parent.getChildrenUnmodifiable();
         for (Node child : children) {
             handleNode(child);
