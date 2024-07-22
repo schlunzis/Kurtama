@@ -11,15 +11,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.NotificationPane;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
-import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEventType;
-import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeMessage;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
 import org.schlunzis.kurtama.client.settings.Setting;
@@ -32,35 +30,34 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
-public class LoginController implements MessageShowingController {
+public class LoginController extends AbstractController {
 
     public static final String NOT_CONNECTED_STYLE = "not_connected";
     public static final String CONNECTED_STYLE = "connected";
     public static final String CONNECTING_STYLE = "connecting";
     public static final String FAILED_STYLE = "failed";
     private static final int PROGRESS_ICON_SIZE = 30;
-    private static final List<String> NOTIFICATION_STYLES;
 
-    static {
-        NOTIFICATION_STYLES = Arrays.stream(SceneChangeEventType.values())
-                .map(e -> "notification-pane" + e.name().toLowerCase())
-                .toList();
-    }
-
-    private final I18n i18n;
     private final ApplicationEventPublisher eventBus;
     private final Environment environment;
     private final ISessionService sessionService;
     private final IUserSettings userSettings;
 
+    public LoginController(I18n i18n, ApplicationEventPublisher eventBus, Environment environment, ISessionService sessionService, IUserSettings userSettings) {
+        super(i18n);
+        this.eventBus = eventBus;
+        this.environment = environment;
+        this.sessionService = sessionService;
+        this.userSettings = userSettings;
+    }
+
     @FXML
+    @Getter
     private NotificationPane notificationPane;
 
     // LOGIN FIELDS
@@ -203,17 +200,6 @@ public class LoginController implements MessageShowingController {
         else
             version = "unknown version";
         versionLabel.setText(version);
-    }
-
-    @Override
-    public void showMessages(List<SceneChangeMessage> messages) {
-        log.info("Showing messages {}", messages);
-        for (SceneChangeMessage message : messages) {
-            notificationPane.textProperty().bind(i18n.createBinding(message.getMessageKey()));
-            notificationPane.getStyleClass().removeAll(NOTIFICATION_STYLES);
-            notificationPane.getStyleClass().add("notification-pane-" + message.getType().name().toLowerCase());
-            notificationPane.show();
-        }
     }
 
 }
