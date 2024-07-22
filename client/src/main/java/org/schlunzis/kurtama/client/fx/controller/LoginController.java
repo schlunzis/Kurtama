@@ -18,6 +18,7 @@ import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
+import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEventType;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeMessage;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
@@ -45,6 +46,14 @@ public class LoginController implements MessageShowingController {
     public static final String CONNECTING_STYLE = "connecting";
     public static final String FAILED_STYLE = "failed";
     private static final int PROGRESS_ICON_SIZE = 30;
+    private static final List<String> NOTIFICATION_STYLES;
+
+    static {
+        NOTIFICATION_STYLES = Arrays.stream(SceneChangeEventType.values())
+                .map(e -> "notification-pane" + e.name().toLowerCase())
+                .toList();
+    }
+
     private final I18n i18n;
     private final ApplicationEventPublisher eventBus;
     private final Environment environment;
@@ -199,8 +208,12 @@ public class LoginController implements MessageShowingController {
     @Override
     public void showMessages(List<SceneChangeMessage> messages) {
         log.info("Showing messages {}", messages);
-        notificationPane.setText(i18n.i18n(messages.getFirst().getMessageKey()));
-        notificationPane.show();
+        for (SceneChangeMessage message : messages) {
+            notificationPane.textProperty().bind(i18n.createBinding(message.getMessageKey()));
+            notificationPane.getStyleClass().removeAll(NOTIFICATION_STYLES);
+            notificationPane.getStyleClass().add("notification-pane-" + message.getType().name().toLowerCase());
+            notificationPane.show();
+        }
     }
 
 }
