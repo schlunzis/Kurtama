@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
+import org.schlunzis.kurtama.client.util.DialogFactory;
+import org.schlunzis.kurtama.client.util.I18n;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
@@ -21,6 +23,8 @@ public class MainMenuController {
 
     private final ApplicationEventPublisher eventBus;
     private final ISessionService sessionService;
+    private final I18n i18n;
+    private final DialogFactory dialogFactory;
 
     @FXML
     private ListView<LobbyInfo> lobbiesListView;
@@ -87,7 +91,15 @@ public class MainMenuController {
         LobbyInfo li = lobbiesListView.getSelectionModel().getSelectedItem();
         if (li == null)
             return;
-        eventBus.publishEvent(new JoinLobbyRequest(li.lobbyID(), lobbyPasswordField.getText()));
+        if (li.passwordProtected()) {
+            dialogFactory.createPasswordDialog("lobby.join.auth.title", "lobby.join.auth.header", "lobby.join.auth.content")
+                    .showAndWait()
+                    .ifPresent(password -> {
+                        log.info("Lobby password entered.");
+                        eventBus.publishEvent(new JoinLobbyRequest(li.lobbyID(), password));
+                    });
+        } else
+            eventBus.publishEvent(new JoinLobbyRequest(li.lobbyID(), ""));
     }
 
     @FXML
