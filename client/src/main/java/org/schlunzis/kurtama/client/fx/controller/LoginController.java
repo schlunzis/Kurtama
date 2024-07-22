@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.controlsfx.control.NotificationPane;
@@ -57,7 +58,7 @@ public class LoginController extends AbstractController {
     }
 
     @FXML
-    @Getter
+    @Getter(AccessLevel.PROTECTED)
     private NotificationPane notificationPane;
 
     // LOGIN FIELDS
@@ -143,6 +144,7 @@ public class LoginController extends AbstractController {
         languageSelector.setButtonCell(createLocaleCell());
         languageSelector.setOnAction(event -> i18n.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
         languageSelector.getSelectionModel().select(i18n.getLocale());
+        super.initNotificationPane();
     }
 
     private ListCell<Locale> createLocaleCell() {

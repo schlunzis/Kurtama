@@ -7,7 +7,9 @@ import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEventType;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeMessage;
 import org.schlunzis.kurtama.client.util.I18n;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 
 @Slf4j
@@ -23,19 +25,33 @@ public abstract class AbstractController implements MessageShowingController {
     }
 
     protected final I18n i18n;
+    private final Deque<SceneChangeMessage> queue = new ArrayDeque<>();
 
     protected abstract NotificationPane getNotificationPane();
 
+    protected void initNotificationPane() {
+        getNotificationPane().setOnHidden(e -> showNextMessage());
+    }
+
     @Override
     public void showMessages(List<SceneChangeMessage> messages) {
-        NotificationPane notificationPane = getNotificationPane();
-        log.info("Showing messages {}", messages);
-        for (SceneChangeMessage message : messages) {
-            notificationPane.textProperty().bind(i18n.createBinding(message.getMessageKey()));
-            notificationPane.getStyleClass().removeAll(NOTIFICATION_STYLES);
-            notificationPane.getStyleClass().add("notification-pane-" + message.getType().name().toLowerCase());
-            notificationPane.show();
+        queue.addAll(messages);
+        if (!getNotificationPane().isShowing()) {
+            showNextMessage();
         }
+    }
+
+    private void showNextMessage() {
+        if (queue.isEmpty())
+            return;
+        SceneChangeMessage message = queue.poll();
+        log.info("Showing message {}", message);
+
+        NotificationPane notificationPane = getNotificationPane();
+        notificationPane.textProperty().bind(i18n.createBinding(message.getMessageKey()));
+        notificationPane.getStyleClass().removeAll(NOTIFICATION_STYLES);
+        notificationPane.getStyleClass().add("notification-pane-" + message.getType().name().toLowerCase());
+        notificationPane.show();
     }
 
 }
