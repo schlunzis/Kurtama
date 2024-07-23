@@ -9,6 +9,7 @@ import org.schlunzis.kurtama.common.messages.game.server.GameStartedMessage;
 import org.schlunzis.kurtama.common.messages.game.server.UpdateGameStateMessage;
 import org.schlunzis.kurtama.server.game.model.SquareGameState;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
+import org.schlunzis.kurtama.server.service.ServerMessageWrappers;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ public class GameService {
     private final GameManagement gameManagement;
 
     @EventListener
-    public void onStartGameRequest(ClientMessageContext<StartGameRequest> cmc) {
+    public ServerMessageWrappers onStartGameRequest(ClientMessageContext<StartGameRequest> cmc) {
         StartGameRequest request = cmc.getClientMessage();
         GameSettings gameSettings = request.gameSettings();
         log.info("Starting game with settings: {}", gameSettings);
@@ -29,11 +30,11 @@ public class GameService {
         SquareGameState gameState = game.getGameState();
 
         cmc.respond(new GameStartedMessage(game.getId(), gameState.toDTO()));
-        cmc.close();
+        return cmc.close();
     }
 
     @EventListener
-    public void onMoveRequest(ClientMessageContext<MoveRequest> cmc) {
+    public ServerMessageWrappers onMoveRequest(ClientMessageContext<MoveRequest> cmc) {
         MoveRequest request = cmc.getClientMessage();
         log.info("Move request: {}", request);
 
@@ -41,7 +42,7 @@ public class GameService {
         game.move(cmc.getUser(), request.getFieldIndex());
 
         cmc.respond(new UpdateGameStateMessage(game.getId(), game.getGameState().toDTO()));
-        cmc.close();
+        return cmc.close();
     }
 
 }

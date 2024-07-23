@@ -7,7 +7,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.fx.TilePane;
 import org.schlunzis.kurtama.client.service.IGameService;
 import org.schlunzis.kurtama.common.game.model.EdgeDTO;
@@ -16,7 +15,6 @@ import org.schlunzis.kurtama.common.game.model.ITileDTO;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@FxmlView("game.fxml")
 @Component
 @RequiredArgsConstructor
 public class GameController {
