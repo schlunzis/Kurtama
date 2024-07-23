@@ -1,4 +1,11 @@
 package org.schlunzis.kurtama.common.game;
 
-public record GameSettings(int columns, int rows) {
+import org.schlunzis.kurtama.common.IUser;
+
+import java.util.Collection;
+import java.util.List;
+
+public record GameSettings(int columns,
+                           int rows,
+                           List<Collection<IUser>> teams) {
 }

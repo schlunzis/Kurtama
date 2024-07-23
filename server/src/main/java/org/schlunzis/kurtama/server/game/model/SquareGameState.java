@@ -3,7 +3,6 @@ package org.schlunzis.kurtama.server.game.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.schlunzis.kurtama.common.game.model.SquareGameStateDTO;
-import org.schlunzis.kurtama.server.user.ServerUser;
 
 import java.util.List;
 
@@ -15,11 +14,11 @@ public class SquareGameState {
     private final List<Team> teams;
 
     public SquareGameStateDTO toDTO() {
-        return new SquareGameStateDTO(terrain.toDTO());
+        return new SquareGameStateDTO(terrain.toDTO(), teams.stream().map(Team::toDTO).toList());
     }
 
-    public SquareTile findTileWithFigureOfUser(ServerUser user) {
-        return terrain.findTileWithFigureOfUser(user);
+    public SquareTile findTileWithFigureOfTeam(Team team) {
+        return terrain.findTileWithFigureOfTeam(team);
     }
 
 }

@@ -1,4 +1,6 @@
 package org.schlunzis.kurtama.common.game.model;
 
-public record SquareGameStateDTO(ITerrainDTO terrain) implements IGameStateDTO {
+import java.util.List;
+
+public record SquareGameStateDTO(ITerrainDTO terrain, List<TeamDTO> teams) implements IGameStateDTO {
 }

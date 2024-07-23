@@ -5,11 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.game.GameSettings;
 import org.schlunzis.kurtama.common.messages.game.client.MoveRequest;
 import org.schlunzis.kurtama.common.messages.game.client.StartGameRequest;
+import org.schlunzis.kurtama.common.messages.game.server.CouldNotCreateGameMessage;
 import org.schlunzis.kurtama.common.messages.game.server.GameStartedMessage;
 import org.schlunzis.kurtama.common.messages.game.server.UpdateGameStateMessage;
 import org.schlunzis.kurtama.server.game.model.SquareGameState;
+import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
 import org.schlunzis.kurtama.server.service.ServerMessageWrappers;
+import org.schlunzis.kurtama.server.user.exception.UserNotFoundException;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +29,17 @@ public class GameService {
         GameSettings gameSettings = request.gameSettings();
         log.info("Starting game with settings: {}", gameSettings);
 
-        Game game = gameManagement.createGame(gameSettings);
+        Game game;
+        try {
+            game = gameManagement.createGame(gameSettings, request.lobbyID());
+        } catch (LobbyNotFoundException | UserNotFoundException e) {
+            log.info("Cannot create Game. Lobby not found.");
+            cmc.respond(new CouldNotCreateGameMessage());
+            return cmc.close();
+        }
         SquareGameState gameState = game.getGameState();
 
-        cmc.respond(new GameStartedMessage(game.getId(), gameState.toDTO()));
+        cmc.sendToMany(new GameStartedMessage(game.getId(), gameState.toDTO()), game.getAllUsers());
         return cmc.close();
     }
 
@@ -41,7 +51,7 @@ public class GameService {
         Game game = gameManagement.getGame(request.getGameID());
         game.move(cmc.getUser(), request.getFieldIndex());
 
-        cmc.respond(new UpdateGameStateMessage(game.getId(), game.getGameState().toDTO()));
+        cmc.sendToMany(new UpdateGameStateMessage(game.getId(), game.getGameState().toDTO()), game.getAllUsers());
         return cmc.close();
     }
 

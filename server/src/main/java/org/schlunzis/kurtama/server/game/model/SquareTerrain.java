@@ -1,10 +1,8 @@
 package org.schlunzis.kurtama.server.game.model;
 
 import org.schlunzis.kurtama.common.game.model.*;
-import org.schlunzis.kurtama.server.user.ServerUser;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SquareTerrain implements ITerrain {
 
@@ -39,10 +37,10 @@ public class SquareTerrain implements ITerrain {
         return new SquareTerrainDTO(columns, rows, (SquareTileDTO[][]) tileDTOs, edgeDTOs);
     }
 
-    public SquareTile findTileWithFigureOfUser(ServerUser user) {
+    public SquareTile findTileWithFigureOfTeam(Team team) {
         for (int x = 0; x < columns; x++) {
             for (int y = 0; y < rows; y++) {
-                if (tiles[x][y].hasFigureOfUser(user)) {
+                if (tiles[x][y].hasFigureOfTeam(team)) {
                     return tiles[x][y];
                 }
             }

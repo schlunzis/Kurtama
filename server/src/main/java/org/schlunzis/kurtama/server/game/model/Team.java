@@ -1,39 +1,34 @@
 package org.schlunzis.kurtama.server.game.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.schlunzis.kurtama.common.IUser;
+import org.schlunzis.kurtama.common.game.model.TeamColor;
+import org.schlunzis.kurtama.common.game.model.TeamDTO;
+import org.schlunzis.kurtama.server.user.ServerUser;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Getter
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public class Team {
 
     private final UUID id;
-    private final Color color;
-    private final List<IUser> users = new ArrayList<>();
+    private final TeamColor color;
+    private final List<ServerUser> users = new ArrayList<>();
 
     @Setter
     private int streetsLeft;
     @Setter
     private int housesLeft;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Team team = (Team) o;
-        return Objects.equals(id, team.id);
+    public TeamDTO toDTO() {
+        return new TeamDTO(id, color, users.stream().<IUser>map(IUser::toDTO).toList(), streetsLeft, housesLeft);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

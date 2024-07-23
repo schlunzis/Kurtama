@@ -26,7 +26,7 @@ public class TilePane extends AnchorPane {
         getChildren().add(label);
         StringBuilder styleBuilder = new StringBuilder();
         if (!tileDTO.figures().isEmpty()) {
-            styleBuilder.append("-fx-background-color: red;");
+            styleBuilder.append("-fx-background-color: ").append(tileDTO.figures().getFirst().color().name().toLowerCase()).append(";");
         }
         styleBuilder.append("-fx-border-color: black;");
         setStyle(styleBuilder.toString());
