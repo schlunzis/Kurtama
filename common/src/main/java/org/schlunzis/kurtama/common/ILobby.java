@@ -19,4 +19,6 @@ public interface ILobby {
 
     UUID getChatID();
 
+    IUser getOwner();
+
 }

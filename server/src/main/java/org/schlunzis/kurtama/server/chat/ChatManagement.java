@@ -1,11 +1,15 @@
 package org.schlunzis.kurtama.server.chat;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ChatManagement {
@@ -63,6 +67,30 @@ public class ChatManagement {
             return chatStore.get(chatID);
         } finally {
             readLock.unlock();
+        }
+    }
+
+    public void addChatter(@NonNull UUID chatID, @NonNull ServerUser user) {
+        writeLock.lock();
+        try {
+            chatStore.get(chatID).ifPresentOrElse(
+                    chat -> chat.addChatter(user),
+                    () -> log.warn("Could not add user to chat. No chat with id {} found", chatID)
+            );
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    public void removeChatter(@NonNull UUID chatID, @NonNull ServerUser user) {
+        writeLock.lock();
+        try {
+            chatStore.get(chatID).ifPresentOrElse(
+                    chat -> chat.removeChatter(user),
+                    () -> log.warn("Could not remove user from chat. No chat with id {} found", chatID)
+            );
+        } finally {
+            writeLock.unlock();
         }
     }
 

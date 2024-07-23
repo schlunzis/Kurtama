@@ -6,11 +6,11 @@
 
     <content>
         <HBox>
-            <Label text="Lobby Name: "/>
+            <Label text="%lobby.create.label.name"/>
             <TextField fx:id="lobbyNameField"/>
         </HBox>
     </content>
 
-    <ButtonType text="OK" buttonData="OK_DONE"/>
-    <ButtonType text="Cancel" buttonData="CANCEL_CLOSE"/>
+    <ButtonType text="%lobby.create.button.ok" buttonData="OK_DONE"/>
+    <ButtonType text="%lobby.create.button.cancel" buttonData="CANCEL_CLOSE"/>
 </DialogPane>

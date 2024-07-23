@@ -1,6 +1,8 @@
 package org.schlunzis.kurtama.server.user;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
+import org.schlunzis.kurtama.common.IUser;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +30,15 @@ public class H2UserStore implements IUserStore {
     @Override
     public Optional<DBUser> getUser(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public boolean deleteUser(IUser user) {
+        try {
+            userRepository.deleteById(user.getId());
+        } catch (IllegalArgumentException | OptimisticEntityLockException e) {
+            return false;
+        }
+        return true;
     }
 }

@@ -1,13 +1,11 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.rgielen.fxweaver.core.FxmlView;
-import org.schlunzis.kurtama.client.fx.dialog.CreateLobbyDialogResult;
-import org.schlunzis.kurtama.client.fx.dialog.DialogFactory;
+import org.schlunzis.kurtama.client.fx.scene.Scene;
+import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
@@ -16,23 +14,26 @@ import org.schlunzis.kurtama.common.messages.lobby.client.JoinLobbyRequest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Slf4j
-@FxmlView("main.fxml")
 @Component
 @RequiredArgsConstructor
 public class MainMenuController {
 
     private final ApplicationEventPublisher eventBus;
-    private final DialogFactory dialogFactory;
     private final ISessionService sessionService;
 
     @FXML
     private ListView<LobbyInfo> lobbiesListView;
 
     @FXML
+    private TextField lobbiesSearchField;
+
+    @FXML
     private Button joinLobbyButton;
+    @FXML
+    private TextField lobbyNameField;
+    @FXML
+    private PasswordField lobbyPasswordField;
 
     @FXML
     private void initialize() {
@@ -57,6 +58,17 @@ public class MainMenuController {
                 joinLobby();
         });
         joinLobbyButton.setDisable(true);
+
+    }
+
+    @FXML
+    private void searchLobbies() {
+        log.debug("Searching for lobbies");
+        String search = lobbiesSearchField.getText();
+        if (search.isBlank())
+            lobbiesListView.setItems(sessionService.getLobbyList());
+        else
+            lobbiesListView.setItems(sessionService.getLobbyList().filtered(li -> li.lobbyName().contains(search)));
     }
 
     @FXML
@@ -66,8 +78,8 @@ public class MainMenuController {
     }
 
     @FXML
-    private void settings(ActionEvent actionEvent) {
-        // TODO implement
+    private void settings() {
+        eventBus.publishEvent(new SceneChangeEvent(Scene.SETTINGS));
     }
 
     @FXML
@@ -79,11 +91,10 @@ public class MainMenuController {
     }
 
     @FXML
-    private void createLobby(ActionEvent actionEvent) {
-        Optional<Dialog<CreateLobbyDialogResult>> dialog = dialogFactory.createCreateLobbyDialog();
-        dialog.flatMap(Dialog::showAndWait).ifPresent(result ->
-                eventBus.publishEvent(new CreateLobbyRequest(result.getName()))
-        );
+    private void createLobby() {
+        String lobbyName = lobbyNameField.getText();
+        if (!lobbyName.isBlank())
+            eventBus.publishEvent(new CreateLobbyRequest(lobbyName));
     }
 
 }

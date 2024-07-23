@@ -1,0 +1,59 @@
+name: Build jar with Dependencies
+run-name: Build to jar on ${{ inputs.os }}
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+        description: "The operating system to build on."
+      mvn:
+        required: true
+        type: string
+        description: "The maven command to use. Either ./mvnw or ./mvnw.cmd. Windows requires the .cmd extension."
+      version:
+        required: true
+        type: string
+        description: "The project version to build. It must be equal to the version in the pom.xml file."
+      jar-file-modifier:
+        required: true
+        type: string
+        description: "The modifier to append to the jar file name. It is used to differentiate between the Linux and Windows jar files."
+
+jobs:
+  build-to-jar:
+    name: Build on ${{ inputs.os }} to jar
+    runs-on: ${{ inputs.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4.2.1
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build Server and Client with Maven
+        run: |
+          ${{ inputs.mvn }} versions:set -DnewVersion="${{ inputs.version }}"
+          ${{ inputs.mvn }} versions:commit
+          ${{ inputs.mvn }} --batch-mode --update-snapshots install package
+          mv client/target/client-${{ inputs.version }}.jar client/target/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          mv server/target/server-${{ inputs.version }}.jar server/target/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+
+      - name: Upload client jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-jar-${{ inputs.jar-file-modifier }}
+          path: client/target/kurtama-client-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          retention-days: 1
+          overwrite: true
+          if-no-files-found: error
+      - name: Upload server jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-jar-${{ inputs.jar-file-modifier }}
+          path: server/target/kurtama-server-${{ inputs.version }}-${{ inputs.jar-file-modifier }}.jar
+          retention-days: 1
+          overwrite: true
+          if-no-files-found: error

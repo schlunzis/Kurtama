@@ -1,12 +1,16 @@
 package org.schlunzis.kurtama.client.service.impl;
 
 import javafx.application.Platform;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
+import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.IUser;
 import org.schlunzis.kurtama.common.LobbyInfo;
+import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.lobby.server.LobbyListInfoMessage;
@@ -24,6 +28,7 @@ import java.util.Optional;
 public class SessionService implements ISessionService {
 
     private final ObservableList<LobbyInfo> lobbyList = FXCollections.observableList(new ArrayList<>());
+    private final Property<ConnectionStatusEvent.Status> connectionStatus = new SimpleObjectProperty<>(ConnectionStatusEvent.Status.NOT_CONNECTED);
     private Optional<IUser> currentUser = Optional.empty();
 
     @EventListener
@@ -42,6 +47,16 @@ public class SessionService implements ISessionService {
         Platform.runLater(() ->
                 lobbyList.setAll(lim.lobbies())
         );
+    }
+
+    @EventListener
+    void onConnectionStatus(ConnectionStatusEvent event) {
+        Platform.runLater(() -> connectionStatus.setValue(event.status()));
+    }
+
+    @EventListener
+    public void onDeletionSuccessfulResponse(DeletionSuccessfulResponse ignored) {
+        currentUser = Optional.empty();
     }
 
 }

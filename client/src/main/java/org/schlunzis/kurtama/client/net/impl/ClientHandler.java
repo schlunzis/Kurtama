@@ -6,10 +6,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.net.ServerMessageDispatcher;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
 public class ClientHandler extends SimpleChannelInboundHandler<String> {
 
     private final ServerMessageDispatcher dispatcher;

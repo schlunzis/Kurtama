@@ -2,15 +2,15 @@ package org.schlunzis.kurtama.client.fx.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.rgielen.fxweaver.core.FxmlView;
 import org.schlunzis.kurtama.client.service.ILobbyService;
+import org.schlunzis.kurtama.common.IUser;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@FxmlView("lobby.fxml")
 @Component
 @RequiredArgsConstructor
 public class LobbyController {
@@ -18,7 +18,7 @@ public class LobbyController {
     private final ILobbyService lobbyService;
 
     @FXML
-    private ListView<String> userListView;
+    private ListView<IUser> userListView;
 
 
     public void leaveLobby() {
@@ -28,6 +28,19 @@ public class LobbyController {
     @FXML
     public void initialize() {
         userListView.setItems(lobbyService.getLobbyUsersList());
+
+        userListView.setCellFactory(userListView -> new ListCell<>() {
+            @Override
+            protected void updateItem(IUser user, boolean empty) {
+                super.updateItem(user, empty);
+                IUser owner = lobbyService.getCurrentLobby().get().getOwner();
+                if (empty || user == null) {
+                    setText(null);
+                } else {
+                    setText(user.getUsername() + (user.equals(owner) ? " (Owner)" : ""));
+                }
+            }
+        });
     }
 
     public void startGame(ActionEvent actionEvent) {
