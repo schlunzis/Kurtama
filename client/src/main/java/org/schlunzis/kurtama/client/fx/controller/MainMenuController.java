@@ -8,7 +8,6 @@ import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.util.DialogFactory;
-import org.schlunzis.kurtama.client.util.I18n;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
@@ -23,7 +22,6 @@ public class MainMenuController {
 
     private final ApplicationEventPublisher eventBus;
     private final ISessionService sessionService;
-    private final I18n i18n;
     private final DialogFactory dialogFactory;
 
     @FXML

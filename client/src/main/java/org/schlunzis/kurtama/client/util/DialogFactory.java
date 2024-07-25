@@ -31,8 +31,8 @@ public class DialogFactory {
      * @param headerKey  The key for the header of the dialog
      * @param contentKey The key for the content of the dialog
      * @return The dialog
+     * @see <a href="https://stackoverflow.com/a/53825771">Stackoverflow</a>
      */
-    // https://stackoverflow.com/a/53825771
     public Dialog<String> createPasswordDialog(String titleKey, String headerKey, String contentKey) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle(i18n.i18n(titleKey));
@@ -58,6 +58,15 @@ public class DialogFactory {
         return dialog;
     }
 
+    /**
+     * Creates a dialog for text input. The dialog has a title, a header and a content. Compared to
+     * {@link #createPasswordDialog} the dialog has a text field instead of a password field.
+     *
+     * @param titleKey   The key for the title of the dialog
+     * @param headerKey  The key for the header of the dialog
+     * @param contentKey The key for the content of the dialog
+     * @return The dialog
+     */
     public TextInputDialog createTextInputDialog(String titleKey, String headerKey, String contentKey) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(i18n.i18n(titleKey));
