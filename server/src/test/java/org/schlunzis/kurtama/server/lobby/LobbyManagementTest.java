@@ -10,7 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.schlunzis.kurtama.server.chat.Chat;
 import org.schlunzis.kurtama.server.chat.ChatManagement;
 import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
+import org.schlunzis.kurtama.server.lobby.exception.WrongLobbyPasswordException;
 import org.schlunzis.kurtama.server.user.ServerUser;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -39,9 +41,17 @@ class LobbyManagementTest {
     UUID defaultLobbyID = new UUID(42, 0);
     UUID defaultChatID = new UUID(0, 42);
 
+    @Mock
+    PasswordEncoder passwordEncoder;
+
+    String defaultPassword = "12345";
+    String otherPassword = "6789";
+    String defaultPasswordHash = "fancy hash";
+
+
     @BeforeEach
     void init() {
-        lobbyManagement = new LobbyManagement(lobbyStore, chatManagement);
+        lobbyManagement = new LobbyManagement(lobbyStore, chatManagement, passwordEncoder);
     }
 
     // ################################################
@@ -51,13 +61,14 @@ class LobbyManagementTest {
     @Test
     void createLobbyDefaultTest() {
         InOrder inOrder = inOrder(defaultLobby);
-        when(lobbyStore.create("test")).thenReturn(defaultLobby);
+        when(lobbyStore.create("test", defaultPasswordHash)).thenReturn(defaultLobby);
         when(defaultLobby.getId()).thenReturn(defaultLobbyID);
         when(chatManagement.createLobbyChat(defaultLobbyID)).thenReturn(defaultChat);
         when(defaultChat.getId()).thenReturn(defaultChatID);
         when(defaultLobby.getChatID()).thenReturn(defaultChatID);
+        when(passwordEncoder.encode(defaultPassword)).thenReturn(defaultPasswordHash);
 
-        ServerLobby lobby = lobbyManagement.createLobby("test", defaultUser);
+        ServerLobby lobby = lobbyManagement.createLobby("test", defaultPassword, defaultUser);
 
         assertEquals(defaultLobby, lobby);
         verify(defaultLobby).joinUser(defaultUser);
@@ -71,8 +82,8 @@ class LobbyManagementTest {
 
     @Test
     void createLobbyNullTest() {
-        assertThrows(NullPointerException.class, () -> lobbyManagement.createLobby(null, defaultUser));
-        assertThrows(NullPointerException.class, () -> lobbyManagement.createLobby("test", null));
+        assertThrows(NullPointerException.class, () -> lobbyManagement.createLobby(null, defaultPassword, defaultUser));
+        assertThrows(NullPointerException.class, () -> lobbyManagement.createLobby("test", defaultPassword, null));
     }
 
     // ################################################
@@ -80,12 +91,13 @@ class LobbyManagementTest {
     // ################################################
 
     @Test
-    void joinLobbyDefaultTest() throws LobbyNotFoundException {
-        when(lobbyStore.get(defaultLobbyID)).thenReturn(java.util.Optional.ofNullable(defaultLobby));
+    void joinLobbyDefaultTest() throws LobbyNotFoundException, WrongLobbyPasswordException {
+        when(lobbyStore.get(defaultLobbyID)).thenReturn(Optional.ofNullable(defaultLobby));
         when(defaultLobby.getId()).thenReturn(defaultLobbyID);
         when(defaultLobby.getChatID()).thenReturn(defaultChatID);
+        when(defaultLobby.isPasswordProtected()).thenReturn(false);
 
-        ServerLobby lobby = lobbyManagement.joinLobby(defaultLobbyID, defaultUser);
+        ServerLobby lobby = lobbyManagement.joinLobby(defaultLobbyID, "", defaultUser);
 
         assertEquals(defaultLobby, lobby);
         verify(defaultLobby).joinUser(defaultUser);
@@ -93,15 +105,54 @@ class LobbyManagementTest {
     }
 
     @Test
+    void joinLobbyPasswordProtected() throws LobbyNotFoundException, WrongLobbyPasswordException {
+        when(lobbyStore.get(defaultLobbyID)).thenReturn(Optional.ofNullable(defaultLobby));
+        when(defaultLobby.getId()).thenReturn(defaultLobbyID);
+        when(defaultLobby.getChatID()).thenReturn(defaultChatID);
+        when(defaultLobby.isPasswordProtected()).thenReturn(true);
+        when(defaultLobby.getPasswordHash()).thenReturn(defaultPasswordHash);
+        when(passwordEncoder.matches(defaultPassword, defaultPasswordHash)).thenReturn(true);
+
+        ServerLobby lobby = lobbyManagement.joinLobby(defaultLobbyID, defaultPassword, defaultUser);
+
+        assertEquals(defaultLobby, lobby);
+        verify(defaultLobby).joinUser(defaultUser);
+        verify(chatManagement).addChatter(defaultChatID, defaultUser);
+    }
+
+
+    @Test
     void joinLobbyNullTest() {
-        assertThrows(NullPointerException.class, () -> lobbyManagement.joinLobby(null, defaultUser));
-        assertThrows(NullPointerException.class, () -> lobbyManagement.joinLobby(defaultLobbyID, null));
+        assertThrows(NullPointerException.class, () -> lobbyManagement.joinLobby(null, defaultPassword, defaultUser));
+        assertThrows(NullPointerException.class, () -> lobbyManagement.joinLobby(defaultLobbyID, defaultPassword, null));
     }
 
     @Test
     void joinLobbyNotFoundTest() {
         when(lobbyStore.get(defaultLobbyID)).thenReturn(Optional.empty());
-        assertThrows(LobbyNotFoundException.class, () -> lobbyManagement.joinLobby(defaultLobbyID, defaultUser));
+        assertThrows(LobbyNotFoundException.class, () -> lobbyManagement.joinLobby(defaultLobbyID, defaultPassword, defaultUser));
+    }
+
+    @Test
+    void joinLobbyWrongPasswordTest() {
+        when(lobbyStore.get(defaultLobbyID)).thenReturn(Optional.of(defaultLobby));
+        when(defaultLobby.isPasswordProtected()).thenReturn(true);
+        when(defaultLobby.getPasswordHash()).thenReturn(defaultPasswordHash);
+        when(passwordEncoder.matches(otherPassword, defaultPasswordHash)).thenReturn(false);
+        assertThrows(WrongLobbyPasswordException.class, () -> lobbyManagement.joinLobby(defaultLobbyID, otherPassword, defaultUser));
+    }
+
+    @Test
+    void joinLobbyNoPasswordTest() throws LobbyNotFoundException, WrongLobbyPasswordException {
+        when(lobbyStore.get(defaultLobbyID)).thenReturn(Optional.of(defaultLobby));
+        when(defaultLobby.isPasswordProtected()).thenReturn(false);
+        when(defaultLobby.getChatID()).thenReturn(defaultChatID);
+
+        ServerLobby lobby = lobbyManagement.joinLobby(defaultLobbyID, otherPassword, defaultUser);
+
+        assertEquals(defaultLobby, lobby);
+        verify(defaultLobby).joinUser(defaultUser);
+        verify(chatManagement).addChatter(defaultChatID, defaultUser);
     }
 
     // ################################################

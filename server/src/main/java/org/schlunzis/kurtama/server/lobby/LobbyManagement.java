@@ -25,6 +25,18 @@ public class LobbyManagement {
     private final PasswordEncoder passwordEncoder;
 
 
+    /**
+     * Create a new lobby with a random UUID. The creator will be added to the lobby. In this method the password is
+     * hashed. If the password is empty, the hash will be empty as well. Starting from here, the server will only work
+     * with hashed passwords.
+     * <p>
+     * The chat for the lobby will be created as well.
+     *
+     * @param lobbyName     the lobby's name
+     * @param lobbyPassword the lobby's raw password
+     * @param creator       the user that creates the lobby
+     * @return the created lobby
+     */
     public ServerLobby createLobby(@NonNull String lobbyName, @NonNull String lobbyPassword, @NonNull ServerUser creator) {
         String passwordHash = lobbyPassword.isBlank() ? "" : passwordEncoder.encode(lobbyPassword);
 
@@ -38,6 +50,17 @@ public class LobbyManagement {
         return lobby;
     }
 
+    /**
+     * Join a lobby. If the lobby is password protected, the password will be checked. If the password is correct, the user
+     * will be added to the lobby.
+     *
+     * @param lobbyID  the id of the lobby
+     * @param password the raw password of the lobby, if applicable
+     * @param user     the user that wants to join the lobby
+     * @return the joined lobby
+     * @throws LobbyNotFoundException      if the lobby was not found
+     * @throws WrongLobbyPasswordException if the password was wrong
+     */
     public ServerLobby joinLobby(@NonNull UUID lobbyID, @NonNull String password, @NonNull ServerUser user) throws LobbyNotFoundException, WrongLobbyPasswordException {
         Optional<ServerLobby> lobby = lobbyStore.get(lobbyID);
         if (lobby.isPresent()) {
