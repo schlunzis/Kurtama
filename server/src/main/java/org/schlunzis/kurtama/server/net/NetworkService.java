@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.server.net;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
@@ -25,9 +26,7 @@ public class NetworkService {
      * @param server      the server to register
      * @return the previous server registered for this session. empty if no server was registered before.
      */
-    public Optional<INetworkServer> addServer(SessionType sessionType, INetworkServer server) {
-        Objects.requireNonNull(sessionType);
-        Objects.requireNonNull(server);
+    public Optional<INetworkServer> addServer(@NonNull SessionType sessionType, @NonNull INetworkServer server) {
         return Optional.ofNullable(servers.put(sessionType, server));
     }
 

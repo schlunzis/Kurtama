@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.server.auth;
 
+import lombok.NonNull;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
 import org.schlunzis.zis.commons.collections.BiMap;
@@ -7,7 +8,6 @@ import org.schlunzis.zis.commons.collections.ConcurrentBiHashMap;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -15,24 +15,19 @@ class UserSessionMap {
 
     private final BiMap<ServerUser, ISession> map = new ConcurrentBiHashMap<>();
 
-    public void put(ServerUser user, ISession session) {
-        Objects.requireNonNull(user);
-        Objects.requireNonNull(session);
+    public void put(@NonNull ServerUser user, @NonNull ISession session) {
         map.put(user, session);
     }
 
-    public Optional<ISession> get(ServerUser user) {
-        Objects.requireNonNull(user);
+    public Optional<ISession> get(@NonNull ServerUser user) {
         return Optional.ofNullable(map.get(user));
     }
 
-    public Optional<ServerUser> get(ISession session) {
-        Objects.requireNonNull(session);
+    public Optional<ServerUser> get(@NonNull ISession session) {
         return Optional.ofNullable(map.getByValue(session));
     }
 
-    public Collection<ISession> getFor(Collection<ServerUser> users) {
-        Objects.requireNonNull(users);
+    public Collection<ISession> getFor(@NonNull Collection<ServerUser> users) {
         return map.getForKeys(users);
     }
 
@@ -40,18 +35,15 @@ class UserSessionMap {
         return map.values();
     }
 
-    public boolean contains(ISession session) {
-        Objects.requireNonNull(session);
+    public boolean contains(@NonNull ISession session) {
         return map.containsValue(session);
     }
 
-    public void remove(ServerUser user) {
-        Objects.requireNonNull(user);
+    public void remove(@NonNull ServerUser user) {
         map.remove(user);
     }
 
-    public void remove(ISession session) {
-        Objects.requireNonNull(session);
+    public void remove(@NonNull ISession session) {
         map.removeByValue(session);
     }
 
