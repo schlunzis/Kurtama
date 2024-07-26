@@ -158,7 +158,6 @@ class ChatManagementTest {
 
     @Test
     void getChatNullTest() {
-        when(chatStore.get(null)).thenThrow(NullPointerException.class);
         assertThrows(NullPointerException.class,
                 () -> chatManagement.getChat(null));
     }

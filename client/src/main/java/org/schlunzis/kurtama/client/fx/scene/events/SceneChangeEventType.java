@@ -5,6 +5,6 @@ public enum SceneChangeEventType {
     SUCCESS,
     WARNING,
     ERROR,
-    INFO;
+    INFO
 
 }

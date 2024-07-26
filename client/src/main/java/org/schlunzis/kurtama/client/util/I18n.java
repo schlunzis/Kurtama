@@ -87,7 +87,7 @@ public class I18n {
      * Extracts the locale from the filename of a language file.
      * <p>
      * The filename is expected to be in the format "messages_{languageTag}.properties".
-     * Example: "messages_de_DE.properties" -> {@link Locale.GERMANY}
+     * Example: "messages_de_DE.properties" -> {@link Locale#GERMANY}
      *
      * @param filename the filename of the language file
      * @return the locale extracted from the filename

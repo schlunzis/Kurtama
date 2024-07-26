@@ -42,7 +42,7 @@ public class ClientMessageDispatcher {
     }
 
     private void publishContext(IClientMessage clientMessage, ISession session, ServerUser user) {
-        eventBus.publishEvent(new ClientMessageContext<>(clientMessage, session, user, authenticationService, eventBus));
+        eventBus.publishEvent(new ClientMessageContext<>(clientMessage, session, user, authenticationService));
     }
 
     public void newClient(ISession session) {
