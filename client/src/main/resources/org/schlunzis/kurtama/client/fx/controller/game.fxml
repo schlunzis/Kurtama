@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <GridPane xmlns:fx="http://javafx.com/fxml"
           xmlns="http://javafx.com/javafx"
           fx:controller="org.schlunzis.kurtama.client.fx.controller.GameController"
           prefWidth="800"
           prefHeight="800">
+    <stylesheets>
+        <URL value="@css/style.css"/>
+        <URL value="@css/game.css"/>
+    </stylesheets>
+
     <columnConstraints>
         <ColumnConstraints percentWidth="10"/>
         <ColumnConstraints percentWidth="80"/>

@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.server.game.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.schlunzis.kurtama.common.IUser;
@@ -8,9 +9,9 @@ import org.schlunzis.kurtama.server.user.ServerUser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
+@EqualsAndHashCode(of = "id")
 @RequiredArgsConstructor
 public class EdgeData {
 
@@ -29,16 +30,4 @@ public class EdgeData {
         return new EdgeDTO(id, first.getId(), second.getId(), streetDTOs);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EdgeData edgeData = (EdgeData) o;
-        return id == edgeData.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

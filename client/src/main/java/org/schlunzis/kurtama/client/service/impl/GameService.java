@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Getter
 @Service
 @RequiredArgsConstructor
 class GameService implements IGameService {
 
     private final ApplicationEventPublisher eventBus;
 
+    @Getter
     private final ObjectProperty<IGameStateDTO> gameState = new SimpleObjectProperty<>();
     private UUID gameID;
 

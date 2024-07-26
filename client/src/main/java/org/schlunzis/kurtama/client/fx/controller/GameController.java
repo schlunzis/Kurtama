@@ -61,7 +61,6 @@ public class GameController {
                 terrainGrid.add(new TilePane(tile, edges, gameService), x, y);
             }
         }
-
     }
 
 }

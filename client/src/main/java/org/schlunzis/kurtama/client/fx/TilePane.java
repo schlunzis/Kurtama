@@ -12,16 +12,8 @@ import java.util.Arrays;
 @Slf4j
 public class TilePane extends AnchorPane {
 
-    private final IGameService gameService;
-
-    private final Label label = new Label();
-    private ITileDTO tileDTO;
-    private EdgeDTO[] edges;
-
     public TilePane(ITileDTO tileDTO, EdgeDTO[] edges, IGameService gameService) {
-        this.tileDTO = tileDTO;
-        this.edges = edges;
-        this.gameService = gameService;
+        Label label = new Label();
         label.setText(tileDTO.id() + " " + Arrays.stream(edges).reduce("", (acc, edge) -> acc + edge.secondTileIndex() + ", ", String::concat));
         getChildren().add(label);
         StringBuilder styleBuilder = new StringBuilder();
@@ -32,7 +24,7 @@ public class TilePane extends AnchorPane {
         setStyle(styleBuilder.toString());
 
         this.setOnMouseClicked(event -> {
-            log.info("Tile " + tileDTO.id() + " clicked");
+            log.info("Tile {} clicked", tileDTO.id());
             gameService.sendMoveRequest(tileDTO.id());
         });
     }

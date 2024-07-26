@@ -1,6 +1,5 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -43,7 +42,8 @@ public class LobbyController {
         });
     }
 
-    public void startGame(ActionEvent actionEvent) {
+    @FXML
+    private void startGame() {
         lobbyService.startGame();
     }
 
