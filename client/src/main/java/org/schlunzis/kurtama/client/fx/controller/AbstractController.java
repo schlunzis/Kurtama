@@ -42,9 +42,9 @@ public abstract class AbstractController implements MessageShowingController {
     }
 
     private void showNextMessage() {
-        if (queue.isEmpty())
-            return;
         SceneChangeMessage message = queue.poll();
+        if (message ==  null)
+            return;
         log.info("Showing message {}", message);
 
         NotificationPane notificationPane = getNotificationPane();
