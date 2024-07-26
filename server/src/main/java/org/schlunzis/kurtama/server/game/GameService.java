@@ -8,6 +8,7 @@ import org.schlunzis.kurtama.common.messages.game.client.StartGameRequest;
 import org.schlunzis.kurtama.common.messages.game.server.CouldNotCreateGameMessage;
 import org.schlunzis.kurtama.common.messages.game.server.GameStartedMessage;
 import org.schlunzis.kurtama.common.messages.game.server.UpdateGameStateMessage;
+import org.schlunzis.kurtama.server.auth.excptions.UnauthorizedRequestException;
 import org.schlunzis.kurtama.server.game.model.SquareGameState;
 import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
 import org.schlunzis.kurtama.server.service.ClientMessageContext;
@@ -31,9 +32,13 @@ public class GameService {
 
         Game game;
         try {
-            game = gameManagement.createGame(gameSettings, request.lobbyID());
+            game = gameManagement.createGame(gameSettings, request.lobbyID(), cmc.getUser());
         } catch (LobbyNotFoundException | UserNotFoundException e) {
             log.info("Cannot create Game. Lobby not found.");
+            cmc.respond(new CouldNotCreateGameMessage());
+            return cmc.close();
+        } catch (UnauthorizedRequestException e) {
+            log.info("Cannot create Game. Unauthorized request.");
             cmc.respond(new CouldNotCreateGameMessage());
             return cmc.close();
         }

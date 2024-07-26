@@ -73,7 +73,8 @@ public class LobbyService implements ILobbyService {
 
     @EventListener
     void onUserJoinedLobbyMessage(UserJoinedLobbyMessage ujlm) {
-        Platform.runLater(() -> lobbyUsersList.add(ujlm.joiningLobbyMember()));
+        currentLobby = Optional.of(ujlm.lobby());
+        Platform.runLater(() -> lobbyUsersList.setAll(ujlm.lobby().getUsers()));
     }
 
 

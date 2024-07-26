@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.IUser;
 import org.schlunzis.kurtama.common.game.GameSettings;
 import org.schlunzis.kurtama.common.game.model.TeamColor;
+import org.schlunzis.kurtama.server.auth.excptions.UnauthorizedRequestException;
 import org.schlunzis.kurtama.server.game.model.Team;
 import org.schlunzis.kurtama.server.lobby.LobbyManagement;
 import org.schlunzis.kurtama.server.lobby.ServerLobby;
@@ -23,8 +24,9 @@ public class GameManagement {
     private final GameStore gameStore;
     private final LobbyManagement lobbyManagement;
 
-    public Game createGame(GameSettings gameSettings, UUID lobbyID) throws LobbyNotFoundException, UserNotFoundException {
+    public Game createGame(GameSettings gameSettings, UUID lobbyID, ServerUser requestingUser) throws LobbyNotFoundException, UserNotFoundException, UnauthorizedRequestException {
         ServerLobby lobby = lobbyManagement.getLobby(lobbyID);
+        if (!lobby.getOwner().equals(requestingUser)) throw new UnauthorizedRequestException();
         List<Team> teams = createTeams(gameSettings, lobby);
 
 

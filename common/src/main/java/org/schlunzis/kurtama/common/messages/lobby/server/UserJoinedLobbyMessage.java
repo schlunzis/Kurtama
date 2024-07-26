@@ -1,7 +1,7 @@
 package org.schlunzis.kurtama.common.messages.lobby.server;
 
-import org.schlunzis.kurtama.common.UserDTO;
+import org.schlunzis.kurtama.common.LobbyDTO;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 
-public record UserJoinedLobbyMessage(UserDTO joiningLobbyMember) implements IServerMessage {
+public record UserJoinedLobbyMessage(LobbyDTO lobby) implements IServerMessage {
 }
