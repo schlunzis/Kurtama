@@ -3,6 +3,7 @@ package org.schlunzis.kurtama.client.fx.scene;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
+import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeMessage;
 import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
@@ -53,7 +54,7 @@ public class SceneController {
 
     @EventListener
     public void onDeletionSuccessfulResponse(DeletionSuccessfulResponse dsr) {
-        eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
+        eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN, SceneChangeMessage.USER_DELETED_SUCCESSFULLY));
     }
 
 }
