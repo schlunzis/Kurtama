@@ -2,12 +2,12 @@ package org.schlunzis.kurtama.server.chat;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.schlunzis.kurtama.server.user.ServerUser;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.UUID;
 
 @EqualsAndHashCode
@@ -18,15 +18,13 @@ public class Chat {
     private final UUID id;
     private final Collection<ServerUser> chatters = new ArrayList<>();
 
-    void addChatter(ServerUser user) {
-        Objects.requireNonNull(user);
+    void addChatter(@NonNull ServerUser user) {
         if (!chatters.contains(user)) {
             chatters.add(user);
         }
     }
 
-    void removeChatter(ServerUser user) {
-        Objects.requireNonNull(user);
+    void removeChatter(@NonNull ServerUser user) {
         chatters.remove(user);
     }
 

@@ -31,7 +31,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        log.info("Client joined - " + ctx);
+        log.info("Client joined - {}", ctx);
         ISession session = channelStore.create(ctx.channel());
         clientMessageDispatcher.newClient(session);
     }
@@ -40,8 +40,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void handlerRemoved(ChannelHandlerContext ctx) {
         channelStore.get(ctx.channel()).ifPresentOrElse(
                 clientMessageDispatcher::clientDisconnected,
-                () -> log.error("No session found for channel " + ctx.channel()));
-        log.info("Client left - " + ctx);
+                () -> log.error("No session found for channel {}", ctx.channel()));
+        log.info("Client left - {}", ctx);
         channelStore.remove(ctx.channel());
         ctx.close();
     }
@@ -49,12 +49,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
         try {
-            log.info("Message received: " + msg);
+            log.info("Message received: {}", msg);
             IClientMessage myMessage = messageConverter.toClientMessage(msg);
             log.info("converted to {}", myMessage);
             channelStore.get(ctx.channel()).ifPresentOrElse(
                     session -> clientMessageDispatcher.dispatch(myMessage, session),
-                    () -> log.error("No session found for channel " + ctx.channel())
+                    () -> log.error("No session found for channel {}", ctx.channel())
             );
         } catch (Throwable t) {
             log.error("Error during message conversion occurred:", t);
@@ -63,7 +63,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.info("Closing connection for client - " + ctx);
+        log.info("Closing connection for client - {}", ctx);
         channelStore.remove(ctx.channel());
         ctx.close();
     }
@@ -76,8 +76,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     /**
      * Sends a message to all recipients. If recipients is empty, the message is sent to all clients.
      *
-     * @param serverMessage
-     * @param recipients
+     * @param serverMessage the message to send
+     * @param recipients    the recipients to send the message to
      */
     public void sendMessage(IServerMessage serverMessage, Collection<ISession> recipients) {
         if (recipients.isEmpty())

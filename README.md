@@ -14,7 +14,7 @@ devastating situations.
 
 ## Build
 
-This project is written in Java 21 and uses Maven as its build tool. To build the project, you need to have
+This project is written in Java 22 and uses Maven as its build tool. To build the project, you need to have
 Java 21 installed. Clone this repository and run the following command in the root directory of the project:
 
 ```bash

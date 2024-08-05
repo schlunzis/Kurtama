@@ -1,0 +1,15 @@
+.notification-pane-info .notification-bar > .pane {
+    -fx-background-color: k-textfield-background;
+}
+
+.notification-pane-error .notification-bar > .pane {
+    -fx-background-color: k-error;
+}
+
+.notification-pane-warning .notification-bar > .pane {
+    -fx-background-color: k-warning;
+}
+
+.notification-pane-success .notification-bar > .pane {
+    -fx-background-color: k-success;
+}

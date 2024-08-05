@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.server.chat.Chat;
 import org.schlunzis.kurtama.server.chat.ChatManagement;
 import org.schlunzis.kurtama.server.lobby.exception.LobbyNotFoundException;
+import org.schlunzis.kurtama.server.lobby.exception.WrongLobbyPasswordException;
 import org.schlunzis.kurtama.server.user.ServerUser;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -20,9 +22,25 @@ public class LobbyManagement {
 
     private final LobbyStore lobbyStore;
     private final ChatManagement chatManagement;
+    private final PasswordEncoder passwordEncoder;
 
-    public ServerLobby createLobby(@NonNull String lobbyName, @NonNull ServerUser creator) {
-        ServerLobby lobby = lobbyStore.create(lobbyName);
+
+    /**
+     * Create a new lobby with a random UUID. The creator will be added to the lobby. In this method the password is
+     * hashed. If the password is empty, the hash will be empty as well. Starting from here, the server will only work
+     * with hashed passwords.
+     * <p>
+     * The chat for the lobby will be created as well.
+     *
+     * @param lobbyName     the lobby's name
+     * @param lobbyPassword the lobby's raw password
+     * @param creator       the user that creates the lobby
+     * @return the created lobby
+     */
+    public ServerLobby createLobby(@NonNull String lobbyName, @NonNull String lobbyPassword, @NonNull ServerUser creator) {
+        String passwordHash = lobbyPassword.isBlank() ? "" : passwordEncoder.encode(lobbyPassword);
+
+        ServerLobby lobby = lobbyStore.create(lobbyName, passwordHash);
         log.info("Created lobby with name: {} and id: {}", lobby.getName(), lobby.getId());
 
         Chat chat = chatManagement.createLobbyChat(lobby.getId());
@@ -32,11 +50,25 @@ public class LobbyManagement {
         return lobby;
     }
 
-    public ServerLobby joinLobby(@NonNull UUID lobbyID, @NonNull ServerUser user) throws LobbyNotFoundException {
+    /**
+     * Join a lobby. If the lobby is password protected, the password will be checked. If the password is correct, the user
+     * will be added to the lobby.
+     *
+     * @param lobbyID  the id of the lobby
+     * @param password the raw password of the lobby, if applicable
+     * @param user     the user that wants to join the lobby
+     * @return the joined lobby
+     * @throws LobbyNotFoundException      if the lobby was not found
+     * @throws WrongLobbyPasswordException if the password was wrong
+     */
+    public ServerLobby joinLobby(@NonNull UUID lobbyID, @NonNull String password, @NonNull ServerUser user) throws LobbyNotFoundException, WrongLobbyPasswordException {
         Optional<ServerLobby> lobby = lobbyStore.get(lobbyID);
         if (lobby.isPresent()) {
-            joinLobby(lobby.get(), user);
-            return lobby.get();
+            ServerLobby l = lobby.get();
+            if (!l.isPasswordProtected() || passwordEncoder.matches(password, l.getPasswordHash())) {
+                joinLobby(lobby.get(), user);
+                return lobby.get();
+            } else throw new WrongLobbyPasswordException();
         } else {
             throw new LobbyNotFoundException();
         }

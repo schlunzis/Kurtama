@@ -1,8 +1,12 @@
 package org.schlunzis.kurtama.server.chat;
 
+import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 class ChatStore {
@@ -20,13 +24,11 @@ class ChatStore {
         return chat;
     }
 
-    public void remove(UUID uuid) {
-        Objects.requireNonNull(uuid);
+    public void remove(@NonNull UUID uuid) {
         chats.remove(uuid);
     }
 
-    public Optional<Chat> get(UUID uuid) {
-        Objects.requireNonNull(uuid);
+    public Optional<Chat> get(@NonNull UUID uuid) {
         return Optional.ofNullable(chats.get(uuid));
     }
 

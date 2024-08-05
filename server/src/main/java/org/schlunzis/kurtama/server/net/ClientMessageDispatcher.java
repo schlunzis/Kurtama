@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.server.net;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
@@ -12,7 +13,6 @@ import org.schlunzis.kurtama.server.user.ServerUser;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -24,9 +24,7 @@ public class ClientMessageDispatcher {
 
     private final ApplicationEventPublisher eventBus;
 
-    public void dispatch(IClientMessage clientMessage, ISession session) {
-        Objects.requireNonNull(clientMessage);
-        Objects.requireNonNull(session);
+    public void dispatch(@NonNull IClientMessage clientMessage, @NonNull ISession session) {
         log.info("going to dispatch message {}", clientMessage);
 
         if (clientMessage instanceof LoginRequest || clientMessage instanceof RegisterRequest) { // no authentication needed
@@ -44,15 +42,14 @@ public class ClientMessageDispatcher {
     }
 
     private void publishContext(IClientMessage clientMessage, ISession session, ServerUser user) {
-        eventBus.publishEvent(new ClientMessageContext<>(clientMessage, session, user, authenticationService, eventBus));
+        eventBus.publishEvent(new ClientMessageContext<>(clientMessage, session, user, authenticationService));
     }
 
     public void newClient(ISession session) {
         // some things could be done here
     }
 
-    public void clientDisconnected(ISession session) {
-        Objects.requireNonNull(session);
+    public void clientDisconnected(@NonNull ISession session) {
         eventBus.publishEvent(new ForcedLogoutEvent(session));
     }
 

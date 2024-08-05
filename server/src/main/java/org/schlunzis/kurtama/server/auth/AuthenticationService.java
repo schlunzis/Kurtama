@@ -65,7 +65,7 @@ class AuthenticationService implements IAuthenticationService {
 
                 userSessionMap.put(user.toServerUser(), cmc.getSession());
                 log.info("User {} logged in", user.getEmail());
-                Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(l -> new LobbyInfo(l.getId(), l.getName(), l.getUsers().size())).toList();
+                Collection<LobbyInfo> lobbyInfos = lobbyStore.getAll().stream().map(l -> new LobbyInfo(l.getId(), l.getName(), l.isPasswordProtected(), l.getUsers().size())).toList();
                 cmc.respond(new LoginSuccessfulResponse(user.toServerUser().toDTO(), user.getEmail(), lobbyInfos));
             } else {
                 log.info("User {} tried to log in with wrong password", user.getEmail());

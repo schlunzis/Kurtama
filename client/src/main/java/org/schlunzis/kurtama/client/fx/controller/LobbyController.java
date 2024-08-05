@@ -28,16 +28,18 @@ public class LobbyController {
     public void initialize() {
         userListView.setItems(lobbyService.getLobbyUsersList());
 
-        userListView.setCellFactory(userListView -> new ListCell<>() {
+        userListView.setCellFactory(_ -> new ListCell<>() {
             @Override
             protected void updateItem(IUser user, boolean empty) {
                 super.updateItem(user, empty);
-                IUser owner = lobbyService.getCurrentLobby().get().getOwner();
-                if (empty || user == null) {
-                    setText(null);
-                } else {
-                    setText(user.getUsername() + (user.equals(owner) ? " (Owner)" : ""));
-                }
+                lobbyService.getCurrentLobby().ifPresentOrElse(lobby -> {
+                    IUser owner = lobby.getOwner();
+                    if (empty || user == null) {
+                        setText(null);
+                    } else {
+                        setText(user.getUsername() + (user.equals(owner) ? " (Owner)" : ""));
+                    }
+                }, () -> log.warn("No lobby found"));
             }
         });
     }

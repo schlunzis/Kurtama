@@ -62,8 +62,7 @@ public final class NettyClient implements INetworkClient {
             log.info("Connection cancelled by user.");
             close(ConnectionStatusEvent.Status.NOT_CONNECTED);
         } else if (!f.isSuccess()) {
-            log.error("Connection failed!");
-            f.cause().printStackTrace();
+            log.error("Connection failed!", f.cause());
             close(ConnectionStatusEvent.Status.FAILED);
         } else {
             log.info("Connected to server.");

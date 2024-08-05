@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
+import org.schlunzis.kurtama.client.util.DialogFactory;
 import org.schlunzis.kurtama.common.LobbyInfo;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutRequest;
 import org.schlunzis.kurtama.common.messages.lobby.client.CreateLobbyRequest;
@@ -21,6 +22,7 @@ public class MainMenuController {
 
     private final ApplicationEventPublisher eventBus;
     private final ISessionService sessionService;
+    private final DialogFactory dialogFactory;
 
     @FXML
     private ListView<LobbyInfo> lobbiesListView;
@@ -39,18 +41,18 @@ public class MainMenuController {
     private void initialize() {
         lobbiesListView.setItems(sessionService.getLobbyList());
         lobbiesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        lobbiesListView.setCellFactory(lobbyInfoListView -> new ListCell<>() {
+        lobbiesListView.setCellFactory(_ -> new ListCell<>() {
             @Override
             protected void updateItem(LobbyInfo lobbyInfo, boolean empty) {
                 super.updateItem(lobbyInfo, empty);
                 if (empty || lobbyInfo == null) {
                     setText(null);
                 } else {
-                    setText(lobbyInfo.lobbyName() + " (" + lobbyInfo.users() + ")");
+                    setText(lobbyInfo.lobbyName() + " (" + lobbyInfo.users() + ")" + (lobbyInfo.passwordProtected() ? " 🔒" : ""));
                 }
             }
         });
-        lobbiesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+        lobbiesListView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) ->
                 joinLobbyButton.setDisable(newValue == null)
         );
         lobbiesListView.setOnMouseClicked(event -> {
@@ -87,14 +89,23 @@ public class MainMenuController {
         LobbyInfo li = lobbiesListView.getSelectionModel().getSelectedItem();
         if (li == null)
             return;
-        eventBus.publishEvent(new JoinLobbyRequest(li.lobbyID()));
+        if (li.passwordProtected()) {
+            dialogFactory.createPasswordDialog("lobby.join.auth.title", "lobby.join.auth.header", "lobby.join.auth.content")
+                    .showAndWait()
+                    .ifPresent(password -> {
+                        log.info("Lobby password entered.");
+                        eventBus.publishEvent(new JoinLobbyRequest(li.lobbyID(), password));
+                    });
+        } else
+            eventBus.publishEvent(new JoinLobbyRequest(li.lobbyID(), ""));
     }
 
     @FXML
     private void createLobby() {
         String lobbyName = lobbyNameField.getText();
+        String lobbyPassword = lobbyPasswordField.getText();
         if (!lobbyName.isBlank())
-            eventBus.publishEvent(new CreateLobbyRequest(lobbyName));
+            eventBus.publishEvent(new CreateLobbyRequest(lobbyName, lobbyPassword));
     }
 
 }

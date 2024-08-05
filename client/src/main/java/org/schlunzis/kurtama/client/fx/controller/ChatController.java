@@ -35,11 +35,11 @@ public class ChatController {
     public void initialize() {
         chatListView.setItems(chatService.getChatMessages());
         senderNameTextField.setText(chatService.getCurrentUsername());
-        chatListView.setCellFactory(listView -> new CustomListCell());
-        chatService.getChatMessages().addListener((ListChangeListener<String>) change -> onNewChatMessage());
-        root.widthProperty().addListener((observable, oldValue, newValue) -> updateScrollDownButtonPosition());
-        scrollDownButton.widthProperty().addListener((observable, oldValue, newValue) -> updateScrollDownButtonPosition());
-        chatTextField.heightProperty().addListener((observable, oldValue, newValue) -> updateScrollDownButtonPosition());
+        chatListView.setCellFactory(_ -> new CustomListCell());
+        chatService.getChatMessages().addListener((ListChangeListener<String>) _ -> onNewChatMessage());
+        root.widthProperty().addListener((_, _, _) -> updateScrollDownButtonPosition());
+        scrollDownButton.widthProperty().addListener((_, _, _) -> updateScrollDownButtonPosition());
+        chatTextField.heightProperty().addListener((_, _, _) -> updateScrollDownButtonPosition());
         setPaused(false);
     }
 
@@ -62,7 +62,7 @@ public class ChatController {
     private void onNewChatMessage() {
         if (verticalBar == null) {
             verticalBar = (ScrollBar) chatListView.lookup(".scroll-bar:vertical");
-            verticalBar.valueProperty().addListener((obs, oldValue, newValue) ->
+            verticalBar.valueProperty().addListener((_, _, newValue) ->
                     setPaused(newValue.doubleValue() < verticalBar.getMax())
             );
         }

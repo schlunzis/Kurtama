@@ -3,6 +3,7 @@ package org.schlunzis.kurtama.client.fx.scene;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
+import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeMessage;
 import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginSuccessfulResponse;
 import org.schlunzis.kurtama.common.messages.authentication.logout.LogoutSuccessfulResponse;
@@ -23,38 +24,38 @@ public class SceneController {
     private final ApplicationEventPublisher eventBus;
 
     @EventListener
-    public void onLoginSuccessfulResponse(LoginSuccessfulResponse lsr) {
+    public void onLoginSuccessfulResponse(LoginSuccessfulResponse ignored) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.MAIN));
     }
 
     @EventListener
-    public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse lsr) {
+    public void onLogoutSuccessfulResponse(LogoutSuccessfulResponse ignored) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
     }
 
     @EventListener
-    public void onRegisterSuccessfulResponse(RegisterSuccessfulResponse rsr) {
+    public void onRegisterSuccessfulResponse(RegisterSuccessfulResponse ignored) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
     }
 
     @EventListener
-    public void onLobbyCreatedSuccessfullyResponse(LobbyCreatedSuccessfullyResponse lcsr) {
+    public void onLobbyCreatedSuccessfullyResponse(LobbyCreatedSuccessfullyResponse ignored) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.LOBBY));
     }
 
     @EventListener
-    public void onJoinLobbySuccessfullyResponse(JoinLobbySuccessfullyResponse jlsr) {
+    public void onJoinLobbySuccessfullyResponse(JoinLobbySuccessfullyResponse ignored) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.LOBBY));
     }
 
     @EventListener
-    public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse llsr) {
+    public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse ignored) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.MAIN));
     }
 
     @EventListener
-    public void onDeletionSuccessfulResponse(DeletionSuccessfulResponse dsr) {
-        eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN));
+    public void onDeletionSuccessfulResponse(DeletionSuccessfulResponse ignored) {
+        eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN, SceneChangeMessage.USER_DELETED_SUCCESSFULLY));
     }
 
     @EventListener

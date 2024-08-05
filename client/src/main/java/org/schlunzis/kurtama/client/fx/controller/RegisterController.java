@@ -31,9 +31,6 @@ public class RegisterController {
     @FXML
     private PasswordField passwordRepeatField;
 
-    // @FXML
-    // private JFXSnackbar snackbar;
-
     @FXML
     private void handleRegister() {
         log.info("Register button clicked");
@@ -65,7 +62,6 @@ public class RegisterController {
         Platform.runLater(() -> {
             passwordField.setText("");
             passwordRepeatField.setText("");
-            // snackbar.fireEvent(new JFXSnackbar.SnackbarEvent(new JFXSnackbarLayout("Registration Failed"), Duration.seconds(2), null));
         });
     }
 }

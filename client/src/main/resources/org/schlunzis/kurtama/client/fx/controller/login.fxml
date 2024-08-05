@@ -2,53 +2,63 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.NotificationPane?>
 <?import java.net.URL?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml" styleClass="root" xmlns="http://javafx.com/javafx"
-            fx:controller="org.schlunzis.kurtama.client.fx.controller.LoginController">
+<NotificationPane xmlns:fx="http://javafx.com/fxml" fx:id="notificationPane" xmlns="http://javafx.com/javafx"
+                  fx:controller="org.schlunzis.kurtama.client.fx.controller.LoginController">
     <stylesheets>
         <URL value="@css/style.css"/>
         <URL value="@css/login.css"/>
+        <URL value="@css/notification.css"/>
     </stylesheets>
 
-    <GridPane AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
-              styleClass="main-content" GridPane.columnIndex="0">
-        <columnConstraints>
-            <ColumnConstraints percentWidth="48"/>
-            <ColumnConstraints prefWidth="50"/>
-            <ColumnConstraints percentWidth="48"/>
-        </columnConstraints>
+    <content>
+        <AnchorPane styleClass="root">
+            <GridPane AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      styleClass="main-content" GridPane.columnIndex="0">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="48"/>
+                    <ColumnConstraints prefWidth="50"/>
+                    <ColumnConstraints percentWidth="48"/>
+                </columnConstraints>
 
-        <GridPane styleClass="login" GridPane.columnIndex="0">
-            <Label text="i{login.label.email}" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label text="i{login.label.password}" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1"
-                           onAction="#handleLogin"/>
-            <Button text="i{login.button.login}" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
-                    onAction="#handleLogin"/>
-            <Button text="i{login.button.register}" styleClass="secondary_button" GridPane.columnIndex="0"
-                    GridPane.rowIndex="3" GridPane.columnSpan="2" onAction="#handleRegister"/>
-            <ComboBox fx:id="languageSelector" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
-        </GridPane>
+                <GridPane styleClass="login" GridPane.columnIndex="0">
+                    <Label text="i{login.label.email}" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="i{login.label.password}" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                   onAction="#handleLogin"/>
+                    <Button text="i{login.button.login}" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                            GridPane.columnSpan="2"
+                            onAction="#handleLogin"/>
+                    <Button text="i{login.button.register}" styleClass="secondary_button" GridPane.columnIndex="0"
+                            GridPane.rowIndex="3" GridPane.columnSpan="2" onAction="#handleRegister"/>
+                    <ComboBox fx:id="languageSelector" GridPane.columnIndex="0" GridPane.rowIndex="4"
+                              GridPane.columnSpan="2"/>
+                </GridPane>
 
-        <GridPane styleClass="sep" GridPane.columnIndex="1" GridPane.rowIndex="0">
-            <Separator orientation="VERTICAL"/>
-        </GridPane>
+                <GridPane styleClass="sep" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Separator orientation="VERTICAL"/>
+                </GridPane>
 
-        <GridPane styleClass="connect" GridPane.columnIndex="2">
-            <Label text="i{login.label.server}" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <TextField fx:id="serverField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label text="i{login.label.port}" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="portField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <Button text="i{login.button.connect}" onAction="#handleServerConnect" GridPane.columnIndex="0"
-                    GridPane.rowIndex="2" GridPane.columnSpan="2"/>
-            <HBox styleClass="progress" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
-                <Region fx:id="progressIndicator"/>
-                <Label fx:id="progressLabel" text="Connecting..."/>
-            </HBox>
-        </GridPane>
-    </GridPane>
+                <GridPane styleClass="connect" GridPane.columnIndex="2">
+                    <Label text="i{login.label.server}" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="serverField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="i{login.label.port}" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="portField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Button text="i{login.button.connect}" onAction="#handleServerConnect" GridPane.columnIndex="0"
+                            GridPane.rowIndex="2" GridPane.columnSpan="2"/>
+                    <HBox styleClass="progress" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
+                        <Region fx:id="progressIndicator"/>
+                        <Label fx:id="progressLabel" text="Connecting..."/>
+                    </HBox>
+                </GridPane>
+            </GridPane>
 
-    <Label fx:id="versionLabel" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" styleClass="version-label"
-           text="Test"/>
-</AnchorPane>
+            <Label fx:id="versionLabel" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0"
+                   styleClass="version-label"
+                   text="Test"/>
+        </AnchorPane>
+    </content>
+</NotificationPane>

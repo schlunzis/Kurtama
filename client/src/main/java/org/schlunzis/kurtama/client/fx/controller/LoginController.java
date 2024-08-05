@@ -11,8 +11,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.controlsfx.control.NotificationPane;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
@@ -34,10 +36,7 @@ import java.util.Locale;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
-public class LoginController {
-
-    private final I18n i18n;
+public class LoginController extends AbstractController {
 
     public static final String NOT_CONNECTED_STYLE = "not_connected";
     public static final String CONNECTED_STYLE = "connected";
@@ -49,6 +48,18 @@ public class LoginController {
     private final Environment environment;
     private final ISessionService sessionService;
     private final IUserSettings userSettings;
+
+    public LoginController(I18n i18n, ApplicationEventPublisher eventBus, Environment environment, ISessionService sessionService, IUserSettings userSettings) {
+        super(i18n);
+        this.eventBus = eventBus;
+        this.environment = environment;
+        this.sessionService = sessionService;
+        this.userSettings = userSettings;
+    }
+
+    @FXML
+    @Getter(AccessLevel.PROTECTED)
+    private NotificationPane notificationPane;
 
     // LOGIN FIELDS
     @FXML
@@ -133,6 +144,7 @@ public class LoginController {
         languageSelector.setButtonCell(createLocaleCell());
         languageSelector.setOnAction(event -> i18n.setLocale(languageSelector.getSelectionModel().getSelectedItem()));
         languageSelector.getSelectionModel().select(i18n.getLocale());
+        super.initNotificationPane();
     }
 
     private ListCell<Locale> createLocaleCell() {

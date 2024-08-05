@@ -80,8 +80,6 @@ class AuthenticationServiceTest {
     @Captor
     ArgumentCaptor<IServerMessage> serverMessageCaptor;
     @Captor
-    ArgumentCaptor<ServerMessageWrapper> messageWrapperCaptor;
-    @Captor
     ArgumentCaptor<DBUser> dbUserCaptor;
 
     @BeforeEach

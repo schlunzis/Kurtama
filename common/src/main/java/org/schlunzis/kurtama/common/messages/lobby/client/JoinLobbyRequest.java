@@ -4,5 +4,5 @@ import org.schlunzis.kurtama.common.messages.IClientMessage;
 
 import java.util.UUID;
 
-public record JoinLobbyRequest(UUID lobbyID) implements IClientMessage {
+public record JoinLobbyRequest(UUID lobbyID, String password) implements IClientMessage {
 }
