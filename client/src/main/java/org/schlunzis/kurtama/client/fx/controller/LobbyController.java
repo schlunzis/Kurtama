@@ -28,7 +28,7 @@ public class LobbyController {
     public void initialize() {
         userListView.setItems(lobbyService.getLobbyUsersList());
 
-        userListView.setCellFactory(ulv -> new ListCell<>() {
+        userListView.setCellFactory(_ -> new ListCell<>() {
             @Override
             protected void updateItem(IUser user, boolean empty) {
                 super.updateItem(user, empty);

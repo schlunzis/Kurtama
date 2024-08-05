@@ -52,7 +52,7 @@ public class ChatService implements IChatService {
     }
 
     @EventListener
-    public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse llsr) {
+    public void onLeaveLobbySuccessfullyResponse(LeaveLobbySuccessfullyResponse ignored) {
         currentChatID = GLOBAL_CHAT_ID;
     }
 

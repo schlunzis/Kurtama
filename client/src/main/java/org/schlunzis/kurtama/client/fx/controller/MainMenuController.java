@@ -39,7 +39,7 @@ public class MainMenuController {
     private void initialize() {
         lobbiesListView.setItems(sessionService.getLobbyList());
         lobbiesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        lobbiesListView.setCellFactory(lobbyInfoListView -> new ListCell<>() {
+        lobbiesListView.setCellFactory(_ -> new ListCell<>() {
             @Override
             protected void updateItem(LobbyInfo lobbyInfo, boolean empty) {
                 super.updateItem(lobbyInfo, empty);
@@ -50,7 +50,7 @@ public class MainMenuController {
                 }
             }
         });
-        lobbiesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+        lobbiesListView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) ->
                 joinLobbyButton.setDisable(newValue == null)
         );
         lobbiesListView.setOnMouseClicked(event -> {

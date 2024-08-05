@@ -40,7 +40,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void handlerRemoved(ChannelHandlerContext ctx) {
         channelStore.get(ctx.channel()).ifPresentOrElse(
                 clientMessageDispatcher::clientDisconnected,
-                () -> log.error("No session found for channel " + ctx.channel()));
+                () -> log.error("No session found for channel {}", ctx.channel()));
         log.info("Client left - {}", ctx);
         channelStore.remove(ctx.channel());
         ctx.close();

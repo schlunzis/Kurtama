@@ -30,7 +30,7 @@ public abstract class AbstractController implements MessageShowingController {
     protected abstract NotificationPane getNotificationPane();
 
     protected void initNotificationPane() {
-        getNotificationPane().setOnHidden(e -> showNextMessage());
+        getNotificationPane().setOnHidden(_ -> showNextMessage());
     }
 
     @Override
@@ -43,7 +43,7 @@ public abstract class AbstractController implements MessageShowingController {
 
     private void showNextMessage() {
         SceneChangeMessage message = queue.poll();
-        if (message ==  null)
+        if (message == null)
             return;
         log.info("Showing message {}", message);
 
