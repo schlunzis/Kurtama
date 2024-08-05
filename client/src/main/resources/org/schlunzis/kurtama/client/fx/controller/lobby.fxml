@@ -25,7 +25,6 @@
     <Button mnemonicParsing="false" onAction="#leaveLobby" text="%lobby.room.button.leave" GridPane.columnIndex="0"
             GridPane.rowIndex="1"/>
     <fx:include source="chat.fxml" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <Button mnemonicParsing="false" onAction="#startGame" text="%lobby.room.button.start.game" GridPane.columnIndex="1"
-            GridPane.rowIndex="1"/>
-
+    <Button fx:id="startGameButton" mnemonicParsing="false" onAction="#startGame" text="%lobby.room.button.start.game"
+            GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 </GridPane>
