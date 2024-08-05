@@ -11,6 +11,7 @@ import org.schlunzis.kurtama.common.messages.authentication.register.RegisterReq
 import org.schlunzis.kurtama.server.auth.IAuthenticationService;
 import org.schlunzis.kurtama.server.net.ISession;
 import org.schlunzis.kurtama.server.user.ServerUser;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
 
@@ -19,7 +20,7 @@ import java.util.Optional;
 /**
  * thanks to <a href="https://stackoverflow.com/questions/71452445/eventlistener-for-generic-events-with-spring">StackOverflow</a>
  * <p>
- * A wrapper for messages to be sent via the {@link org.springframework.context.ApplicationEventPublisher}. This wrapper
+ * A wrapper for messages to be sent via the {@link ApplicationEventPublisher}. This wrapper
  * contains the message, the session and a user.
  * <p>
  * The message is the Message received from the client. The session is the session associated with the channel the
