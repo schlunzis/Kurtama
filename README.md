@@ -55,6 +55,47 @@ See [here](https://learn.microsoft.com/en-gb/windows/win32/msi/productversion) f
 
 This will create a .deb package and a .exe installer in the `target/jpackage-out` directory.
 
+### Docker
+
+The server might be build using Docker. You might use the provided image from the GitHub container registry or build it 
+yourself. If you desire to build the image yourself, we recommend to use the provided `docker-compose.yml` file, which 
+takes care of the build process.
+
+To build the image, you run the following command:
+
+```bash
+docker compose up
+```
+
+If you changed some code and want to force a rebuild of the image, you need to run the following command:
+
+```bash
+docker compose up --build kurtama-server
+```
+
+This will build the server image and start the server in a container. The server will listen on port `8007` by default.
+
+In case you want to access the container and see the files in the system you may do so by performing the following 
+command:
+    
+```bash
+docker compose exec kurtama-server /bin/sh
+```
+
+To access the application logs you can run the following command:
+
+```bash
+docker compose exec kurtama-server tail -f /opt/kurtama/logs/server.log
+```
+> [!Note]
+> `server.log` does only contain the explicit server logs. Logs from dependencies are not written to this file.
+
+To see the whole log output you need to run the following command:
+    
+```bash
+docker compose logs -f kurtama-server
+```
+
 ## Further information
 
 This is our first big project in Java completely written from scratch. We are still learning and trying to improve our
