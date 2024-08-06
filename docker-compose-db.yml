@@ -1,0 +1,9 @@
+services:
+  kurtama-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kurtama
+      POSTGRES_PASSWORD: kurtama
+      POSTGRES_DB: kurtama
+    ports:
+      - "5432:5432"

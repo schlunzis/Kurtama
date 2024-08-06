@@ -3,16 +3,14 @@ package org.schlunzis.kurtama.server.user;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.schlunzis.kurtama.common.IUser;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Profile("!production")
 @RequiredArgsConstructor
-public class H2UserStore implements IUserStore {
+public class UserStore implements IUserStore {
 
     private final UserRepository userRepository;
 
