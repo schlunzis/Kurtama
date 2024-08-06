@@ -1,7 +1,7 @@
 FROM maven:3.9.6-eclipse-temurin-22-alpine AS builder
 WORKDIR /opt/app
 COPY . .
-RUN  mvn --activate-profiles docker --projects server --also-make --batch-mode --update-snapshots install package
+RUN  --mount=type=cache,target=/root/.m2 mvn --activate-profiles docker --projects server --also-make --batch-mode --update-snapshots clean install package
 
 FROM eclipse-temurin:22-jre-alpine
 WORKDIR /opt/kurtama

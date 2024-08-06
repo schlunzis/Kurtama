@@ -18,7 +18,7 @@
         <Logger name="org.schlunzis.kurtama" level="${sys:logging.level:-info}">
             <AppenderRef ref="LogToFile"/>
         </Logger>
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="LogToConsole"/>
         </Root>
     </Loggers>
