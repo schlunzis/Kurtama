@@ -25,4 +25,11 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
         dispatcher.dispatch(myMessage);
     }
 
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        super.handlerRemoved(ctx);
+        log.info("Connection to Server lost");
+        dispatcher.connectionLost();
+    }
+
 }

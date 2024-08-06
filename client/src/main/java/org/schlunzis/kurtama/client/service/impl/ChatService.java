@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.schlunzis.kurtama.client.events.ConnectionLostEvent;
 import org.schlunzis.kurtama.client.service.IChatService;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.IUser;
@@ -65,6 +66,12 @@ public class ChatService implements IChatService {
 
     @EventListener
     public void onDeletionSuccessfulResponse(DeletionSuccessfulResponse ignored) {
+        currentChatID = GLOBAL_CHAT_ID;
+        Platform.runLater(chatMessages::clear);
+    }
+
+    @EventListener
+    public void onConnectionLostEvent(ConnectionLostEvent ignored) {
         currentChatID = GLOBAL_CHAT_ID;
         Platform.runLater(chatMessages::clear);
     }

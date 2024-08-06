@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.schlunzis.kurtama.client.events.ConnectionLostEvent;
 import org.schlunzis.kurtama.client.service.ILobbyService;
 import org.schlunzis.kurtama.common.ILobby;
 import org.schlunzis.kurtama.common.IUser;
@@ -75,6 +76,11 @@ public class LobbyService implements ILobbyService {
     void onUserJoinedLobbyMessage(UserJoinedLobbyMessage ujlm) {
         currentLobby = Optional.of(ujlm.lobby());
         Platform.runLater(() -> lobbyUsersList.setAll(ujlm.lobby().getUsers()));
+    }
+
+    @EventListener
+    public void onConnectionLostEvent(ConnectionLostEvent ignored) {
+        currentLobby = Optional.empty();
     }
 
 
