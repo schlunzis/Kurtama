@@ -32,4 +32,6 @@ public interface INetworkClient {
      */
     void close(ConnectionStatusEvent.Status status);
 
+    boolean isIntentionallyStopped();
+
 }

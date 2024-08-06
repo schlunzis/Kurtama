@@ -2,11 +2,9 @@ package org.schlunzis.kurtama.client.net;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.kurtama.client.events.ClientClosingEvent;
-import org.schlunzis.kurtama.client.events.ClientReadyEvent;
-import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
-import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
+import org.schlunzis.kurtama.client.events.*;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class NetworkService {
 
     private final NetworkServerFactory networkServerFactory;
+    private final ApplicationEventPublisher eventBus;
     private INetworkClient networkClient;
 
     @EventListener
@@ -45,6 +44,13 @@ public class NetworkService {
         Thread.ofVirtual()
                 .name("Netty-Start-Thread")
                 .start(() -> networkClient.start());
+    }
+
+    public void connectionLost() {
+        if (!networkClient.isIntentionallyStopped()) {
+            eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.FAILED));
+            eventBus.publishEvent(new ConnectionLostEvent());
+        }
     }
 
 }
