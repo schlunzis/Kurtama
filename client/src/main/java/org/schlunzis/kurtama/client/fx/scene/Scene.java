@@ -19,7 +19,8 @@ public enum Scene {
     REGISTER("register", RegisterController.class, "register.fxml"),
     LOBBY("lobby", LobbyController.class, "lobby.fxml"),
     SETTINGS("settings", SettingsController.class, "settings.fxml"),
-    GAME("game", GameController.class, "game.fxml");
+    GAME("game", GameController.class, "game.fxml"),
+    CREATE_SERVER("server", CreateServerController.class, "create-server.fxml");
 
     /**
      * Contains the lookup key for the title of the scene.

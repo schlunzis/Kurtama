@@ -59,6 +59,7 @@
             <Label fx:id="versionLabel" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0"
                    styleClass="version-label"
                    text="Test"/>
+            <Button fx:id="serverButton" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" onAction="#createServer"/>
         </AnchorPane>
     </content>
 </NotificationPane>

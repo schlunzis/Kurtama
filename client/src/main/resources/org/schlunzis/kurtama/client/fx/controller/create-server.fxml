@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<GridPane xmlns:fx="http://javafx.com/fxml" styleClass="root" xmlns="http://javafx.com/javafx"
+          fx:controller="org.schlunzis.kurtama.client.fx.controller.CreateServerController">
+    <stylesheets>
+        <URL value="@css/style.css"/>
+    </stylesheets>
+
+    <VBox>
+        <ComboBox fx:id="typeSelector" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
+        <Button text="Test Requirements" onAction="#handleTestRequirements" GridPane.columnIndex="0"
+                GridPane.rowIndex="2" GridPane.columnSpan="2"/>
+        <Label text="i{login.label.port}" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="portField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Button text="Run" onAction="#handleRun" GridPane.columnIndex="0"
+                GridPane.rowIndex="2" GridPane.columnSpan="2"/>
+    </VBox>
+
+</GridPane>
