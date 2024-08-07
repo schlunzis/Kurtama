@@ -13,7 +13,12 @@ import java.util.concurrent.Executors;
 @Component
 public class Server {
 
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private static final int MINIMUM_JAVA_VERSION = 22;
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
+        Thread t = new Thread(r);
+        t.setDaemon(true);
+        return t;
+    });
     private Process serverProcess;
 
     @Setter
@@ -36,8 +41,10 @@ public class Server {
             int exitCode = process.waitFor();
             String[] output = streamGobbler.getOutput();
             Arrays.stream(output).forEach(log::info);
+            String javaVersion = extractJavaVersion(output);
+            log.info("Java version: {}", javaVersion);
 
-            return exitCode == 0;
+            return exitCode == 0 && javaVersion != null && Integer.parseInt(javaVersion) >= MINIMUM_JAVA_VERSION;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.error("Error while testing JAR requirements", e);
@@ -46,6 +53,16 @@ public class Server {
             log.error("Error while testing JAR requirements", e);
         }
         return false;
+    }
+
+    public static String extractJavaVersion(String[] output) {
+        String lineWithVersion = output[1];
+        int startIndex = lineWithVersion.indexOf("(");
+        int endIndex = lineWithVersion.indexOf(")");
+        String semverString = lineWithVersion.substring(startIndex + 1, endIndex).split(" ")[1];
+        log.debug("Semver string: {}", semverString);
+
+        return semverString.split("\\.")[0];
     }
 
     private boolean testDocker() {
