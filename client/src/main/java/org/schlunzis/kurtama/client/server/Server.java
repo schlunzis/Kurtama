@@ -2,9 +2,13 @@ package org.schlunzis.kurtama.client.server;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,6 +23,11 @@ public class Server {
         t.setDaemon(true);
         return t;
     });
+    private static final String JAR_URL = "https://github.com/schlunzis/Kurtama/releases/download/v${kurtama-version}/kurtama-client-${kurtama-version}-linux.jar";
+    private static final String JAR_URL_VERSION_REPLACEMENT = "${kurtama-version}";
+    private static final String JAR_VERSION = "0.0.1-alpha+20240807142035";
+    private static final String JAR_PATH = "kurtama-server.jar";
+
     private Process serverProcess;
 
     @Setter
@@ -97,6 +106,42 @@ public class Server {
     }
 
     public void run(int port) {
+        switch (serverType) {
+            case JAR -> runJAR(port);
+            case DOCKER -> runDocker(port);
+        }
+    }
+
+    private void runJAR(int port) {
+        log.info("Starting server with JAR");
+        executor.submit(() -> {
+            try {
+                FileUtils.copyURLToFile(
+                        new URI(JAR_URL.replace(JAR_URL_VERSION_REPLACEMENT, JAR_VERSION)).toURL(),
+                        new File(JAR_PATH),
+                        10000,
+                        10000
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+
+            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", JAR_PATH)
+                    .directory(new File("."))
+                    .inheritIO();
+            processBuilder.environment().put("KURTAMA_SERVER_PORT", String.valueOf(port));
+            try {
+                serverProcess = processBuilder.start();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private void runDocker(int port) {
+
     }
 
 }
