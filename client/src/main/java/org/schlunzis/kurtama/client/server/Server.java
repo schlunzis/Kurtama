@@ -23,7 +23,7 @@ public class Server {
         t.setDaemon(true);
         return t;
     });
-    private static final String JAR_URL = "https://github.com/schlunzis/Kurtama/releases/download/v${kurtama-version}/kurtama-client-${kurtama-version}-linux.jar";
+    private static final String JAR_URL = "https://github.com/schlunzis/Kurtama/releases/download/v${kurtama-version}/kurtama-server-${kurtama-version}-linux.jar";
     private static final String JAR_URL_VERSION_REPLACEMENT = "${kurtama-version}";
     private static final String JAR_VERSION = "0.0.1-alpha+20240807142035";
     private static final String JAR_PATH = "kurtama-server.jar";
