@@ -65,7 +65,7 @@ public class JarServer extends Server {
             try {
                 FileUtils.copyURLToFile(
                         new URI(JAR_URL.replace(JAR_URL_VERSION_REPLACEMENT, versionManager.getVersion())).toURL(),
-                        new File(path + JAR_PATH),
+                        new File(path + File.separator + JAR_PATH),
                         10000,
                         10000
                 );
@@ -86,9 +86,5 @@ public class JarServer extends Server {
         });
     }
 
-    @Override
-    public void stop() {
-        serverProcess.destroy();
-    }
 
 }

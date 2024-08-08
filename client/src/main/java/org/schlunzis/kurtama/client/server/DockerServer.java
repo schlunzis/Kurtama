@@ -44,9 +44,4 @@ public class DockerServer extends Server {
 
     }
 
-    @Override
-    public void stop() {
-        serverProcess.destroy();
-    }
-
 }

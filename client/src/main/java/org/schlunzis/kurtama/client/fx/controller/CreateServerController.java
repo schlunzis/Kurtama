@@ -35,7 +35,8 @@ public class CreateServerController {
     @FXML
     private void initialize() {
         typeSelector.setItems(FXCollections.observableList(Arrays.asList(ServerType.values())));
-        typeSelector.setValue(ServerType.JAR);
+        typeSelector.getSelectionModel().select(ServerType.JAR);
+        server = serverFactory.getServer(typeSelector.getValue());
         typeSelector.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
             log.info("Selected server type: {}", newValue);
             server = serverFactory.getServer(typeSelector.getValue());

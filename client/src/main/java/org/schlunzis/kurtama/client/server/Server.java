@@ -20,6 +20,9 @@ public abstract class Server {
 
     public abstract void run(int port, String path);
 
-    public abstract void stop();
+    public void stop() {
+        if (serverProcess != null)
+            serverProcess.destroy();
+    }
 
 }
