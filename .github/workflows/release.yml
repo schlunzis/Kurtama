@@ -41,13 +41,9 @@ jobs:
         with:
           name: client-jar-win
       - uses: actions/download-artifact@v4
-        name: Download Server JAR for Linux
+        name: Download Server JAR
         with:
-          name: server-jar-linux
-      - uses: actions/download-artifact@v4
-        name: Download Server JAR for Windows
-        with:
-          name: server-jar-win
+          name: server-jar
 
       - name: List artifacts
         run: ls -al
