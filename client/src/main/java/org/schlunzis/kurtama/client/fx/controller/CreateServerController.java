@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.server.Server;
+import org.schlunzis.kurtama.client.server.ServerFactory;
 import org.schlunzis.kurtama.client.server.ServerType;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,8 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class CreateServerController {
 
-    private final Server server;
+    private final ServerFactory serverFactory;
+    private Server server;
 
     @FXML
     private ComboBox<ServerType> typeSelector;
@@ -31,7 +33,9 @@ public class CreateServerController {
 
     @FXML
     private void handleTestRequirements() {
-        server.setServerType(typeSelector.getValue());
+        if (server != null)
+            server.stop();
+        server = serverFactory.getServer(typeSelector.getValue());
         log.info("Can system run server? {}", server.testRequirements());
     }
 

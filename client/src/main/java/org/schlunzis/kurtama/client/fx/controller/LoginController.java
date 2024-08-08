@@ -24,6 +24,7 @@ import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
 import org.schlunzis.kurtama.client.settings.Setting;
 import org.schlunzis.kurtama.client.util.I18n;
+import org.schlunzis.kurtama.client.util.VersionManager;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginRequest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -49,13 +50,15 @@ public class LoginController extends AbstractController {
     private final Environment environment;
     private final ISessionService sessionService;
     private final IUserSettings userSettings;
+    private final VersionManager versionManager;
 
-    public LoginController(I18n i18n, ApplicationEventPublisher eventBus, Environment environment, ISessionService sessionService, IUserSettings userSettings) {
+    public LoginController(I18n i18n, ApplicationEventPublisher eventBus, Environment environment, ISessionService sessionService, IUserSettings userSettings, VersionManager versionManager) {
         super(i18n);
         this.eventBus = eventBus;
         this.environment = environment;
         this.sessionService = sessionService;
         this.userSettings = userSettings;
+        this.versionManager = versionManager;
     }
 
     @FXML
@@ -197,12 +200,7 @@ public class LoginController extends AbstractController {
     }
 
     private void setVersion() {
-        String version = getClass().getPackage().getImplementationVersion();
-        if (version != null && !version.isEmpty())
-            version = "v" + version;
-        else
-            version = "unknown version";
-        versionLabel.setText(version);
+        versionLabel.setText("v" + versionManager.getVersion());
     }
 
     public void createServer() {
