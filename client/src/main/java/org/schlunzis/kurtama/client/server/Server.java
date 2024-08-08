@@ -18,7 +18,7 @@ public abstract class Server {
 
     public abstract boolean testRequirements();
 
-    public abstract void run(int port);
+    public abstract void run(int port, String path);
 
     public abstract void stop();
 

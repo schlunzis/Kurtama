@@ -59,13 +59,13 @@ public class JarServer extends Server {
     }
 
     @Override
-    public void run(int port) {
+    public void run(int port, String path) {
         log.info("Starting server with JAR");
         executor.submit(() -> {
             try {
                 FileUtils.copyURLToFile(
                         new URI(JAR_URL.replace(JAR_URL_VERSION_REPLACEMENT, versionManager.getVersion())).toURL(),
-                        new File(JAR_PATH),
+                        new File(path + JAR_PATH),
                         10000,
                         10000
                 );
@@ -75,7 +75,7 @@ public class JarServer extends Server {
             }
 
             ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", JAR_PATH)
-                    .directory(new File("."))
+                    .directory(new File(path))
                     .inheritIO();
             processBuilder.environment().put("KURTAMA_SERVER_PORT", String.valueOf(port));
             try {
