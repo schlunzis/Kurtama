@@ -6,9 +6,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.kurtama.client.events.ClientClosingEvent;
 import org.schlunzis.kurtama.client.server.Server;
 import org.schlunzis.kurtama.client.server.ServerFactory;
 import org.schlunzis.kurtama.client.server.ServerType;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -50,6 +52,12 @@ public class CreateServerController {
     private void handleRun() {
         int port = Integer.parseInt(portField.getText()); // TODO exception handling
         server.run(port);
+    }
+
+    @EventListener
+    public void onClientClosingEvent(ClientClosingEvent ignored) {
+        if (server != null)
+            server.stop();
     }
 
 }
