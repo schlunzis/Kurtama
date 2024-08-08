@@ -29,14 +29,21 @@ public class CreateServerController {
     @FXML
     private void initialize() {
         typeSelector.setItems(FXCollections.observableList(Arrays.asList(ServerType.values())));
+        typeSelector.setValue(ServerType.JAR);
+        typeSelector.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
+            log.info("Selected server type: {}", newValue);
+            server = serverFactory.getServer(typeSelector.getValue());
+        });
     }
 
     @FXML
     private void handleTestRequirements() {
-        if (server != null)
+        if (server != null) {
             server.stop();
-        server = serverFactory.getServer(typeSelector.getValue());
-        log.info("Can system run server? {}", server.testRequirements());
+            log.info("Can system run server? {}", server.testRequirements());
+        } else {
+            log.error("No server selected");
+        }
     }
 
     @FXML
