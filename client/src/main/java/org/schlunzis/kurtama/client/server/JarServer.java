@@ -80,8 +80,7 @@ public class JarServer extends Server {
             }
 
             ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", JAR_PATH)
-                    .directory(new File(path))
-                    .inheritIO();
+                    .directory(new File(path));
             processBuilder.environment().put("KURTAMA_SERVER_PORT", String.valueOf(port));
             try {
                 serverProcess = processBuilder.start();

@@ -14,6 +14,8 @@ import org.schlunzis.kurtama.client.server.LogSink;
 import org.schlunzis.kurtama.client.server.Server;
 import org.schlunzis.kurtama.client.server.ServerFactory;
 import org.schlunzis.kurtama.client.server.ServerType;
+import org.schlunzis.kurtama.client.settings.IUserSettings;
+import org.schlunzis.kurtama.client.settings.Setting;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +29,7 @@ public class CreateServerController {
 
     private final ServerFactory serverFactory;
     private final LogSink logSink;
+    private final IUserSettings userSettings;
     private Server server;
 
     @FXML
@@ -47,7 +50,8 @@ public class CreateServerController {
             log.info("Selected server type: {}", newValue);
             server = serverFactory.getServer(typeSelector.getValue());
         });
-        pathField.setText(System.getProperty("user.home") + File.separator + ".kurtama"); // TODO get from settings
+        pathField.setText(userSettings.getString(Setting.SERVER_PATH));
+        portField.setText(String.valueOf(userSettings.getInt(Setting.PORT)));
         logSink.setLogConsumer(line -> Platform.runLater(() -> logArea.appendText(line + "\n")));
     }
 
@@ -64,6 +68,8 @@ public class CreateServerController {
     @FXML
     private void handleRun() {
         int port = Integer.parseInt(portField.getText()); // TODO exception handling
+        userSettings.putInt(Setting.PORT, port);
+        userSettings.putString(Setting.SERVER_PATH, pathField.getText());
         server.run(port, pathField.getText());
     }
 
