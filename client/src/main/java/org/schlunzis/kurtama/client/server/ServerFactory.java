@@ -9,11 +9,12 @@ import org.springframework.stereotype.Component;
 public class ServerFactory {
 
     private final VersionManager versionManager;
+    private final LogSink logSink;
 
     public Server getServer(ServerType serverType) {
         return switch (serverType) {
-            case JAR -> new JarServer(versionManager);
-            case DOCKER -> new DockerServer();
+            case JAR -> new JarServer(versionManager, logSink);
+            case DOCKER -> new DockerServer(logSink);
         };
     }
 

@@ -8,6 +8,10 @@ import java.util.Arrays;
 @Slf4j
 public class DockerServer extends Server {
 
+    public DockerServer(LogSink logSink) {
+        super(logSink);
+    }
+
     @Override
     public boolean testRequirements() {
         log.info("Testing for docker installation");

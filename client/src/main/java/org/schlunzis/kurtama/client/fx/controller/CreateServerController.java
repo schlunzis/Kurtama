@@ -1,13 +1,16 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.events.ClientClosingEvent;
+import org.schlunzis.kurtama.client.server.LogSink;
 import org.schlunzis.kurtama.client.server.Server;
 import org.schlunzis.kurtama.client.server.ServerFactory;
 import org.schlunzis.kurtama.client.server.ServerType;
@@ -23,6 +26,7 @@ import java.util.Arrays;
 public class CreateServerController {
 
     private final ServerFactory serverFactory;
+    private final LogSink logSink;
     private Server server;
 
     @FXML
@@ -31,6 +35,8 @@ public class CreateServerController {
     private TextField portField;
     @FXML
     private TextField pathField;
+    @FXML
+    private TextArea logArea;
 
     @FXML
     private void initialize() {
@@ -42,6 +48,7 @@ public class CreateServerController {
             server = serverFactory.getServer(typeSelector.getValue());
         });
         pathField.setText(System.getProperty("user.home") + File.separator + ".kurtama"); // TODO get from settings
+        logSink.setLogConsumer(line -> Platform.runLater(() -> logArea.appendText(line + "\n")));
     }
 
     @FXML

@@ -19,6 +19,8 @@
         <TextField fx:id="portField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
         <Button text="Run" onAction="#handleRun" GridPane.columnIndex="0"
                 GridPane.rowIndex="2" GridPane.columnSpan="2"/>
+        <TextArea fx:id="logArea" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="3"
+                  editable="false"/>
     </VBox>
 
 </GridPane>

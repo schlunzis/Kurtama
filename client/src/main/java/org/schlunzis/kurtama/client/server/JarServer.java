@@ -1,18 +1,18 @@
 package org.schlunzis.kurtama.client.server;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.schlunzis.kurtama.client.util.VersionManager;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
 @Slf4j
-@RequiredArgsConstructor
 public class JarServer extends Server {
 
     private static final int MINIMUM_JAVA_VERSION = 22;
@@ -21,6 +21,11 @@ public class JarServer extends Server {
     private static final String JAR_PATH = "kurtama-server.jar";
 
     private final VersionManager versionManager;
+
+    public JarServer(VersionManager versionManager, LogSink logSink) {
+        super(logSink);
+        this.versionManager = versionManager;
+    }
 
     @Override
     public boolean testRequirements() {
@@ -80,6 +85,10 @@ public class JarServer extends Server {
             processBuilder.environment().put("KURTAMA_SERVER_PORT", String.valueOf(port));
             try {
                 serverProcess = processBuilder.start();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
+                while (serverProcess.isAlive()) {
+                    logSink.log(reader.readLine());
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
