@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.Arrays;
 
 @Slf4j
-public class DockerServer extends Server {
+class DockerServer extends Server {
 
-    public DockerServer(LogSink logSink) {
+    DockerServer(LogSink logSink) {
         super(logSink);
     }
 

@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 
 @Slf4j
-public class JarServer extends Server {
+class JarServer extends Server {
 
     private static final int MINIMUM_JAVA_VERSION = 22;
     private static final String JAR_URL = "https://github.com/schlunzis/Kurtama/releases/download/v${kurtama-version}/kurtama-server-${kurtama-version}.jar";
@@ -22,7 +22,7 @@ public class JarServer extends Server {
 
     private final VersionManager versionManager;
 
-    public JarServer(VersionManager versionManager, LogSink logSink) {
+    JarServer(VersionManager versionManager, LogSink logSink) {
         super(logSink);
         this.versionManager = versionManager;
     }
@@ -65,7 +65,7 @@ public class JarServer extends Server {
 
     @Override
     public void run(int port, String path) {
-        log.info("Starting server with JAR");
+        log.info("Downloading server with JAR");
         executor.submit(() -> {
             try {
                 FileUtils.copyURLToFile(
@@ -79,6 +79,7 @@ public class JarServer extends Server {
                 throw new RuntimeException(e);
             }
 
+            log.info("Starting server with JAR");
             ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", JAR_PATH)
                     .directory(new File(path));
             processBuilder.environment().put("KURTAMA_SERVER_PORT", String.valueOf(port));

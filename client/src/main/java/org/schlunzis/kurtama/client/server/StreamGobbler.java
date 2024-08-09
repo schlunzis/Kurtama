@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 @RequiredArgsConstructor
-public class StreamGobbler implements Runnable {
+class StreamGobbler implements Runnable {
 
     private final InputStream is;
     @Getter
