@@ -5,8 +5,10 @@ import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.schlunzis.kurtama.common.IUser;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +45,12 @@ public class UserStore implements IUserStore {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<IUser> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> (IUser) user)
+                .collect(Collectors.toList());
     }
 }

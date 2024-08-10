@@ -4,6 +4,7 @@ import org.schlunzis.kurtama.common.IUser;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.List;
 
 public interface IUserStore {
 
@@ -16,5 +17,7 @@ public interface IUserStore {
     boolean deleteUser(IUser User);
 
     boolean deleteUser(UUID id);
+
+    List<IUser> getAllUsers();
 
 }

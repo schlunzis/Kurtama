@@ -5,14 +5,27 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta charset="UTF-8">
     <script>
-        function makeGetRequest() {
-            const textFieldValue = document.getElementById('inputField').value;
-            const url = `/api/rest/admin/v1/usermanagement/delete/${encodeURIComponent(textFieldValue)}`;
+
+        /*
+         * oy, what a disgusting way of getting the user ID. There must be a way to inject the ID via thymeleaf. Let's
+         * mark this as a TODO
+         */
+        function getUserIdForRow(button) {
+            // Find the row containing the button
+            const row = button.closest('tr');
+            // Find the cell containing the user ID
+            const idCell = row.querySelector('td:nth-child(2)');
+            // Get the text content of the ID cell
+             return idCell.textContent;
+          }
+
+        function deleteUser(userId) {
+            const url = `/api/rest/admin/v1/usermanagement/delete/${encodeURIComponent(userId)}`;
 
             fetch(url)
                     .then(response => {
                         if (response.ok) {
-                            document.getElementById('response').innerText = 'User with ID ' + textFieldValue + ' has been deleted!';
+                            document.getElementById('response').innerText = 'User with ID ' + userId + ' has been deleted!';
                         }
                     })
                     .catch(error => {
@@ -27,11 +40,25 @@
 <body>
 <h1>Usermanagement</h1>
 <p>You may perform usermanagement here.</p>
-<form onsubmit="return makeGetRequest();">
-    <label for="inputField">Enter text:</label>
-    <input type="text" id="inputField" name="inputField" required>
-    <button type="submit">Submit</button>
-</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>Username</th>
+        <th>ID</th>
+        <th>action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.id}"></td>
+        <td>
+            <button type="button" onclick="const id = getUserIdForRow(this); return deleteUser(id)">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
 <pre id="response"></pre>
 
 </body>
