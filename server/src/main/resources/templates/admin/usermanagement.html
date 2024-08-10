@@ -4,60 +4,63 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <body>
 
-
 <div layout:fragment="content">
-<script>
+    <script>
 
-    /*
-     * oy, what a disgusting way of getting the user ID. There must be a way to inject the ID via thymeleaf. Let's
-     * mark this as a TODO
-     */
-    function getUserIdForRow(button) {
-        const row = button.closest('tr');
-        const idCell = row.querySelector('td:nth-child(2)');
-        row.remove(); // Not the right position to remove the row, but it's a quick fix for now (what if the fetch fails?)
-        return idCell.textContent;
-    }
+        /*
+        * oy, what a disgusting way of getting the user ID. There must be a way to inject the ID via thymeleaf. Let's
+        * mark this as a TODO
+        */
+        function getUserIdForRow(button) {
+            const row = button.closest('tr');
+            const idCell = row.querySelector('td:nth-child(2)');
+            row.remove(); // Not the right position to remove the row, but it's a quick fix for now (what if the fetch fails?)
+            return idCell.textContent;
+        }
 
-    function deleteUser(userId) {
-        const url = `/api/rest/admin/v1/usermanagement/delete/${encodeURIComponent(userId)}`;
+        function deleteUser(userId) {
+            const url = `/api/rest/admin/v1/usermanagement/delete/${encodeURIComponent(userId)}`;
+            const responseElement = document.getElementById('response');
+            fetch(url)
+                    .then(response => {
+                        if (response.ok) {
+                            responseElement.className = 'alert alert-success';
+                            responseElement.innerText = 'User with ID ' + userId + ' has been deleted!';
+                        }
+                    })
+                    .catch(error => {
+                        responseElement.className = 'alert alert-danger';
+                        responseElement.innerText = 'Error: ' + error;
+                    });
+            return false; // Prevent form submission
+        }
+    </script>
 
-        fetch(url)
-                .then(response => {
-                    if (response.ok) {
-                        document.getElementById('response').innerText = 'User with ID ' + userId + ' has been deleted!';
-                    }
-                })
-                .catch(error => {
-                    document.getElementById('response').innerText = 'Error: ' + error;
-                });
+    <h1>Usermanagement</h1>
+    <p>You may perform usermanagement here.</p>
 
-        return false; // Prevent form submission
-    }
-</script>
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Username</th>
+            <th>ID</th>
+            <th>action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.id}"></td>
+            <td>
+                <button type="button" class="btn btn-danger"
+                        onclick="const id = getUserIdForRow(this); return deleteUser(id)">Delete
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <pre id="response"></pre>
+</div>
 
-<h1>Usermanagement</h1>
-<p>You may perform usermanagement here.</p>
-
-<table>
-    <thead>
-    <tr>
-        <th>Username</th>
-        <th>ID</th>
-        <th>action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.id}"></td>
-        <td>
-            <button type="button" onclick="const id = getUserIdForRow(this); return deleteUser(id)">Delete</button>
-        </td>
-    </tr>
-    </tbody>
-        </table>
-        <pre id="response"></pre>
-    </div>
 </body>
 </html>
