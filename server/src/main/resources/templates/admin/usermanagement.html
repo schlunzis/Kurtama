@@ -1,41 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Admin - Usermanagement</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta charset="UTF-8">
-    <script>
-
-        /*
-         * oy, what a disgusting way of getting the user ID. There must be a way to inject the ID via thymeleaf. Let's
-         * mark this as a TODO
-         */
-        function getUserIdForRow(button) {
-            const row = button.closest('tr');
-            const idCell = row.querySelector('td:nth-child(2)');
-            row.remove(); // Not the right position to remove the row, but it's a quick fix for now (what if the fetch fails?)
-             return idCell.textContent;
-          }
-
-        function deleteUser(userId) {
-            const url = `/api/rest/admin/v1/usermanagement/delete/${encodeURIComponent(userId)}`;
-
-            fetch(url)
-                    .then(response => {
-                        if (response.ok) {
-                            document.getElementById('response').innerText = 'User with ID ' + userId + ' has been deleted!';
-                        }
-                    })
-                    .catch(error => {
-                        document.getElementById('response').innerText = 'Error: ' + error;
-                    });
-
-            return false; // Prevent form submission
-        }
-    </script>
-</head>
-
+<html lang="en" layout:decorate="~{layout/layout :: layout(title='Admin - Usermanagement')}"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <body>
+
+
+<div layout:fragment="content">
+<script>
+
+    /*
+     * oy, what a disgusting way of getting the user ID. There must be a way to inject the ID via thymeleaf. Let's
+     * mark this as a TODO
+     */
+    function getUserIdForRow(button) {
+        const row = button.closest('tr');
+        const idCell = row.querySelector('td:nth-child(2)');
+        row.remove(); // Not the right position to remove the row, but it's a quick fix for now (what if the fetch fails?)
+        return idCell.textContent;
+    }
+
+    function deleteUser(userId) {
+        const url = `/api/rest/admin/v1/usermanagement/delete/${encodeURIComponent(userId)}`;
+
+        fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('response').innerText = 'User with ID ' + userId + ' has been deleted!';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('response').innerText = 'Error: ' + error;
+                });
+
+        return false; // Prevent form submission
+    }
+</script>
+
 <h1>Usermanagement</h1>
 <p>You may perform usermanagement here.</p>
 
@@ -56,10 +56,8 @@
         </td>
     </tr>
     </tbody>
-</table>
-<pre id="response"></pre>
-
+        </table>
+        <pre id="response"></pre>
+    </div>
 </body>
-
-
 </html>
