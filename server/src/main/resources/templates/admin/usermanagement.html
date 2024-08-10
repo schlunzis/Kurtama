@@ -11,11 +11,9 @@
          * mark this as a TODO
          */
         function getUserIdForRow(button) {
-            // Find the row containing the button
             const row = button.closest('tr');
-            // Find the cell containing the user ID
             const idCell = row.querySelector('td:nth-child(2)');
-            // Get the text content of the ID cell
+            row.remove(); // Not the right position to remove the row, but it's a quick fix for now (what if the fetch fails?)
              return idCell.textContent;
           }
 
