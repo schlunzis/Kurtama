@@ -15,4 +15,6 @@ public interface IUserStore {
 
     boolean deleteUser(IUser User);
 
+    boolean deleteUser(UUID id);
+
 }

@@ -32,8 +32,13 @@ public class UserStore implements IUserStore {
 
     @Override
     public boolean deleteUser(IUser user) {
+        return deleteUser(user.getId());
+    }
+
+    @Override
+    public boolean deleteUser(UUID id) {
         try {
-            userRepository.deleteById(user.getId());
+            userRepository.deleteById(id);
         } catch (IllegalArgumentException | OptimisticEntityLockException e) {
             return false;
         }
