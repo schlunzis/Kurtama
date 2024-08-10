@@ -7,7 +7,7 @@
     <script>
         function makeGetRequest() {
             const textFieldValue = document.getElementById('inputField').value;
-            const url = `http://localhost:8008/api/rest/admin/v1/usermanagement/delete/${encodeURIComponent(textFieldValue)}`;
+            const url = `/api/rest/admin/v1/usermanagement/delete/${encodeURIComponent(textFieldValue)}`;
 
             fetch(url)
                     .then(response => {
@@ -25,7 +25,6 @@
 </head>
 
 <body>
-<span th:if="${id != null}" th:text="User with ${id} has been deleted!"></span>
 <h1>Usermanagement</h1>
 <p>You may perform usermanagement here.</p>
 <form onsubmit="return makeGetRequest();">
