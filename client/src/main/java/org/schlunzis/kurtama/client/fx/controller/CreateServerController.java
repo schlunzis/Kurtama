@@ -51,6 +51,11 @@ public class CreateServerController {
         serverStatusView.setI18n(i18n);
         pathField.setText(userSettings.getString(Setting.SERVER_PATH));
         portField.setText(String.valueOf(userSettings.getInt(Setting.PORT)));
+        portField.textProperty().addListener((_, _, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                portField.setText(newValue.replaceAll("\\D", ""));
+            }
+        });
         typeSelector.setItems(FXCollections.observableList(Arrays.asList(ServerType.values())));
         typeSelector.getSelectionModel().select(userSettings.getServerType(Setting.SERVER_TYPE));
         server = createServer(typeSelector.getSelectionModel().getSelectedItem());
@@ -72,12 +77,13 @@ public class CreateServerController {
             requirementsStatusView.setStatus(success ? RequirementsStatus.SUCCESS : RequirementsStatus.FAILED);
         } else {
             log.error("No server selected");
+            requirementsStatusView.setStatus(RequirementsStatus.FAILED);
         }
     }
 
     @FXML
     private void handleRun() {
-        int port = Integer.parseInt(portField.getText()); // TODO exception handling
+        int port = Integer.parseInt(portField.getText());
         userSettings.putInt(Setting.PORT, port);
         userSettings.putString(Setting.SERVER_PATH, pathField.getText());
         server.run(port, pathField.getText());
