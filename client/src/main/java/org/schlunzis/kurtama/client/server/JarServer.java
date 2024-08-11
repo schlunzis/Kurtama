@@ -66,6 +66,7 @@ class JarServer extends Server {
     @Override
     public void run(int port, String path) {
         log.info("Downloading server with JAR");
+        setStatus(ServerStatus.DOWNLOADING);
         executor.submit(() -> {
             try {
                 FileUtils.copyURLToFile(
@@ -76,10 +77,12 @@ class JarServer extends Server {
                 );
             } catch (IOException | URISyntaxException e) {
                 log.error("Error while downloading JAR", e);
-                throw new RuntimeException(e);
+                setStatus(ServerStatus.DOWNLOAD_FAILED);
+                return;
             }
 
             log.info("Starting server with JAR");
+            setStatus(ServerStatus.RUNNING);
             ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", JAR_PATH)
                     .directory(new File(path));
             processBuilder.environment().put("KURTAMA_SERVER_PORT", String.valueOf(port));
@@ -90,10 +93,10 @@ class JarServer extends Server {
                     logSink.log(reader.readLine());
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                log.error("Error while starting JAR server", e);
+                setStatus(ServerStatus.RUNNING_FAILED);
             }
         });
     }
-
 
 }

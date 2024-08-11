@@ -1,5 +1,7 @@
 package org.schlunzis.kurtama.client.server;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,8 @@ public abstract class Server {
 
     protected Process serverProcess;
 
+    private final ObjectProperty<ServerStatus> status = new SimpleObjectProperty<>(ServerStatus.NOT_STARTED);
+
     public abstract boolean testRequirements();
 
     public abstract void run(int port, String path);
@@ -27,6 +31,20 @@ public abstract class Server {
     public void stop() {
         if (serverProcess != null)
             serverProcess.destroy();
+        setStatus(ServerStatus.STOPPED);
+    }
+
+    protected void setStatus(ServerStatus status) {
+        log.info("Server status: {}", status);
+        this.status.set(status);
+    }
+
+    public ObjectProperty<ServerStatus> statusProperty() {
+        return status;
+    }
+
+    public ServerStatus getStatus() {
+        return status.get();
     }
 
 }

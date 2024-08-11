@@ -10,12 +10,11 @@ import javafx.stage.DirectoryChooser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.client.events.ClientClosingEvent;
-import org.schlunzis.kurtama.client.server.LogSink;
-import org.schlunzis.kurtama.client.server.Server;
-import org.schlunzis.kurtama.client.server.ServerFactory;
-import org.schlunzis.kurtama.client.server.ServerType;
+import org.schlunzis.kurtama.client.fx.view.StatusView;
+import org.schlunzis.kurtama.client.server.*;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
 import org.schlunzis.kurtama.client.settings.Setting;
+import org.schlunzis.kurtama.client.util.I18n;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -30,36 +29,46 @@ public class CreateServerController {
     private final ServerFactory serverFactory;
     private final LogSink logSink;
     private final IUserSettings userSettings;
+    private final I18n i18n;
     private Server server;
 
     @FXML
     private ComboBox<ServerType> typeSelector;
     @FXML
+    private StatusView requirementsStatusView;
+    @FXML
     private TextField portField;
     @FXML
     private TextField pathField;
+    @FXML
+    private StatusView serverStatusView;
     @FXML
     private TextArea logArea;
 
     @FXML
     private void initialize() {
-        typeSelector.setItems(FXCollections.observableList(Arrays.asList(ServerType.values())));
-        typeSelector.getSelectionModel().select(ServerType.JAR);
-        server = serverFactory.getServer(typeSelector.getValue());
-        typeSelector.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
-            log.info("Selected server type: {}", newValue);
-            server = serverFactory.getServer(typeSelector.getValue());
-        });
+        requirementsStatusView.setI18n(i18n);
+        serverStatusView.setI18n(i18n);
         pathField.setText(userSettings.getString(Setting.SERVER_PATH));
         portField.setText(String.valueOf(userSettings.getInt(Setting.PORT)));
+        typeSelector.setItems(FXCollections.observableList(Arrays.asList(ServerType.values())));
+        typeSelector.getSelectionModel().select(ServerType.JAR);
+        server = createServer(ServerType.JAR);
+
+        typeSelector.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
+            log.info("Selected server type: {}", newValue);
+            server = createServer(newValue);
+        });
         logSink.setLogConsumer(line -> Platform.runLater(() -> logArea.appendText(line + "\n")));
     }
 
-    @FXML
-    private void handleTestRequirements() {
+    private void testRequirements() {
+        requirementsStatusView.setStatus(RequirementsStatus.TESTING);
         if (server != null) {
             server.stop();
-            log.info("Can system run server? {}", server.testRequirements());
+            boolean success = server.testRequirements();
+            log.info("Can system run server? {}", success);
+            requirementsStatusView.setStatus(success ? RequirementsStatus.SUCCESS : RequirementsStatus.FAILED);
         } else {
             log.error("No server selected");
         }
@@ -92,6 +101,16 @@ public class CreateServerController {
         if (selectedDirectory != null) {
             pathField.setText(selectedDirectory.getAbsolutePath());
         }
+    }
+
+    private Server createServer(ServerType serverType) {
+        server = serverFactory.getServer(serverType);
+        server.statusProperty().addListener((_, _, newValue) -> {
+            log.info("Server status changed: {}", newValue);
+            Platform.runLater(() -> serverStatusView.setStatus(newValue));
+        });
+        testRequirements();
+        return server;
     }
 
 }

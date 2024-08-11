@@ -1,0 +1,11 @@
+.root {
+    -fx-padding: 10;
+}
+
+VBox {
+    -fx-spacing: 10;
+}
+
+.port-field {
+    -fx-pref-width: 100;
+}
