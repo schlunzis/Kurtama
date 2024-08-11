@@ -1,5 +1,6 @@
 package org.schlunzis.kurtama.client.settings;
 
+import org.schlunzis.kurtama.client.server.ServerType;
 import org.springframework.stereotype.Component;
 
 import java.util.prefs.Preferences;
@@ -37,6 +38,21 @@ public class UserSettings implements IUserSettings {
     @Override
     public boolean getBoolean(Setting<Boolean> key) {
         return preferences.getBoolean(key.getPreferencesKey(), key.getDefaultValue());
+    }
+
+    @Override
+    public ServerType getServerType(Setting<ServerType> key) {
+        try {
+            return ServerType.valueOf(preferences.get(key.getPreferencesKey(), key.getDefaultValue().name()));
+        } catch (IllegalArgumentException e) {
+            preferences.put(key.getPreferencesKey(), key.getDefaultValue().name());
+            return key.getDefaultValue();
+        }
+    }
+
+    @Override
+    public void putServerType(Setting<ServerType> key, ServerType value) {
+        preferences.put(key.getPreferencesKey(), value.name());
     }
 
 }

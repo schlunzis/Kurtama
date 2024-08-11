@@ -52,11 +52,12 @@ public class CreateServerController {
         pathField.setText(userSettings.getString(Setting.SERVER_PATH));
         portField.setText(String.valueOf(userSettings.getInt(Setting.PORT)));
         typeSelector.setItems(FXCollections.observableList(Arrays.asList(ServerType.values())));
-        typeSelector.getSelectionModel().select(ServerType.JAR);
-        server = createServer(ServerType.JAR);
+        typeSelector.getSelectionModel().select(userSettings.getServerType(Setting.SERVER_TYPE));
+        server = createServer(typeSelector.getSelectionModel().getSelectedItem());
 
         typeSelector.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
             log.info("Selected server type: {}", newValue);
+            userSettings.putServerType(Setting.SERVER_TYPE, newValue);
             server = createServer(newValue);
         });
         logSink.setLogConsumer(line -> Platform.runLater(() -> logArea.appendText(line + "\n")));
