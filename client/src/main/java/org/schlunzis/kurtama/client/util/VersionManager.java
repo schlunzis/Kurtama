@@ -14,4 +14,8 @@ public class VersionManager {
         return version;
     }
 
+    public String getDockerVersion() {
+        return getVersion().replace("+", "-");
+    }
+
 }
