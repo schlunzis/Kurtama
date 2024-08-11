@@ -116,6 +116,7 @@ public class CreateServerController {
             log.info("Server status changed: {}", newValue);
             Platform.runLater(() -> serverStatusView.setStatus(newValue));
         });
+        Platform.runLater(() -> serverStatusView.setStatus(server.getStatus()));
         testRequirements();
         return server;
     }

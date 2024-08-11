@@ -6,12 +6,15 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
 import org.schlunzis.kurtama.client.util.I18n;
 
 import java.util.Objects;
@@ -21,11 +24,12 @@ public class StatusView extends HBox {
     public static final String STYLE_CLASS = "status-view";
     public static final String ICON_STYLE_CLASS = "status-icon";
     private static final int PROGRESS_ICON_SIZE = 30;
+    private static final FontAwesome FONT_AWESOME = new FontAwesome();
 
     @Setter
     private I18n i18n;
 
-    private final Region statusIcon = new Region();
+    private final Pane statusIcon = new Pane();
     private final Label statusLabel = new Label();
 
     private final Rotate progressRotate;
@@ -57,6 +61,11 @@ public class StatusView extends HBox {
         if (status.getType() == StatusType.PROGRESS)
             progressTimeline.play();
         statusLabel.textProperty().bind(i18n.createBinding(status.getI18nKey()));
+        statusIcon.getChildren().clear();
+        Glyph glyph = FONT_AWESOME.create(status.getType().getGlyph());
+        glyph.setColor(status.getType().getColor()); // Not Working
+        glyph.setFontSize(PROGRESS_ICON_SIZE);
+        statusIcon.getChildren().add(glyph);
         statusIcon.getStyleClass().clear();
         statusIcon.getStyleClass().addAll(ICON_STYLE_CLASS, status.getType().getStyleClass());
     }
@@ -70,13 +79,15 @@ public class StatusView extends HBox {
     @Getter
     @RequiredArgsConstructor
     public enum StatusType {
-        INFO("info"),
-        PROGRESS("progress"),
-        WARNING("warning"),
-        ERROR("error"),
-        SUCCESS("success");
+        INFO(FontAwesome.Glyph.INFO, Color.LIGHTBLUE),
+        PROGRESS(FontAwesome.Glyph.SPINNER, Color.LIGHTBLUE),
+        WARNING(FontAwesome.Glyph.WARNING, Color.ORANGE),
+        ERROR(FontAwesome.Glyph.BARS, Color.RED),
+        SUCCESS(FontAwesome.Glyph.CHECK, Color.GREEN);
 
-        private final String styleClass;
+        private final FontAwesome.Glyph glyph;
+        private final Color color;
+        private final String styleClass = name().toLowerCase();
     }
 
 }
