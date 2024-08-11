@@ -31,7 +31,7 @@ public interface UserApi {
             @ApiResponse(responseCode = "200", description = "Successfully provided the summary"),
             @ApiResponse(responseCode = "401", description = "You are not authorized to send new data", content = @Content)
     })
-    default ResponseEntity<Void> newData(@Parameter(description = "The id of the user to be examined", required = true) @PathVariable("id") UUID id) {
+    default ResponseEntity<Void> summary(@Parameter(description = "The id of the user to be examined", required = true) @PathVariable("id") UUID id) {
         return getService().summary(id);
     }
 }

@@ -33,7 +33,7 @@ public interface AdminApi {
             @ApiResponse(responseCode = "401", description = "You are not authorized to send new data", content = @Content),
             @ApiResponse(responseCode = "404", description = "The user was not found", content = @Content)
     })
-    default ResponseEntity<Void> newData(@Parameter(description = "The list of data entries to add", required = true) @PathVariable("id") UUID id) {
+    default ResponseEntity<Void> deleteUser(@Parameter(description = "The ID of the user to be deleted", required = true) @PathVariable("id") UUID id) {
         return getService().deleteUser(id);
     }
 
