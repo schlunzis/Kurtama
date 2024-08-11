@@ -1,0 +1,6 @@
+name: kurtama-server
+services:
+  kurtama-server:
+    image: ghcr.io/schlunzis/kurtama/server:v{version}
+    ports:
+      - '{port}:8007'

@@ -14,7 +14,7 @@ public class ServerFactory {
     public Server getServer(ServerType serverType) {
         return switch (serverType) {
             case JAR -> new JarServer(versionManager, logSink);
-            case DOCKER -> new DockerServer(logSink);
+            case DOCKER -> new DockerServer(versionManager, logSink);
         };
     }
 

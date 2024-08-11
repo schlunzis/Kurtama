@@ -1,15 +1,32 @@
 package org.schlunzis.kurtama.client.server;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.schlunzis.kurtama.client.util.VersionManager;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 @Slf4j
 class DockerServer extends Server {
 
-    DockerServer(LogSink logSink) {
+    private final String COMPOSE_STRING;
+    private String path;
+
+    DockerServer(VersionManager versionManager, LogSink logSink) {
         super(logSink);
+        try {
+            String cs = IOUtils.resourceToString("/server/server-compose.yml", StandardCharsets.UTF_8);
+            this.COMPOSE_STRING = cs.replace("{version}", versionManager.getDockerVersion());
+        } catch (IOException e) {
+            log.error("Error while reading docker-compose.yml", e);
+            throw new RuntimeException("Error while reading docker-compose.yml", e);
+        }
     }
 
     @Override
@@ -45,7 +62,45 @@ class DockerServer extends Server {
 
     @Override
     public void run(int port, String path) {
+        String runConfig = COMPOSE_STRING.replace("{port}", String.valueOf(port));
+        // write runConfig to docker-compose.yml file at path
+        try {
+            FileUtils.writeStringToFile(new File(path + File.separator + "docker-compose.yml"), runConfig, StandardCharsets.UTF_8, false);
+        } catch (IOException e) {
+            log.error("Error while writing docker-compose.yml", e);
+            throw new RuntimeException("Error while writing docker-compose.yml", e);
+        }
 
+        executor.submit(() -> {
+            ProcessBuilder processBuilder = new ProcessBuilder("docker", "compose", "up")
+                    .directory(new File(path));
+            this.path = path;
+            try {
+                serverProcess = processBuilder.start();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
+                while (serverProcess.isAlive()) {
+                    logSink.log(reader.readLine());
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
+    @Override
+    public void stop() {
+        super.stop();
+        if (path == null) {
+            return;
+        }
+
+        ProcessBuilder processBuilder = new ProcessBuilder("docker", "compose", "down")
+                .directory(new File(path));
+        try {
+            processBuilder.start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
