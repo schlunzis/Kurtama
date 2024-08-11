@@ -3,6 +3,7 @@ package org.schlunzis.kurtama.server.user;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.schlunzis.kurtama.common.IUser;
+import org.schlunzis.kurtama.common.Role;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public class UserStore implements IUserStore {
 
     @Override
     public UUID createUser(DBUser user) {
+        if (userRepository.count() == 0) // ensure that the first user is an admin
+            user.getRoles().add(Role.ADMIN);
         DBUser dbUser = userRepository.save(user);
         return dbUser.getId();
     }
@@ -28,9 +31,15 @@ public class UserStore implements IUserStore {
     }
 
     @Override
+    public Optional<DBUser> getUserByUserName(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
     public Optional<DBUser> getUser(String email) {
         return userRepository.findByEmail(email);
     }
+
 
     @Override
     public boolean deleteUser(IUser user) {

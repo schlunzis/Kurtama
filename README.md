@@ -105,13 +105,18 @@ Docker image.
 The server can be configured using a rest api or the built-in web ui. To connect the game client to the server you need
 to use the port that is configured using the variable `kurtama.server.netty.port`. The default port is `8007`. You can
 access the web ui by navigating to `http://localhost:8008` in your browser. The admin view is available via
-`http://localhost:8008/admin`. The default credentials are `kurtama` and `kurtama`.
+`http://localhost:8008/admin`. In the test environment the first user generated is an admin user. The credentials are
+`test0:test0`. Also, the very first user to be placed in the database is made an admin by default. This is to ensure
+that there is always at least one admin user in the system.
 
 You can also use the rest api with basic authentication. Example:
 
 ```bash
-curl http://localhost:8008/api/rest/admin/v1/usermanagement/delete/{userID} -u "kurtama:kurtama"
+curl -x DELETE http://localhost:8008/api/admin/v1/user/delete/{userID} -u "test0:test0"
 ```
+
+There also is a swagger ui available at `http://localhost:8008/swagger-ui/index.html`. This is a great way to explore
+the rest api and see what endpoints are available.
 
 ## Further information
 

@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.schlunzis.kurtama.common.IUser;
+import org.schlunzis.kurtama.common.Role;
 import org.schlunzis.kurtama.common.UserDTO;
 
+import java.util.Collection;
 import java.util.UUID;
 
 @Data
@@ -19,9 +21,10 @@ public class ServerUser implements IUser {
     private UUID id;
     private String email;
     private String username;
+    private Collection<Role> roles;
 
     public UserDTO toDTO() {
-        return new UserDTO(id, username);
+        return new UserDTO(id, username, roles);
     }
 
 }

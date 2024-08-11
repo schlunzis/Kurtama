@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.schlunzis.kurtama.common.IUser;
+import org.schlunzis.kurtama.common.Role;
 import org.schlunzis.kurtama.common.UserDTO;
 
+import java.util.Collection;
 import java.util.UUID;
 
 @Data
@@ -29,24 +31,31 @@ public class DBUser implements IUser {
     @Column
     private String passwordHash;
 
+    // TODO: correctly store roles in the database. A look in the database currently shows that the roles leave a real mess.
+    @Column
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Collection<Role> roles;
+
     /**
      * @param email        the email
      * @param username     the username
      * @param passwordHash the password hash
      */
-    public DBUser(String email, String username, String passwordHash) {
+    public DBUser(String email, String username, String passwordHash, Collection<Role> roles) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.email = email;
+        this.roles = roles;
     }
 
     public ServerUser toServerUser() {
-        return new ServerUser(id, email, username);
+        return new ServerUser(id, email, username, roles);
     }
 
     @Override
     public UserDTO toDTO() {
-        return new UserDTO(id, username);
+        return new UserDTO(id, username, roles);
     }
 
 }

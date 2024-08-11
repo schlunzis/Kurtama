@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<DBUser, UUID> {
 
     Optional<DBUser> findByEmail(String email);
 
+    Optional<DBUser> findByUsername(String username);
+
 }
