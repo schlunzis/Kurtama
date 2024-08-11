@@ -19,9 +19,9 @@
         }
 
         function deleteUser(userId) {
-            const url = `/api/rest/admin/v1/usermanagement/delete/${encodeURIComponent(userId)}`;
+            const url = `/api/admin/v1/user/delete/${encodeURIComponent(userId)}`;
             const responseElement = document.getElementById('response');
-            fetch(url)
+            fetch(url, {method: 'DELETE', credentials: 'include'})
                     .then(response => {
                         if (response.ok) {
                             responseElement.className = 'alert alert-success';
