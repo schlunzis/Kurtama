@@ -1,4 +1,4 @@
-package org.schlunzis.kurtama.server.web.controller.ui.pub;
+package org.schlunzis.kurtama.server.web.controller.ui;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/")
-public class UIHomeController {
+public class HomeUIController {
 
     @GetMapping
     public String index() {
@@ -17,6 +17,5 @@ public class UIHomeController {
     public String home() {
         return "index";
     }
-
 
 }

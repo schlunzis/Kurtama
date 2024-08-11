@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Getter
 @RestController
 @RequiredArgsConstructor
-public class AdminController implements AdminApi {
+public class AdminRestController implements AdminApi {
 
     private final IAdminService service;
 
