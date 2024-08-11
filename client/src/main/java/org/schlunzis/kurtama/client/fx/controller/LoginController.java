@@ -1,16 +1,9 @@
 package org.schlunzis.kurtama.client.fx.controller;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.Region;
-import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +13,7 @@ import org.schlunzis.kurtama.client.events.NewServerConnectionEvent;
 import org.schlunzis.kurtama.client.fx.scene.Scene;
 import org.schlunzis.kurtama.client.fx.scene.events.NewStageEvent;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
+import org.schlunzis.kurtama.client.fx.view.StatusView;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
 import org.schlunzis.kurtama.client.settings.Setting;
@@ -44,7 +38,6 @@ public class LoginController extends AbstractController {
     public static final String CONNECTED_STYLE = "connected";
     public static final String CONNECTING_STYLE = "connecting";
     public static final String FAILED_STYLE = "failed";
-    private static final int PROGRESS_ICON_SIZE = 30;
 
     private final ApplicationEventPublisher eventBus;
     private final Environment environment;
@@ -81,14 +74,9 @@ public class LoginController extends AbstractController {
     @FXML
     private TextField portField;
     @FXML
-    private Region progressIndicator;
-    @FXML
-    private Label progressLabel;
+    public StatusView statusView;
     @FXML
     private Label versionLabel;
-
-    private Rotate progressRotate;
-    private Timeline progressTimeline;
 
     @FXML
     private void handleLogin() {
@@ -126,14 +114,7 @@ public class LoginController extends AbstractController {
         if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("dev"))))
             devLogin();
 
-        progressRotate = new Rotate(0, PROGRESS_ICON_SIZE / 2d, PROGRESS_ICON_SIZE / 2d);
-        progressTimeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(progressRotate.angleProperty(), 0d)),
-                new KeyFrame(Duration.millis(2000), new KeyValue(progressRotate.angleProperty(), 360d))
-        );
-        progressIndicator.getTransforms().add(progressRotate);
-        progressTimeline.setCycleCount(Animation.INDEFINITE);
-
+        statusView.setI18n(i18n);
         sessionService.getConnectionStatus().addListener((observable, oldValue, newValue) ->
                 Platform.runLater(() -> applyConnectionStatus(newValue))
         );
@@ -171,32 +152,7 @@ public class LoginController extends AbstractController {
     }
 
     private void applyConnectionStatus(ConnectionStatusEvent.Status status) {
-        String text = "";
-        String indicatorClass = "";
-        progressTimeline.stop();
-        progressRotate.setAngle(0);
-        switch (status) {
-            case NOT_CONNECTED -> {
-                text = "Not Connected";
-                indicatorClass = NOT_CONNECTED_STYLE;
-            }
-            case CONNECTED -> {
-                text = "Connected";
-                indicatorClass = CONNECTED_STYLE;
-            }
-            case CONNECTING -> {
-                text = "Connecting...";
-                indicatorClass = CONNECTING_STYLE;
-                progressTimeline.play();
-            }
-            case FAILED -> {
-                text = "Connection Failed";
-                indicatorClass = FAILED_STYLE;
-            }
-        }
-        progressIndicator.getStyleClass().clear();
-        progressIndicator.getStyleClass().addAll("progress-indicator", indicatorClass);
-        progressLabel.setText(text);
+        statusView.setStatus(status);
     }
 
     private void setVersion() {
