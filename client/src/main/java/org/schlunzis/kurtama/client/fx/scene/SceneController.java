@@ -2,6 +2,7 @@ package org.schlunzis.kurtama.client.fx.scene;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.kurtama.client.events.ConnectionLostEvent;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeEvent;
 import org.schlunzis.kurtama.client.fx.scene.events.SceneChangeMessage;
 import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionSuccessfulResponse;
@@ -61,6 +62,11 @@ public class SceneController {
     @EventListener
     public void onGameStartedMessage(GameStartedMessage gsm) {
         eventBus.publishEvent(new SceneChangeEvent(Scene.GAME));
+    }
+
+    @EventListener
+    public void onConnectionLostEvent(ConnectionLostEvent ignored) {
+        eventBus.publishEvent(new SceneChangeEvent(Scene.LOGIN, SceneChangeMessage.CONNECTION_LOST));
     }
 
 }

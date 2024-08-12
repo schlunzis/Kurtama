@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
+import org.schlunzis.kurtama.client.events.ConnectionLostEvent;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.service.ISessionService;
 import org.schlunzis.kurtama.common.IUser;
@@ -56,6 +57,11 @@ public class SessionService implements ISessionService {
 
     @EventListener
     public void onDeletionSuccessfulResponse(DeletionSuccessfulResponse ignored) {
+        currentUser = Optional.empty();
+    }
+
+    @EventListener
+    public void onConnectionLostEvent(ConnectionLostEvent ignored) {
         currentUser = Optional.empty();
     }
 

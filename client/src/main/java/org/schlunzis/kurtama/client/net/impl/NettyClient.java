@@ -11,9 +11,12 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.kurtama.client.events.ConnectionLostEvent;
 import org.schlunzis.kurtama.client.events.ConnectionStatusEvent;
 import org.schlunzis.kurtama.client.net.INetworkClient;
+import org.schlunzis.kurtama.client.net.ServerMessageDispatcher;
 import org.schlunzis.kurtama.common.messages.IClientMessage;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -27,8 +30,10 @@ public final class NettyClient implements INetworkClient {
     private final int port;
     private final String host;
     private ChannelFuture f;
+    @Getter
+    private volatile boolean intentionallyStopped = false;
 
-    public NettyClient(ClientHandler clientHandler, ApplicationEventPublisher eventBus, String host, int port) {
+    public NettyClient(ServerMessageDispatcher serverMessageDispatcher, ApplicationEventPublisher eventBus, String host, int port) {
         this.eventBus = eventBus;
         this.host = host;
         this.port = port;
@@ -47,7 +52,16 @@ public final class NettyClient implements INetworkClient {
                         p.addLast(new StringDecoder());
                         p.addLast(new StringEncoder());
                         // This is our custom client handler which will have logic for chat.
-                        p.addLast(clientHandler);
+                        p.addLast(new ClientHandler(serverMessageDispatcher) {
+                            @Override
+                            public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+                                super.handlerRemoved(ctx);
+                                if (!intentionallyStopped) {
+                                    eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.FAILED));
+                                    eventBus.publishEvent(new ConnectionLostEvent());
+                                }
+                            }
+                        });
                     }
                 });
     }
@@ -56,23 +70,24 @@ public final class NettyClient implements INetworkClient {
     public void start() {
         eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.CONNECTING));
         f = b.connect(host, port);
-        f.awaitUninterruptibly();
-
-        if (f.isCancelled()) {
-            log.info("Connection cancelled by user.");
-            close(ConnectionStatusEvent.Status.NOT_CONNECTED);
-        } else if (!f.isSuccess()) {
-            log.error("Connection failed!", f.cause());
-            close(ConnectionStatusEvent.Status.FAILED);
-        } else {
-            log.info("Connected to server.");
-            eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.CONNECTED));
-        }
+        f.addListener(_ -> {
+            if (f.isCancelled()) {
+                log.info("Connection cancelled by user.");
+                close(ConnectionStatusEvent.Status.NOT_CONNECTED);
+            } else if (!f.isSuccess()) {
+                log.error("Connection failed!", f.cause());
+                close(ConnectionStatusEvent.Status.FAILED);
+            } else {
+                log.info("Connected to server.");
+                eventBus.publishEvent(new ConnectionStatusEvent(ConnectionStatusEvent.Status.CONNECTED));
+            }
+        });
     }
 
     @Override
     public void close(ConnectionStatusEvent.Status status) {
         log.debug("Closing network client");
+        intentionallyStopped = true;
         eventBus.publishEvent(new ConnectionStatusEvent(status));
         f.channel().close();
         group.shutdownGracefully();

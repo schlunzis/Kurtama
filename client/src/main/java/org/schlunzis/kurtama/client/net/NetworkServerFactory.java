@@ -1,7 +1,6 @@
 package org.schlunzis.kurtama.client.net;
 
 import lombok.RequiredArgsConstructor;
-import org.schlunzis.kurtama.client.net.impl.ClientHandler;
 import org.schlunzis.kurtama.client.net.impl.NettyClient;
 import org.schlunzis.kurtama.client.settings.IUserSettings;
 import org.schlunzis.kurtama.client.settings.Setting;
@@ -18,13 +17,11 @@ public class NetworkServerFactory {
 
 
     public INetworkClient createNettyClient() {
-        return new NettyClient(new ClientHandler(serverMessageDispatcher), eventBus,
-                userSettings.getString(Setting.HOST), userSettings.getInt(Setting.PORT)
-        );
+        return createNettyClient(userSettings.getString(Setting.HOST), userSettings.getInt(Setting.PORT));
     }
 
     public INetworkClient createNettyClient(String host, int port) {
-        return new NettyClient(new ClientHandler(serverMessageDispatcher), eventBus, host, port);
+        return new NettyClient(serverMessageDispatcher, eventBus, host, port);
     }
 
 }
