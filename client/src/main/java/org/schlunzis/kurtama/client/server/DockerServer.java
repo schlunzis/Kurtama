@@ -62,13 +62,15 @@ class DockerServer extends Server {
 
     @Override
     public void run(int port, String path) {
+        setStatus(ServerStatus.RUNNING);
         String runConfig = COMPOSE_STRING.replace("{port}", String.valueOf(port));
         // write runConfig to docker-compose.yml file at path
         try {
             FileUtils.writeStringToFile(new File(path + File.separator + "docker-compose.yml"), runConfig, StandardCharsets.UTF_8, false);
         } catch (IOException e) {
             log.error("Error while writing docker-compose.yml", e);
-            throw new RuntimeException("Error while writing docker-compose.yml", e);
+            setStatus(ServerStatus.RUNNING_FAILED);
+            return;
         }
 
         executor.submit(() -> {
@@ -82,7 +84,8 @@ class DockerServer extends Server {
                     logSink.log(reader.readLine());
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                log.error("Error while starting server", e);
+                setStatus(ServerStatus.RUNNING_FAILED);
             }
         });
     }
@@ -98,9 +101,10 @@ class DockerServer extends Server {
                 .directory(new File(path));
         try {
             processBuilder.start();
+            setStatus(ServerStatus.STOPPED);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("Error while stopping server", e);
+            setStatus(ServerStatus.RUNNING_FAILED);
         }
-
     }
 }
