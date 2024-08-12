@@ -112,7 +112,7 @@ that there is always at least one admin user in the system.
 You can also use the rest api with basic authentication. Example:
 
 ```bash
-curl -x DELETE http://localhost:8008/api/admin/v1/user/delete/{userID} -u "test0:test0"
+curl -X DELETE http://localhost:8008/api/admin/v1/user/delete/{userID} -u "test0:test0"
 ```
 
 There also is a swagger ui available at `http://localhost:8008/swagger-ui/index.html`. This is a great way to explore

@@ -1,6 +1,5 @@
 package org.schlunzis.kurtama.server.web.service;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.schlunzis.kurtama.server.user.DBUser;
 import org.schlunzis.kurtama.server.user.UserStore;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * This class is used by Spring Security to authenticate users.
@@ -26,20 +24,6 @@ import java.util.UUID;
 public class WebUserDetailsService implements UserDetailsService {
 
     private final UserStore userStore;
-
-    /**
-     * Spring does not provide a field for the user's id. We need to extend the User class to add this field.
-     */
-    @Getter
-    public static class WebUser extends User {
-
-        private final UUID id;
-
-        public WebUser(User user, UUID id) {
-            super(user.getUsername(), user.getPassword(), user.getAuthorities());
-            this.id = id;
-        }
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
