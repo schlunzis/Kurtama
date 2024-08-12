@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 class JarServer extends Server {
@@ -22,6 +24,8 @@ class JarServer extends Server {
 
     private final VersionManager versionManager;
 
+    private String javaExecutable = null;
+
     JarServer(VersionManager versionManager, LogSink logSink) {
         super(logSink);
         this.versionManager = versionManager;
@@ -29,8 +33,50 @@ class JarServer extends Server {
 
     @Override
     public boolean testRequirements() {
-        log.info("Testing for java installation");
-        ProcessBuilder processBuilder = new ProcessBuilder("java", "-version");
+        if (!testUsingJavaHome()) {
+            log.info("Testing using JAVA_HOME failed, trying PATH");
+            return testUsingPath();
+        }
+        return true;
+    }
+
+    private boolean testUsingJavaHome() {
+        log.info("Testing for java installation using JAVA_HOME");
+        String javaHome = System.getenv("JAVA_HOME");
+        if (javaHome == null) {
+            log.info("JAVA_HOME not set");
+            return false;
+        }
+
+        String testExecutable = javaHome + File.separator + "bin" + File.separator + "java";
+        if (test(testExecutable)) {
+            javaExecutable = testExecutable;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean testUsingPath() {
+        String path = System.getenv("PATH");
+        if (path == null) {
+            log.info("PATH not set");
+            return false;
+        }
+
+        String[] pathEntries = path.split(File.pathSeparator);
+        for (String pathEntry : pathEntries) {
+            String testExecutable = pathEntry + File.separator + "java";
+            if (test(testExecutable)) {
+                javaExecutable = testExecutable;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean test(String javaExecutable) {
+        log.info("Testing for java installation using executable: {}", javaExecutable);
+        ProcessBuilder processBuilder = new ProcessBuilder(javaExecutable, "-version");
         try {
             Process process = processBuilder.start();
             StreamGobbler streamGobbler = new StreamGobbler(process.getErrorStream());
@@ -39,10 +85,10 @@ class JarServer extends Server {
             int exitCode = process.waitFor();
             String[] output = streamGobbler.getOutput();
             Arrays.stream(output).forEach(log::info);
-            String javaVersion = extractJavaVersion(output);
+            int javaVersion = extractJavaVersion(output);
             log.info("Java version: {}", javaVersion);
 
-            return exitCode == 0 && javaVersion != null && Integer.parseInt(javaVersion) >= MINIMUM_JAVA_VERSION;
+            return exitCode == 0 && javaVersion >= MINIMUM_JAVA_VERSION;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.error("Error while testing JAR requirements", e);
@@ -53,14 +99,22 @@ class JarServer extends Server {
         return false;
     }
 
-    private static String extractJavaVersion(String[] output) {
+    private static int extractJavaVersion(String[] output) {
         String lineWithVersion = output[1];
         int startIndex = lineWithVersion.indexOf("(");
         int endIndex = lineWithVersion.indexOf(")");
         String semverString = lineWithVersion.substring(startIndex + 1, endIndex).split(" ")[1];
         log.debug("Semver string: {}", semverString);
 
-        return semverString.split("\\.")[0];
+        // Extract major version by returning the first number in the string
+        Pattern pattern = Pattern.compile("^\\d+");
+        Matcher matcher = pattern.matcher(semverString);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group());
+        } else {
+            log.error("Error while extracting Java version");
+        }
+        return -1;
     }
 
     @Override
@@ -83,7 +137,7 @@ class JarServer extends Server {
 
             log.info("Starting server with JAR");
             setStatus(ServerStatus.RUNNING);
-            ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", JAR_PATH)
+            ProcessBuilder processBuilder = new ProcessBuilder(javaExecutable, "-jar", JAR_PATH)
                     .directory(new File(path));
             processBuilder.environment().put("KURTAMA_SERVER_PORT", String.valueOf(port));
             try {
