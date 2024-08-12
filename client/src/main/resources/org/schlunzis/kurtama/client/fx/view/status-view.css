@@ -13,22 +13,22 @@
     -fx-max-width: -size;
 }
 
-.status-view .info {
-    -fx-background-color: lightblue;
+.status-view .info .glyph-font {
+    -fx-text-fill: lightblue;
 }
 
-.status-view .progress {
-    -fx-background-color: lightblue;
+.status-view .progress .glyph-font {
+    -fx-text-fill: lightblue;
 }
 
-.status-view .warning {
-    -fx-background-color: k-warning;
+.status-view .warning .glyph-font {
+    -fx-text-fill: k-warning;
 }
 
-.status-view .error {
-    -fx-fill: k-error;
+.status-view .error .glyph-font {
+    -fx-text-fill: k-error;
 }
 
-.status-view .success {
-    -fx-background-color: k-button;
+.status-view .success .glyph-font {
+    -fx-text-fill: k-button;
 }

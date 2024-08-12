@@ -82,7 +82,7 @@ public class StatusView extends HBox {
         INFO(FontAwesome.Glyph.INFO, Color.LIGHTBLUE),
         PROGRESS(FontAwesome.Glyph.SPINNER, Color.LIGHTBLUE),
         WARNING(FontAwesome.Glyph.WARNING, Color.ORANGE),
-        ERROR(FontAwesome.Glyph.BARS, Color.RED),
+        ERROR(FontAwesome.Glyph.TIMES, Color.RED),
         SUCCESS(FontAwesome.Glyph.CHECK, Color.GREEN);
 
         private final FontAwesome.Glyph glyph;
