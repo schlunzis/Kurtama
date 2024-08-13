@@ -71,7 +71,6 @@ public class CreateServerController {
     private void testRequirements() {
         requirementsStatusView.setStatus(RequirementsStatus.TESTING);
         if (server != null) {
-            server.stop();
             boolean success = server.testRequirements();
             log.info("Can system run server? {}", success);
             requirementsStatusView.setStatus(success ? RequirementsStatus.SUCCESS : RequirementsStatus.FAILED);

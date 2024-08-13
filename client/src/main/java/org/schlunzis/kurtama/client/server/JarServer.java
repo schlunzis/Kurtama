@@ -120,6 +120,10 @@ class JarServer extends Server {
     @Override
     public void run(int port, String path) {
         log.info("Downloading server with JAR");
+        if (getStatus() == ServerStatus.RUNNING) {
+            log.info("Server already running");
+            return;
+        }
         setStatus(ServerStatus.DOWNLOADING);
         executor.submit(() -> {
             try {
@@ -142,6 +146,7 @@ class JarServer extends Server {
             processBuilder.environment().put("KURTAMA_SERVER_PORT", String.valueOf(port));
             try {
                 serverProcess = processBuilder.start();
+                serverProcess.onExit().thenRun(() -> setStatus(ServerStatus.STOPPED));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
                 while (serverProcess.isAlive()) {
                     logSink.log(reader.readLine());
