@@ -65,7 +65,7 @@ class DockerServer extends Server {
     public void run(int port, String path) {
         mutex.acquireUninterruptibly();
         setStatus(ServerStatus.DOWNLOADING);
-        String runConfig = composeString.replace("{port}", String.valueOf(port));
+        String runConfig = composeString.replace("{port}", Integer.toString(port));
         // write runConfig to docker-compose.yml file at path
         try {
             FileUtils.writeStringToFile(new File(path + File.separator + "docker-compose.yml"), runConfig, StandardCharsets.UTF_8, false);
