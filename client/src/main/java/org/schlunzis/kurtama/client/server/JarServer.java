@@ -95,7 +95,7 @@ class JarServer extends Server {
             log.error("Error while testing JAR requirements", e);
             return false;
         } catch (IOException e) {
-            log.error("Error while testing JAR requirements", e);
+            log.debug("Error while testing JAR requirements", e);
         }
         return false;
     }
