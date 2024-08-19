@@ -7,13 +7,17 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @RequiredArgsConstructor
 public abstract class Server {
 
-    protected static final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(r);
+    private static final AtomicInteger serverCounter = new AtomicInteger(0);
+    protected static final ExecutorService executor = Executors.newThreadPerTaskExecutor(r -> {
+        Thread t = Thread.ofVirtual()
+                .unstarted(r);
+        t.setName("ServerExecutor-" + serverCounter.getAndIncrement());
         t.setDaemon(true);
         return t;
     });

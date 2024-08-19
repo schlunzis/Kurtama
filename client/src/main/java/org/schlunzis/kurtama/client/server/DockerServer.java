@@ -86,9 +86,11 @@ class DockerServer extends Server {
                 try (BufferedReader reader = serverProcess.inputReader()) {
                     while (serverProcess.isAlive()) {
                         String line = reader.readLine();
-                        if (getStatus() == ServerStatus.DOWNLOADING && line.endsWith("Netty Server started on port: " + port)) {
-                            setStatus(ServerStatus.RUNNING);
+                        if (getStatus() == ServerStatus.DOWNLOADING && line.startsWith("Attaching to")) {
+                            setStatus(ServerStatus.STARTING);
                             mutex.release();
+                        } else if (getStatus() == ServerStatus.STARTING && line.endsWith("Netty Server started on port: " + port)) {
+                            setStatus(ServerStatus.RUNNING);
                         }
                         logSink.log(line);
                     }
@@ -109,16 +111,22 @@ class DockerServer extends Server {
             return;
         }
 
-        setStatus(ServerStatus.STOPPING);
-        ProcessBuilder processBuilder = new ProcessBuilder("docker", "compose", "down")
-                .directory(new File(path));
-        try {
-            processBuilder.start();
-            setStatus(ServerStatus.STOPPED);
-        } catch (IOException e) {
-            log.error("Error while stopping server", e);
-            setStatus(ServerStatus.RUN_FAILED);
-        }
-        mutex.release();
+        executor.submit(() -> {
+            setStatus(ServerStatus.STOPPING);
+            ProcessBuilder processBuilder = new ProcessBuilder("docker", "compose", "down")
+                    .directory(new File(path));
+            try {
+                Process process = processBuilder.start();
+                process.waitFor();
+                setStatus(ServerStatus.STOPPED);
+            } catch (IOException e) {
+                log.error("Error while stopping server", e);
+                setStatus(ServerStatus.RUN_FAILED);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("Error while stopping server", e);
+            }
+            mutex.release();
+        });
     }
 }
