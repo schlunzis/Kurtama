@@ -53,7 +53,7 @@ public class StageManager {
 
     @EventListener
     public void onNewStageEvent(NewStageEvent event) {
-        log.debug("Opeing new stage with scene {}", event.scene());
+        log.debug("Opening new stage with scene {}", event.scene());
         Platform.runLater(() -> {
             FXMLLoader loader = createScene(event.scene());
             Stage newStage = new Stage();
