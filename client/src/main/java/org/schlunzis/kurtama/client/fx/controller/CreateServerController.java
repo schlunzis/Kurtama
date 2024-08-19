@@ -55,7 +55,7 @@ public class CreateServerController {
         requirementsStatusView.setI18n(i18n);
         serverStatusView.setI18n(i18n);
         pathField.setText(userSettings.getString(Setting.SERVER_PATH));
-        portField.setText(String.valueOf(userSettings.getInt(Setting.PORT)));
+        portField.setText(Integer.toString(userSettings.getInt(Setting.PORT)));
         portField.textProperty().addListener((_, _, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 portField.setText(newValue.replaceAll("\\D", ""));
