@@ -5,4 +5,3 @@ services:
     container_name: kurtama-server
     ports:
       - '{port}:8007'
-#    volumes:
