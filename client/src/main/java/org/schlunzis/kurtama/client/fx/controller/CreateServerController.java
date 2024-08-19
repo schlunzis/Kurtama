@@ -3,6 +3,7 @@ package org.schlunzis.kurtama.client.fx.controller;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -41,7 +42,11 @@ public class CreateServerController {
     @FXML
     private TextField pathField;
     @FXML
+    private Button selectFolderButton;
+    @FXML
     private StatusView serverStatusView;
+    @FXML
+    private Button stopRunButton;
     @FXML
     private TextArea logArea;
 
@@ -113,11 +118,40 @@ public class CreateServerController {
         server = serverFactory.getServer(serverType);
         server.statusProperty().addListener((_, _, newValue) -> {
             log.info("Server status changed: {}", newValue);
-            Platform.runLater(() -> serverStatusView.setStatus(newValue));
+            Platform.runLater(() -> {
+                serverStatusView.setStatus(newValue);
+                boolean disable = newValue != ServerStatus.NOT_STARTED && newValue != ServerStatus.STOPPED;
+                setDisableServerConfig(disable);
+                if (newValue == ServerStatus.RUNNING) {
+                    stopRunButton.textProperty().bind(i18n.createBinding("server.stop"));
+                    stopRunButton.setOnAction(_ -> server.stop());
+                    stopRunButton.setDisable(false);
+                } else if (newValue == ServerStatus.NOT_STARTED) {
+                    stopRunButton.textProperty().bind(i18n.createBinding("server.run"));
+                    stopRunButton.setOnAction(_ -> handleRun());
+                    stopRunButton.setDisable(false);
+                } else if (newValue == ServerStatus.STOPPED) {
+                    stopRunButton.textProperty().bind(i18n.createBinding("server.run"));
+                    stopRunButton.setOnAction(_ -> {
+                        server = createServer(typeSelector.getSelectionModel().getSelectedItem());
+                        handleRun();
+                    });
+                    stopRunButton.setDisable(false);
+                } else {
+                    stopRunButton.setDisable(true);
+                }
+            });
         });
         Platform.runLater(() -> serverStatusView.setStatus(server.getStatus()));
         testRequirements();
         return server;
+    }
+
+    private void setDisableServerConfig(boolean disable) {
+        typeSelector.setDisable(disable);
+        pathField.setDisable(disable);
+        selectFolderButton.setDisable(disable);
+        portField.setDisable(disable);
     }
 
 }

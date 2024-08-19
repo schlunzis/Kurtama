@@ -7,10 +7,10 @@ import org.schlunzis.kurtama.client.util.VersionManager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +24,7 @@ class JarServer extends Server {
 
     private final VersionManager versionManager;
 
+    private final Semaphore mutex = new Semaphore(1);
     private String javaExecutable = null;
 
     JarServer(VersionManager versionManager, LogSink logSink) {
@@ -120,7 +121,8 @@ class JarServer extends Server {
     @Override
     public void run(int port, String path) {
         log.info("Downloading server with JAR");
-        if (getStatus() == ServerStatus.RUNNING) {
+        mutex.acquireUninterruptibly();
+        if (getStatus() != ServerStatus.NOT_STARTED) {
             log.info("Server already running");
             return;
         }
@@ -140,22 +142,36 @@ class JarServer extends Server {
             }
 
             log.info("Starting server with JAR");
-            setStatus(ServerStatus.RUNNING);
+            setStatus(ServerStatus.STARTING);
             ProcessBuilder processBuilder = new ProcessBuilder(javaExecutable, "-jar", JAR_PATH)
                     .directory(new File(path));
             processBuilder.environment().put("KURTAMA_SERVER_PORT", String.valueOf(port));
             try {
                 serverProcess = processBuilder.start();
                 serverProcess.onExit().thenRun(() -> setStatus(ServerStatus.STOPPED));
-                BufferedReader reader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
-                while (serverProcess.isAlive()) {
-                    logSink.log(reader.readLine());
+                try (BufferedReader reader = serverProcess.inputReader()) {
+                    while (serverProcess.isAlive()) {
+                        String line = reader.readLine();
+                        if (getStatus() == ServerStatus.STARTING && line.endsWith("Netty Server started on port: " + port)) {
+                            setStatus(ServerStatus.RUNNING);
+                            mutex.release();
+                        }
+                        logSink.log(line);
+                    }
                 }
             } catch (IOException e) {
                 log.error("Error while starting JAR server", e);
-                setStatus(ServerStatus.RUNNING_FAILED);
+                setStatus(ServerStatus.RUN_FAILED);
             }
         });
+    }
+
+    @Override
+    public void stop() {
+        setStatus(ServerStatus.STOPPING);
+        mutex.acquireUninterruptibly();
+        super.stop();
+        mutex.release();
     }
 
 }

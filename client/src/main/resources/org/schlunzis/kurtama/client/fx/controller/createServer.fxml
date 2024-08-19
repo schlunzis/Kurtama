@@ -18,14 +18,14 @@
         </HBox>
         <HBox>
             <TextField fx:id="pathField" HBox.hgrow="ALWAYS"/>
-            <Button text="i{server.select.folder}" onAction="#handleSelectPath"/>
+            <Button fx:id="selectFolderButton" text="i{server.select.folder}" onAction="#handleSelectPath"/>
         </HBox>
         <HBox alignment="CENTER_LEFT">
             <Label text="i{login.label.port}"/>
             <TextField fx:id="portField" styleClass="port-field"/>
         </HBox>
         <HBox>
-            <Button text="i{server.run}" onAction="#handleRun"/>
+            <Button fx:id="stopRunButton" text="i{server.run}" onAction="#handleRun"/>
             <StatusView fx:id="serverStatusView" HBox.hgrow="ALWAYS"/>
         </HBox>
         <TextArea fx:id="logArea" editable="false" VBox.vgrow="ALWAYS"/>
