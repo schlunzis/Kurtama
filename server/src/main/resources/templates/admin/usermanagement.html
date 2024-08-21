@@ -6,19 +6,8 @@
 
 <div layout:fragment="content">
     <script>
-
-        /*
-        * oy, what a disgusting way of getting the user ID. There must be a way to inject the ID via thymeleaf. Let's
-        * mark this as a TODO
-        */
-        function getUserIdForRow(button) {
-            const row = button.closest('tr');
-            const idCell = row.querySelector('td:nth-child(2)');
-            row.remove(); // Not the right position to remove the row, but it's a quick fix for now (what if the fetch fails?)
-            return idCell.textContent;
-        }
-
-        function deleteUser(userId) {
+        function deleteUser(button) {
+            const userId = button.getAttribute('data-userid');
             const url = `/api/admin/v1/user/delete/${encodeURIComponent(userId)}`;
             const responseElement = document.getElementById('response');
             fetch(url, {method: 'DELETE', credentials: 'include'})
@@ -26,6 +15,7 @@
                         if (response.ok) {
                             responseElement.className = 'alert alert-success';
                             responseElement.innerText = 'User with ID ' + userId + ' has been deleted!';
+                            button.closest('tr').remove();
                         }
                     })
                     .catch(error => {
@@ -44,7 +34,7 @@
         <tr>
             <th>Username</th>
             <th>ID</th>
-            <th>action</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -52,8 +42,10 @@
             <td th:text="${user.username}"></td>
             <td th:text="${user.id}"></td>
             <td>
+                <!-- th:onclick does not work here as user.id is not boolean or number -->
                 <button type="button" class="btn btn-danger"
-                        onclick="const id = getUserIdForRow(this); return deleteUser(id)">Delete
+                        th:data-userid="${user.id}"
+                        onclick="return deleteUser(this)">Delete
                 </button>
             </td>
         </tr>
