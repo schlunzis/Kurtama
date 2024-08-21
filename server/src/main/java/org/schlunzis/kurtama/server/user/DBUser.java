@@ -31,10 +31,9 @@ public class DBUser implements IUser {
     @Column
     private String passwordHash;
 
-    // TODO: correctly store roles in the database. A look in the database currently shows that the roles leave a real mess.
     @Column
+    @Enumerated(EnumType.STRING) // Having the name of the enum in the database is more readable
     @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
     private Collection<Role> roles;
 
     /**
