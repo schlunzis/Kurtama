@@ -7,3 +7,9 @@ services:
       POSTGRES_DB: kurtama
     ports:
       - "5432:5432"
+    networks:
+      kurtama-network:
+
+networks:
+  kurtama-network:
+    name: kurtama-network

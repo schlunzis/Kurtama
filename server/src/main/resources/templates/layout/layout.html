@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="https://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title=${title})}"></head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="content" id="content" layout:fragment="content">
+    <p>lorem ipsum</p>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

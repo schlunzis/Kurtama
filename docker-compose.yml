@@ -4,3 +4,14 @@ services:
       .
     ports:
       - "8007:8007"
+      - "8008:8008"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=prod
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://kurtama-db:5432/kurtama
+#    networks:
+#      kurtama-network:
+
+#networks:
+#  kurtama-network:
+#    name: kurtama-network
+#    external: true

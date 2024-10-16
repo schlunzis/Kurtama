@@ -100,6 +100,24 @@ docker compose logs -f kurtama-server
 Please refer to the [wiki](https://github.com/schlunzis/Kurtama/wiki/Docker) for more information on how to use the
 Docker image.
 
+## Server
+
+The server can be configured using a rest api or the built-in web ui. To connect the game client to the server you need
+to use the port that is configured using the variable `kurtama.server.netty.port`. The default port is `8007`. You can
+access the web ui by navigating to `http://localhost:8008` in your browser. The admin view is available via
+`http://localhost:8008/admin`. In the test environment the first user generated is an admin user. The credentials are
+`test0:test0`. Also, the very first user to be placed in the database is made an admin by default. This is to ensure
+that there is always at least one admin user in the system.
+
+You can also use the rest api with basic authentication. Example:
+
+```bash
+curl -X DELETE http://localhost:8008/api/admin/v1/user/delete/{userID} -u "test0:test0"
+```
+
+There also is a swagger ui available at `http://localhost:8008/swagger-ui/index.html`. This is a great way to explore
+the rest api and see what endpoints are available.
+
 ## Further information
 
 This is our first big project in Java completely written from scratch. We are still learning and trying to improve our

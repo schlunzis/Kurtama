@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{layout/layout :: layout(title='Admin - Usermanagement')}"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+
+<div layout:fragment="content">
+    <script>
+        function deleteUser(button) {
+            const userId = button.getAttribute('data-userid');
+            const url = `/api/admin/v1/user/delete/${encodeURIComponent(userId)}`;
+            const responseElement = document.getElementById('response');
+            fetch(url, {method: 'DELETE', credentials: 'include'})
+                    .then(response => {
+                        if (response.ok) {
+                            responseElement.className = 'alert alert-success';
+                            responseElement.innerText = 'User with ID ' + userId + ' has been deleted!';
+                            button.closest('tr').remove();
+                        }
+                    })
+                    .catch(error => {
+                        responseElement.className = 'alert alert-danger';
+                        responseElement.innerText = 'Error: ' + error;
+                    });
+            return false; // Prevent form submission
+        }
+    </script>
+
+    <h1>Usermanagement</h1>
+    <p>You may perform usermanagement here.</p>
+
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Username</th>
+            <th>ID</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.id}"></td>
+            <td>
+                <!-- th:onclick does not work here as user.id is not boolean or number -->
+                <button type="button" class="btn btn-danger"
+                        th:data-userid="${user.id}"
+                        onclick="return deleteUser(this)">Delete
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <pre id="response"></pre>
+</div>
+
+</body>
+</html>

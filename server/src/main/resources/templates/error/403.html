@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{layout/layout :: layout(title='Error')}"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+
+<div layout:fragment="content">
+    <h1>403 - Oooops, error detected</h1>
+    <p>It seems you don't have the rights to access this location. But we appreciate your curiosity. Now go <a
+            th:href="@{/}">HOME</a>.
+    </p>
+</div>
+
+</body>
+</html>
