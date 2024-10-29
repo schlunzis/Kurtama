@@ -30,7 +30,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4.2.2
         with:
-          java-version: '22'
+          java-version: '23'
           distribution: 'temurin'
           cache: maven
       - name: Build Server and Client with Maven
