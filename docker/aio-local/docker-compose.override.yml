@@ -1,0 +1,5 @@
+services:
+  kurtama-server:
+    image: !reset null
+    build: ../..
+    container_name: kurtama-server-local

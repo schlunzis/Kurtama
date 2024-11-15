@@ -5,8 +5,10 @@ include:
 services:
   kurtama-server:
     image: ghcr.io/schlunzis/kurtama/server
+    hostname: kurtama-server
     ports:
       - "8007:8007"
+      # - "8008:8008"
     environment:
       SPRING_PROFILES_ACTIVE: dev
       # SPRING_PROFILES_ACTIVE: prod
