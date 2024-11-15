@@ -1,0 +1,25 @@
+name: kurtama-db
+services:
+  kurtama-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: kurtama
+      POSTGRES_PASSWORD: kurtama
+      POSTGRES_DB: kurtama
+      PGUSER: kurtama
+    # ports:
+    #   - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    # volumes:
+    #  - kurtama-db:/var/lib/postgresql/data
+    networks:
+      - kurtama-db-network
+
+networks:
+  kurtama-db-network:
+# volumes:
+#   kurtama-db:

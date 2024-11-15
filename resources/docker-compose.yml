@@ -1,6 +1,0 @@
-services:
-  kurtama-server:
-    build:
-      ..
-    ports:
-      - "8007:8007"

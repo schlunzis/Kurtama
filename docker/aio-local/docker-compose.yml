@@ -1,0 +1,21 @@
+name: kurtama-aio-local
+include:
+  - ../modules/db.yml
+  - ../modules/prometheus.yml
+services:
+  kurtama-server-local:
+    build: ../..
+    ports:
+      - "8007:8007"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://kurtama-db:5432/kurtama
+      SPRING_DATASOURCE_USERNAME: kurtama
+      SPRING_DATASOURCE_PASSWORD: kurtama
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: org.postgresql.Driver
+    networks:
+      - kurtama-db-network
+      - kurtama-prometheus-network
+    depends_on:
+      kurtama-db:
+        condition: service_healthy

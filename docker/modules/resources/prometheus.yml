@@ -21,4 +21,4 @@ scrape_configs:
     metrics_path: /monitoring/prometheus
     scrape_interval: 5s
     static_configs:
-      - targets: [ 'kurtama:8008' ]
+      - targets: [ 'kurtama-server:8008' ]

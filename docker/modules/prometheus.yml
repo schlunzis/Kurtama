@@ -1,24 +1,17 @@
-name: prometheus monitoring
-
+name: prometheus
 services:
-  prometheus:
+  kurtama-prometheus:
     image: prom/prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./resources/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
+      - '--log.level=debug'
     networks:
-      - prometheus-network
-  kurtama:
-    build:
-      ../..
-    ports:
-      - "8007:8007"
-    networks:
-      - prometheus-network
+      - kurtama-prometheus-network
 
 #  grafana:
 #    image: grafana/grafana
@@ -28,4 +21,4 @@ services:
 #      - kurtama-network
 
 networks:
-  prometheus-network:
+  kurtama-prometheus-network:

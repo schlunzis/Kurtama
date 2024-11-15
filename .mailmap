@@ -1,1 +1,40 @@
-Tilman Holube <tilman@holube.de>
+# Template taken from:
+# https://blog.pother.ca/gource-organisation/03.logs.before.mailmap.html
+# ==============================================================================
+# The .mailmap feature is used to coalesce together commits by the same person
+# in the (short)log, where their name and/or email address was spelled differently.
+#
+# In the simple form, each line in the file consists of the canonical real name
+# of an author, whitespace, and an email address used in the commit (enclosed by
+# < and >) to map to the name.
+#
+#       Proper Name <commit@email.xx>
+#
+# Other examples:
+#
+# <proper@email.xx> <commit@email.xx>               # replace only email
+# Proper Name <proper@email.xx> <commit@email.xx>   # replace both name and email
+# ==============================================================================
+
+# ==============================================================================
+# Canonical Email Addresses
+#
+# These are all contributors to this repository as they SHOULD be listed.
+# ------------------------------------------------------------------------------
+Tilman Holube   <tilman@holube.de>
+Jonas Pohl      <jonas.jp4c@gmail.com>
+# ==============================================================================
+
+# ==============================================================================
+# Other Email addresses
+# ------------------------------------------------------------------------------
+Tilman Holube   <tilman@holube.de> <45685205+Til7701@users.noreply.github.com>
+# ==============================================================================
+
+# ==============================================================================
+# Unknown user
+# ------------------------------------------------------------------------------
+Unknown         <unknown@example.com>
+# ==============================================================================
+
+#EOF
