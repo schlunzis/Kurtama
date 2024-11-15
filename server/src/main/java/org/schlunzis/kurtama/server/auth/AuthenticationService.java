@@ -3,6 +3,7 @@ package org.schlunzis.kurtama.server.auth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.LobbyInfo;
+import org.schlunzis.kurtama.common.Role;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionRequest;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * This class handles all login-, logout- and registration events. It also provides information about whether a user is
@@ -90,7 +92,7 @@ class AuthenticationService implements IAuthenticationService {
         String username = rr.getUsername();
         String password = rr.getPassword();
         try {
-            userStore.createUser(new DBUser(email, username, passwordEncoder.encode(password)));
+            userStore.createUser(new DBUser(email, username, passwordEncoder.encode(password), Set.of(Role.USER)));
             cmc.respond(new RegisterSuccessfulResponse());
         } catch (IllegalArgumentException e) {
             log.info("User with email {} already exists", email);

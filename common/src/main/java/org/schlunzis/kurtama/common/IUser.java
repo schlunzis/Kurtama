@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import org.schlunzis.kurtama.common.util.InheritanceTypeIdResolver;
 
+import java.util.Set;
 import java.util.UUID;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, property = "discriminator")
@@ -17,5 +18,7 @@ public interface IUser {
     void setUsername(String username);
 
     UserDTO toDTO();
+
+    Set<Role> getRoles();
 
 }

@@ -20,8 +20,8 @@ public class WebSecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/actuator/**").permitAll()
-                                .anyRequest().permitAll()
+                                .requestMatchers("/monitoring/**").hasRole("MONITORING")
+                                .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults())
                 .httpBasic(withDefaults())

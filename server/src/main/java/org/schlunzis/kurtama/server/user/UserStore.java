@@ -30,6 +30,10 @@ public class UserStore implements IUserStore {
         return userRepository.findByEmail(email);
     }
 
+    public Optional<DBUser> getUserByUserName(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     @Override
     public boolean deleteUser(IUser user) {
         try {
