@@ -1,11 +1,14 @@
 name: kurtama-aio
 include:
   - ../modules/db.yml
+  - ../modules/prometheus.yml
 services:
   kurtama-server:
     image: ghcr.io/schlunzis/kurtama/server
+    hostname: kurtama-server
     ports:
       - "8007:8007"
+      # - "8008:8008"
     environment:
       SPRING_PROFILES_ACTIVE: dev
       # SPRING_PROFILES_ACTIVE: prod
@@ -15,6 +18,7 @@ services:
       SPRING_DATASOURCE_DRIVER-CLASS-NAME: org.postgresql.Driver
     networks:
       - kurtama-db-network
+      - kurtama-prometheus-network
     depends_on:
       kurtama-db:
         condition: service_healthy

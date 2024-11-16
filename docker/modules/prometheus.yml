@@ -1,0 +1,24 @@
+name: prometheus
+services:
+  kurtama-prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./resources/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--log.level=debug'
+    networks:
+      - kurtama-prometheus-network
+
+#  grafana:
+#    image: grafana/grafana
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      - kurtama-network
+
+networks:
+  kurtama-prometheus-network:

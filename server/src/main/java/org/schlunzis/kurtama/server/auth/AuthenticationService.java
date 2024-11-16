@@ -3,6 +3,7 @@ package org.schlunzis.kurtama.server.auth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.kurtama.common.LobbyInfo;
+import org.schlunzis.kurtama.common.Role;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionFailedResponse;
 import org.schlunzis.kurtama.common.messages.authentication.delete.DeletionRequest;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * This class handles all login-, logout- and registration events. It also provides information about whether a user is
@@ -58,6 +60,11 @@ class AuthenticationService implements IAuthenticationService {
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
 
+                if (!user.getRoles().contains(Role.USER) && !user.getRoles().contains(Role.ADMIN)) {
+                    log.info("User {} tried to log in without the required roles", user.getEmail());
+                    cmc.respond(new LoginFailedResponse());
+                    return;
+                }
                 userSessionMap.get(user.toServerUser()).ifPresent(oldSession -> {
                     log.info("User {} already logged in. Going to log out old session {}", user.getEmail(), oldSession);
                     logout(oldSession);
@@ -90,7 +97,7 @@ class AuthenticationService implements IAuthenticationService {
         String username = rr.getUsername();
         String password = rr.getPassword();
         try {
-            userStore.createUser(new DBUser(email, username, passwordEncoder.encode(password)));
+            userStore.createUser(new DBUser(email, username, passwordEncoder.encode(password), Set.of(Role.USER)));
             cmc.respond(new RegisterSuccessfulResponse());
         } catch (IllegalArgumentException e) {
             log.info("User with email {} already exists", email);

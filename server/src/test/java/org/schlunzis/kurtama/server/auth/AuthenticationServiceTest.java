@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.schlunzis.kurtama.common.Role;
 import org.schlunzis.kurtama.common.UserDTO;
 import org.schlunzis.kurtama.common.messages.IServerMessage;
 import org.schlunzis.kurtama.common.messages.authentication.login.LoginFailedResponse;
@@ -30,6 +31,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -61,6 +63,8 @@ class AuthenticationServiceTest {
     String defaultPassword = "12345";
     String otherPassword = "12345";
     String defaultPasswordHash = "fancy hash";
+    Role defaultRole = Role.USER;
+
     @Mock
     ISession defaultSession;
 
@@ -138,6 +142,7 @@ class AuthenticationServiceTest {
         when(cmcLoginRequest.getSession()).thenReturn(defaultSession);
         when(defaultServerUser.toDTO()).thenReturn(defaultUserDTO);
         when(defaultDBUser.getEmail()).thenReturn(defaultEmail);
+        when(defaultDBUser.getRoles()).thenReturn(Set.of(defaultRole));
         when(userSessionMap.get(defaultServerUser)).thenReturn(Optional.empty());
 
         authenticationService.onLoginEvent(cmcLoginRequest);
@@ -169,6 +174,7 @@ class AuthenticationServiceTest {
         when(cmcLoginRequest.getSession()).thenReturn(defaultSession);
         when(defaultServerUser.toDTO()).thenReturn(defaultUserDTO);
         when(defaultDBUser.getEmail()).thenReturn(defaultEmail);
+        when(defaultDBUser.getRoles()).thenReturn(Set.of(defaultRole));
         when(userSessionMap.get(defaultServerUser)).thenReturn(Optional.empty());
 
         authenticationService.onLoginEvent(cmcLoginRequest);
@@ -201,6 +207,7 @@ class AuthenticationServiceTest {
         when(cmcLoginRequest.getSession()).thenReturn(defaultSession);
         when(defaultServerUser.toDTO()).thenReturn(defaultUserDTO);
         when(defaultDBUser.getEmail()).thenReturn(defaultEmail);
+        when(defaultDBUser.getRoles()).thenReturn(Set.of(defaultRole));
         when(userSessionMap.get(defaultServerUser)).thenReturn(Optional.empty());
 
         authenticationService.onLoginEvent(cmcLoginRequest);
