@@ -24,4 +24,4 @@ scrape_configs:
       - targets: [ 'kurtama-server:8008' ]
     basic_auth:
       username: monitoring
-      password: prometheus
+      password: pr0m3th3us

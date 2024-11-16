@@ -39,8 +39,5 @@ public class DevelopmentConfig {
             UUID id = userStore.createUser(new DBUser("test" + i + "@schlunzis.org", "test" + i, pe.encode("test" + i), roles));
             log.debug("Created user with id {}", id);
         }
-        // TODO: Create monitoring user with env-provided password independently of the profile
-        UUID id = userStore.createUser(new DBUser("monitoring@schlunzis.org", "monitoring", pe.encode("prometheus"), Set.of(Role.MONITORING)));
-        log.debug("Created monitoring user with id {}", id);
     }
 }
