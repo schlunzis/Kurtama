@@ -60,6 +60,11 @@ class AuthenticationService implements IAuthenticationService {
         userStore.getUser(loginRequest.getEmail()).ifPresentOrElse(user -> {
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
 
+                if (!user.getRoles().contains(Role.USER) && !user.getRoles().contains(Role.ADMIN)) {
+                    log.info("User {} tried to log in without the required roles", user.getEmail());
+                    cmc.respond(new LoginFailedResponse());
+                    return;
+                }
                 userSessionMap.get(user.toServerUser()).ifPresent(oldSession -> {
                     log.info("User {} already logged in. Going to log out old session {}", user.getEmail(), oldSession);
                     logout(oldSession);
