@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.schlunzis.kurtama.client.fx.view.StatusView?>
+<?import java.net.URL?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" styleClass="root" xmlns="http://javafx.com/javafx"
+            fx:controller="org.schlunzis.kurtama.client.fx.controller.CreateServerController">
+    <stylesheets>
+        <URL value="@css/style.css"/>
+        <URL value="@css/createServer.css"/>
+    </stylesheets>
+
+    <VBox AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <HBox>
+            <ComboBox fx:id="typeSelector"/>
+            <StatusView fx:id="requirementsStatusView" HBox.hgrow="ALWAYS"/>
+        </HBox>
+        <HBox>
+            <TextField fx:id="pathField" HBox.hgrow="ALWAYS"/>
+            <Button fx:id="selectFolderButton" text="i{server.select.folder}" onAction="#handleSelectPath"/>
+        </HBox>
+        <HBox alignment="CENTER_LEFT">
+            <Label text="i{login.label.port}"/>
+            <TextField fx:id="portField" styleClass="port-field"/>
+        </HBox>
+        <HBox>
+            <Button fx:id="stopRunButton" text="i{server.run}" onAction="#handleRun"/>
+            <StatusView fx:id="serverStatusView" HBox.hgrow="ALWAYS"/>
+        </HBox>
+        <TextArea fx:id="logArea" editable="false" VBox.vgrow="ALWAYS"/>
+    </VBox>
+
+</AnchorPane>

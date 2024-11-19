@@ -1,0 +1,34 @@
+.status-view {
+    -fx-alignment: center;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 40px;
+    -fx-spacing: 10px;
+}
+
+.status-icon {
+    -size: 30;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+}
+
+.status-view .info .glyph-font {
+    -fx-text-fill: lightblue;
+}
+
+.status-view .progress .glyph-font {
+    -fx-text-fill: lightblue;
+}
+
+.status-view .warning .glyph-font {
+    -fx-text-fill: k-warning;
+}
+
+.status-view .error .glyph-font {
+    -fx-text-fill: k-error;
+}
+
+.status-view .success .glyph-font {
+    -fx-text-fill: k-button;
+}

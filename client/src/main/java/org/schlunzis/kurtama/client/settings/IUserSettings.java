@@ -1,5 +1,7 @@
 package org.schlunzis.kurtama.client.settings;
 
+import org.schlunzis.kurtama.client.server.ServerType;
+
 public interface IUserSettings {
 
     void putString(Setting<String> key, String value);
@@ -13,5 +15,9 @@ public interface IUserSettings {
     int getInt(Setting<Integer> key);
 
     boolean getBoolean(Setting<Boolean> key);
+
+    ServerType getServerType(Setting<ServerType> key);
+
+    void putServerType(Setting<ServerType> key, ServerType value);
 
 }

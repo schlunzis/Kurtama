@@ -116,3 +116,29 @@ TextField:focused, PasswordField:focused {
 .label {
     -fx-text-fill: k-text-color;
 }
+
+/*
+ ComboBox
+ */
+ComboBox {
+    -fx-background-color: k-textfield-focused;
+}
+
+ComboBox .arrow {
+    -fx-background-color: k-text-color;
+}
+
+/*
+ TextArea
+ */
+
+TextArea {
+    -fx-font-family: monospace;
+}
+
+TextArea, TextArea .scroll-pane, TextArea .content, TextArea .viewport {
+    -fx-background-color: k-textfield-background;
+    -fx-text-fill: k-text-color;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
